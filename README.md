@@ -1,3 +1,11 @@
+![GitHub last commit](https://img.shields.io/github/last-commit/Ma-Ko-dev/Turn-Based-Prototype?style=flat-square)
+![GitHub issues](https://img.shields.io/github/issues/Ma-Ko-dev/Turn-Based-Prototype?style=flat-square)
+![GitHub stars](https://img.shields.io/github/stars/Ma-Ko-dev/Turn-Based-Prototype?style=flat-square)
+![License](https://img.shields.io/github/license/Ma-Ko-dev/Turn-Based-Prototype?style=flat-square)
+![Godot](https://img.shields.io/badge/Godot-4.6-blue?logo=godot-engine&logoColor=white&style=flat-square)
+![Language](https://img.shields.io/badge/Language-GDScript-478cbf?style=flat-square)
+
+
 # Turn-Based-Prototype
 
 A tactical 2D turn-based prototype built with **Godot 4.6**. This project is the foundation for a grid-based RPG, focusing on clean mechanics and scalable combat systems.
