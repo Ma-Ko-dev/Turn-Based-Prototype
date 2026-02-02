@@ -28,7 +28,7 @@ A tactical 2D turn-based prototype built with **Godot 4.6**. This project is the
   <summary>Click to view clips from early development</summary>
   
   ### Early Prototypes (Grid & Movement)
-  <video src="https://github.com/Ma-Ko-dev/Turn-Based-Prototype/blob/main/dev_logs/Godot%20Engine%20-%202026-01-28%2014-14-27.mp4">First movement iteration</video>
+  <video src="dev_logs/Godot Engine - 2026-01-28 14-14-27" controls>First movement iteration</video>
   
   
   ### Current Version (AI Movement)
