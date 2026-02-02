@@ -1,0 +1,43 @@
+[gd_scene format=4 uid="uid://cxg7ue3k504c6"]
+
+[ext_resource type="Script" uid="uid://cifrkgcm7e1bf" path="res://scripts/player.gd" id="1_78s5d"]
+[ext_resource type="TileSet" uid="uid://nfp0efavgx5g" path="res://assets/main_tileset.tres" id="1_jb3nc"]
+[ext_resource type="Texture2D" uid="uid://bgsim6yse6sn8" path="res://assets/units/player/atlas_player.tres" id="3_a1rh6"]
+[ext_resource type="Script" uid="uid://ckdelfqek4cv" path="res://scripts/map_manager.gd" id="6_a1rh6"]
+
+[node name="GameRoot" type="Node2D" unique_id=1645537557]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=1665712938]
+scale = Vector2(4, 4)
+tile_map_data = PackedByteArray("AAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAUAAAAEAAAAAAABAAMAAAAEAAAAAAAAAAMAAAABAAAAAAABAAQAAAACAAAAAAACAAIAAAAFAAIAAAADAAAAAAAFAAEAAAABAAEAAAAFAAEAAAAEAAUAAAADAAIAAAABAAUAAAAAAAAAAAACAAUAAAAAAAAAAAACAAQAAAAAAAAAAAACAAMAAAAAAAAAAAADAAMAAAAAAAAAAAADAAQAAAAAAAAAAAADAAUAAAAAAAAAAAAFAAUAAAAAAAAAAAAFAAQAAAAGAAIAAAAFAAMAAAAAAAAAAAAFAAIAAAAAAAAAAAAFAAEAAAAAAAAAAAAFAAAAAAAAAAAAAAAEAAAAAAAGAAAAAAAEAAEAAAAGAAAAAAADAAEAAAAGAAAAAAADAAIAAAAAAAAAAAAEAAIAAAAAAAAAAAAEAAQAAAAAAAAAAAABAAIAAAAAAAAAAAACAAEAAAAGAAAAAAACAAAAAAAGAAAAAAABAAAAAAAAAAAAAAAEAAMAAAAAAAAAAAAAAAEAAAAAAAAAAAA=")
+tile_set = ExtResource("1_jb3nc")
+
+[node name="HighlightLayer" type="TileMapLayer" parent="." unique_id=471275150]
+scale = Vector2(4, 4)
+tile_set = ExtResource("1_jb3nc")
+
+[node name="PreviewLayer" type="TileMapLayer" parent="." unique_id=1838265159]
+scale = Vector2(4, 4)
+tile_set = ExtResource("1_jb3nc")
+
+[node name="SelectionLayer" type="TileMapLayer" parent="." unique_id=998689811]
+scale = Vector2(4, 4)
+tile_set = ExtResource("1_jb3nc")
+
+[node name="PlayerToken" type="Sprite2D" parent="." unique_id=606042742]
+scale = Vector2(3, 3)
+texture = ExtResource("3_a1rh6")
+script = ExtResource("1_78s5d")
+movement_range = null
+initiative_bonus = null
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1645649685]
+
+[node name="MovementLabel" type="Label" parent="CanvasLayer" unique_id=508116740]
+offset_left = 8.0
+offset_top = 392.0
+offset_right = 48.0
+offset_bottom = 415.0
+
+[node name="MapManager" type="Node" parent="." unique_id=1552409391]
+script = ExtResource("6_a1rh6")

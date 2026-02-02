@@ -1,0 +1,77 @@
+[gd_scene format=4 uid="uid://cxg7ue3k504c6"]
+
+[ext_resource type="Script" uid="uid://cifrkgcm7e1bf" path="res://scripts/player.gd" id="1_78s5d"]
+[ext_resource type="Texture2D" uid="uid://bo67yhsqmuc1p" path="res://assets/player_placeholder.png" id="1_ni5ms"]
+[ext_resource type="Texture2D" uid="uid://g77j73bsch0y" path="res://assets/tileset.png" id="1_uebra"]
+[ext_resource type="Texture2D" uid="uid://cwcc8gxa6quao" path="res://assets/tileset_blocked.png" id="2_iusj4"]
+[ext_resource type="Texture2D" uid="uid://baxn6e8s54exk" path="res://assets/tileset_difficult.png" id="3_a1rh6"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jb3nc"]
+texture = ExtResource("1_uebra")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+0:0/0/custom_data_0 = 1
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_j7aru"]
+texture = ExtResource("2_iusj4")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+0:0/0/custom_data_0 = 99
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ylec3"]
+texture = ExtResource("3_a1rh6")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+0:0/0/custom_data_0 = 2
+
+[sub_resource type="TileSet" id="TileSet_iusj4"]
+tile_size = Vector2i(64, 64)
+custom_data_layer_0/name = "movement_cost"
+custom_data_layer_0/type = 2
+sources/0 = SubResource("TileSetAtlasSource_jb3nc")
+sources/1 = SubResource("TileSetAtlasSource_j7aru")
+sources/2 = SubResource("TileSetAtlasSource_ylec3")
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_iusj4"]
+texture = ExtResource("1_uebra")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_a1rh6"]
+tile_size = Vector2i(64, 64)
+sources/0 = SubResource("TileSetAtlasSource_iusj4")
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_a1rh6"]
+texture = ExtResource("1_uebra")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_j7aru"]
+tile_size = Vector2i(64, 64)
+sources/0 = SubResource("TileSetAtlasSource_a1rh6")
+
+[node name="GameRoot" type="Node2D" unique_id=1645537557]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=1665712938]
+tile_map_data = PackedByteArray("AAAAAAAAAAAAAAAAAAABAAEAAAAAAAAAAAACAAIAAgAAAAAAAAADAAMAAQAAAAAAAAAAAAEAAAAAAAAAAAABAAIAAAAAAAAAAAACAAMAAAAAAAAAAAADAAQAAAAAAAAAAAADAAUAAAAAAAAAAAAEAAUAAAAAAAAAAAACAAQAAAAAAAAAAAABAAQAAQAAAAAAAAABAAMAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAUAAAAAAAAAAAABAAUAAAAAAAAAAAACAAUAAAAAAAAAAAACAAAAAgAAAAAAAAADAAAAAgAAAAAAAAAEAAAAAgAAAAAAAAAFAAAAAAAAAAAAAAAFAAEAAAAAAAAAAAAFAAIAAAAAAAAAAAAFAAMAAAAAAAAAAAAFAAQAAAAAAAAAAAAFAAUAAAAAAAAAAAAEAAMAAAAAAAAAAAAEAAIAAgAAAAAAAAAEAAEAAgAAAAAAAAADAAEAAQAAAAAAAAACAAEAAgAAAAAAAAADAAIAAgAAAAAAAAAEAAQAAAAAAAAAAAAAAAIAAgAAAAAAAAABAAAAAAAAAAAAAAA=")
+tile_set = SubResource("TileSet_iusj4")
+
+[node name="HighlightLayer" type="TileMapLayer" parent="." unique_id=471275150]
+modulate = Color(0.97120136, 0.9805401, 0.7608356, 0.83137256)
+tile_set = SubResource("TileSet_a1rh6")
+
+[node name="PreviewLayer" type="TileMapLayer" parent="." unique_id=1838265159]
+tile_set = SubResource("TileSet_j7aru")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=606042742]
+scale = Vector2(0.32, 0.32)
+texture = ExtResource("1_ni5ms")
+script = ExtResource("1_78s5d")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1645649685]
+
+[node name="MovementLabel" type="Label" parent="CanvasLayer" unique_id=508116740]
+offset_left = 8.0
+offset_top = 392.0
+offset_right = 48.0
+offset_bottom = 415.0
