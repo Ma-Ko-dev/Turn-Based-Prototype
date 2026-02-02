@@ -23,17 +23,6 @@ A tactical 2D turn-based prototype built with **Godot 4.6**. This project is the
 3. Check the `Resources/` folder to modify unit stats.
 4. Press `Enter` in Exploration mode to cycle turns or `Tab` to force-start combat.
 
-## 📺 Development Progress
-<details>
-  <summary>Click to view clips from early development</summary>
-  
-  ### Early Prototypes (Grid & Movement)
-  
-  
-  ### Current Version (AI Movement)
-  
-</details>
-
 ## ⚖️ License
 
 This project is licensed under the MIT License - see the `LICENSE` file for details.
