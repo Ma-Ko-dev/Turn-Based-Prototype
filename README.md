@@ -1,3 +1,11 @@
+![GitHub last commit](https://img.shields.io/github/last-commit/Ma-Ko-dev/Turn-Based-Prototype?style=flat-square)
+![GitHub issues](https://img.shields.io/github/issues/Ma-Ko-dev/Turn-Based-Prototype?style=flat-square)
+![GitHub stars](https://img.shields.io/github/stars/Ma-Ko-dev/Turn-Based-Prototype?style=flat-square)
+![License](https://img.shields.io/github/license/Ma-Ko-dev/Turn-Based-Prototype?style=flat-square)
+![Godot](https://img.shields.io/badge/Godot-4.6-blue?logo=godot-engine&logoColor=white&style=flat-square)
+![Language](https://img.shields.io/badge/Language-GDScript-478cbf?style=flat-square)
+
+
 # Turn-Based-Prototype
 
 A tactical 2D turn-based prototype built with **Godot 4.6**. This project is the foundation for a grid-based RPG, focusing on clean mechanics and scalable combat systems.
@@ -20,8 +28,8 @@ A tactical 2D turn-based prototype built with **Godot 4.6**. This project is the
 
 1. Clone the repository.
 2. Open the project in Godot 4.x.
-3. Check the `Resources/` folder to modify unit stats.
-4. Press `Enter` in Exploration mode to cycle turns or `Tab` to force-start combat.
+3. Press 'Run'
+4. Press `Enter/Space` in Exploration mode to cycle turns or `Tab` to force-start combat (Which just makes the enemies chase you)
 
 ## ⚖️ License
 
