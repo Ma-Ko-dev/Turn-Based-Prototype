@@ -22,7 +22,7 @@ A tactical 2D turn-based prototype built with **Godot 4.6**. This project is the
 
 * **Languages**: 100% GDScript.
 * **Architecture**: Signal-driven UI and state management for decoupled systems.
-* **Assets**: Compatible with 32x32 tilesets (optimized for Kenney's assets).
+* **Assets**: Compatible with 16x16 tilesets (optimized for Kenney's 1-Bit asset).
 
 ## 📖 How to Use
 
