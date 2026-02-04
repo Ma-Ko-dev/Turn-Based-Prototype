@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dfk5weuf11l2b" path="res://scenes/game_root.gd" id="1_ylec3"]
 [ext_resource type="PackedScene" uid="uid://cqdd83pfe3aqt" path="res://scenes/Player.tscn" id="2_uebra"]
+[ext_resource type="PackedScene" uid="uid://chygwhunclgm0" path="res://scenes/levels/Level_01.tscn" id="2_ylec3"]
 [ext_resource type="PackedScene" uid="uid://desyp0hxe7xot" path="res://scenes/Enemy.tscn" id="4_a1rh6"]
 [ext_resource type="Resource" uid="uid://co81tbfmbxii5" path="res://assets/units/enemies/Ghost.tres" id="5_j7aru"]
 [ext_resource type="Script" uid="uid://ckdelfqek4cv" path="res://scripts/map_manager.gd" id="6_a1rh6"]
@@ -10,17 +11,16 @@
 
 [node name="GameRoot" type="Node2D" unique_id=1645537557]
 script = ExtResource("1_ylec3")
-
-[node name="PlayerToken" parent="." unique_id=2037288528 groups=["players"] instance=ExtResource("2_uebra")]
-position = Vector2(160, 224)
+start_level = ExtResource("2_ylec3")
+player_scene = ExtResource("2_uebra")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1645649685]
 
 [node name="MovementLabel" type="Label" parent="CanvasLayer" unique_id=508116740]
-offset_left = 8.0
-offset_top = 392.0
-offset_right = 48.0
-offset_bottom = 415.0
+offset_left = 864.0
+offset_top = 192.0
+offset_right = 1047.0
+offset_bottom = 215.0
 text = "Movement placeholder "
 
 [node name="MapManager" type="Node" parent="." unique_id=1552409391]
@@ -43,9 +43,10 @@ texture_filter = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 392.0
-offset_right = -664.0
-offset_bottom = -480.0
+offset_left = 856.0
+offset_top = 8.0
+offset_right = -200.0
+offset_bottom = -472.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("7_j7aru")

@@ -1,8 +1,9 @@
 [gd_scene format=4 uid="uid://cxfi6slnvx185"]
 
 [ext_resource type="TileSet" uid="uid://nfp0efavgx5g" path="res://assets/main_tileset.tres" id="1_xxmur"]
+[ext_resource type="Script" uid="uid://ddb326dqa48d8" path="res://scripts/debug-spawn_marker.gd" id="2_0plv3"]
 
-[node name="Node2D" type="Node2D" unique_id=1330468739]
+[node name="BaseLevel" type="Node2D" unique_id=1330468739]
 
 [node name="GroundLayer" type="TileMapLayer" parent="." unique_id=163704109]
 modulate = Color(0.3882353, 0.16470589, 0.16470589, 1)
@@ -41,4 +42,9 @@ tile_set = ExtResource("1_xxmur")
 
 [node name="Markers" type="Node2D" parent="." unique_id=577359482]
 
-[node name="PlayerSpawn" type="Node2D" parent="Markers" unique_id=210226]
+[node name="PlayerSpawn" type="Marker2D" parent="Markers" unique_id=329869282]
+position = Vector2(32, 32)
+script = ExtResource("2_0plv3")
+
+[node name="EnemySpawn" type="Marker2D" parent="Markers" unique_id=1634180193]
+script = ExtResource("2_0plv3")

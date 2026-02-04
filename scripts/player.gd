@@ -1,14 +1,17 @@
 extends Unit
 
 # --- Tilemap Layer References ---
-@onready var movement_label = get_node("../CanvasLayer/MovementLabel")
-@onready var preview_layer: TileMapLayer = get_node("../PreviewLayer")
-@onready var selection_layer: TileMapLayer = get_node("../SelectionLayer")
+#@onready var movement_label = get_node("../CanvasLayer/MovementLabel")
+#@onready var preview_layer: TileMapLayer = get_node("../PreviewLayer")
+#@onready var selection_layer: TileMapLayer = get_node("../SelectionLayer")
+var movement_label: Label
+var preview_layer: TileMapLayer
+var selection_layer: TileMapLayer
 
 
 func _ready():
 	# Initialize a local AStar instance for player-specific path calculations
-	astar_grid = AStarGrid2D.new()
+	#astar_grid = AStarGrid2D.new()
 	super._ready()
 	update_ui()
 
@@ -91,6 +94,14 @@ func _process(_delta):
 				update_preview(hovered_cell, total_cost)
 	else:
 		preview_layer.clear()
+
+
+func setup_player_references(m_manager, m_label, p_layer, s_layer):
+	map_manager = m_manager
+	movement_label = m_label
+	preview_layer = p_layer
+	selection_layer = s_layer
+	update_ui()
 
 
 func draw_path_preview(path: Array[Vector2i]):

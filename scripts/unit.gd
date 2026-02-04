@@ -19,7 +19,8 @@ var is_selected: bool = false
 var is_active_unit: bool = false
 
 # --- References ---
-@onready var map_manager: MapManager = get_node("../MapManager")
+#@onready var map_manager: MapManager = get_node("../MapManager")
+var map_manager: MapManager
 
 # Helper properties to easily access grid data from the MapManager
 var astar_grid: AStarGrid2D:
@@ -33,12 +34,12 @@ var grid_size: float:
 # --- Lifecycle Functions ---
 func _ready():
 	remaining_movement = movement_range
-	# Calculate initial grid position based on the starting world position in the editor
-	grid_pos = Vector2i(floor(position.x / grid_size), floor(position.y / grid_size))
-	
-	# Wait for a frame to ensure MapManager has initialized the AStar grid before occupying a cell
-	await get_tree().process_frame
-	set_grid_occupancy(true)
+	if map_manager:
+		# Calculate initial grid position based on the starting world position in the editor
+		#grid_pos = Vector2i(floor(position.x / grid_size), floor(position.y / grid_size))
+		# Wait for a frame to ensure MapManager has initialized the AStar grid before occupying a cell
+		await get_tree().process_frame
+		set_grid_occupancy(true)
 
 
 # --- Pathfinding ---
@@ -95,6 +96,11 @@ func set_grid_occupancy(is_occupied: bool):
 	# Marks the unit's current tile as solid/blocked in the shared AStar grid
 	if astar_grid:
 		astar_grid.set_point_solid(grid_pos, is_occupied)
+
+
+func teleport_to_grid_pos(new_grid_pos: Vector2i):
+	grid_pos = new_grid_pos
+	set_grid_occupancy(true)
 
 
 # --- Turn Logic ---
