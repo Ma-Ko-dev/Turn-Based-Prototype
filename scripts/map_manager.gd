@@ -2,15 +2,25 @@ extends Node
 class_name MapManager
 
 # --- References ---
-@onready var obstacle_layer: TileMapLayer = get_node("../ObstacleLayer")
-@onready var ground_layer: TileMapLayer = get_node("../GroundLayer")
+#@onready var obstacle_layer: TileMapLayer = get_node("../ObstacleLayer")
+#@onready var ground_layer: TileMapLayer = get_node("../GroundLayer")
+
+var ground_layer: TileMapLayer
+var obstacle_layer: TileMapLayer
+
 
 # --- Grid Configuration ---
 @export var grid_size: int = 64
 var astar_grid: AStarGrid2D = AStarGrid2D.new()
 
 
-func _ready():
+#func _ready():
+	#setup_astar()
+
+
+func setup_level(level_node: Node2D):
+	ground_layer = level_node.get_node("GroundLayer")
+	obstacle_layer = level_node.get_node("ObstacleLayer")
 	setup_astar()
 
 

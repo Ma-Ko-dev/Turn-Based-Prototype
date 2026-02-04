@@ -1,6 +1,6 @@
-[gd_scene format=4 uid="uid://cxg7ue3k504c6"]
+[gd_scene format=3 uid="uid://cxg7ue3k504c6"]
 
-[ext_resource type="TileSet" uid="uid://nfp0efavgx5g" path="res://assets/main_tileset.tres" id="1_jb3nc"]
+[ext_resource type="Script" uid="uid://dfk5weuf11l2b" path="res://scenes/game_root.gd" id="1_ylec3"]
 [ext_resource type="PackedScene" uid="uid://cqdd83pfe3aqt" path="res://scenes/Player.tscn" id="2_uebra"]
 [ext_resource type="PackedScene" uid="uid://desyp0hxe7xot" path="res://scenes/Enemy.tscn" id="4_a1rh6"]
 [ext_resource type="Resource" uid="uid://co81tbfmbxii5" path="res://assets/units/enemies/Ghost.tres" id="5_j7aru"]
@@ -9,33 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://ca65s4dfy8qa1" path="res://assets/ui/UI_Panel_Base.tres" id="7_j7aru"]
 
 [node name="GameRoot" type="Node2D" unique_id=1645537557]
-
-[node name="GroundLayer" type="TileMapLayer" parent="." unique_id=531092845]
-modulate = Color(0.3882353, 0.16470589, 0.16470589, 1)
-scale = Vector2(4, 4)
-tile_map_data = PackedByteArray("AAAAAAAAAAAIAAUAAAABAAAAAAAIAAUAAAACAAAAAAAIAAUAAAADAAAAAAAIAAUAAAAEAAAAAAAIAAUAAAAFAAAAAAAIAAUAAAAFAAEAAAAIAAUAAAAEAAEAAAAIAAUAAAAEAAIAAAAIAAUAAAADAAIAAAAIAAUAAAADAAMAAAAIAAUAAAACAAMAAAAIAAUAAAACAAQAAAAIAAUAAAABAAQAAAAIAAUAAAABAAUAAAAIAAUAAAAAAAUAAAAIAAUAAAAAAAQAAAAIAAUAAAAAAAMAAAAIAAUAAAAAAAIAAAAIAAUAAAAAAAEAAAAIAAUAAAABAAEAAAAIAAUAAAABAAIAAAAIAAUAAAABAAMAAAAIAAUAAAACAAIAAAAIAAUAAAACAAEAAAAIAAUAAAADAAEAAAAIAAUAAAADAAQAAAAIAAUAAAADAAUAAAAIAAUAAAAEAAUAAAAIAAUAAAAFAAUAAAAIAAUAAAAFAAQAAAAIAAUAAAAFAAMAAAAIAAUAAAAFAAIAAAAIAAUAAAAEAAMAAAAIAAUAAAAEAAQAAAAIAAUAAAACAAUAAAAIAAUAAAA=")
-tile_set = ExtResource("1_jb3nc")
-
-[node name="ObstacleLayer" type="TileMapLayer" parent="." unique_id=1665712938]
-z_index = 1
-scale = Vector2(4, 4)
-tile_map_data = PackedByteArray("AAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAUAAAAEAAAAAAABAAMAAAAEAAAAAAAAAAMAAAABAAAAAAABAAQAAAACAAAAAAACAAIAAAAFAAIAAAADAAAAAAAFAAEAAAABAAEAAAAFAAEAAAAEAAUAAAADAAIAAAABAAUAAAAAAAAAAAACAAUAAAAAAAAAAAACAAQAAAAAAAAAAAACAAMAAAAAAAAAAAADAAMAAAAAAAAAAAADAAQAAAAAAAAAAAADAAUAAAAAAAAAAAAFAAUAAAAAAAAAAAAFAAQAAAAGAAIAAAAFAAMAAAAAAAAAAAAFAAIAAAAAAAAAAAAFAAEAAAAAAAAAAAAFAAAAAAAAAAAAAAAEAAAAAAAGAAAAAAAEAAEAAAAGAAAAAAADAAEAAAAGAAAAAAADAAIAAAAAAAAAAAAEAAIAAAAAAAAAAAAEAAQAAAAAAAAAAAABAAIAAAAAAAAAAAACAAEAAAAGAAAAAAACAAAAAAAGAAAAAAABAAAAAAAAAAAAAAAEAAMAAAAAAAAAAAAAAAEAAAAAAAAAAAA=")
-tile_set = ExtResource("1_jb3nc")
-
-[node name="HighlightLayer" type="TileMapLayer" parent="." unique_id=471275150]
-z_index = 2
-scale = Vector2(4, 4)
-tile_set = ExtResource("1_jb3nc")
-
-[node name="SelectionLayer" type="TileMapLayer" parent="." unique_id=998689811]
-z_index = 2
-scale = Vector2(4, 4)
-tile_set = ExtResource("1_jb3nc")
-
-[node name="PreviewLayer" type="TileMapLayer" parent="." unique_id=1838265159]
-z_index = 3
-scale = Vector2(4, 4)
-tile_set = ExtResource("1_jb3nc")
+script = ExtResource("1_ylec3")
 
 [node name="PlayerToken" parent="." unique_id=2037288528 groups=["players"] instance=ExtResource("2_uebra")]
 position = Vector2(160, 224)
@@ -47,6 +21,7 @@ offset_left = 8.0
 offset_top = 392.0
 offset_right = 48.0
 offset_bottom = 415.0
+text = "Movement placeholder "
 
 [node name="MapManager" type="Node" parent="." unique_id=1552409391]
 script = ExtResource("6_a1rh6")
@@ -65,20 +40,17 @@ movement_range = 4
 
 [node name="ActionMenu" type="NinePatchRect" parent="UI" unique_id=1767508180]
 texture_filter = 1
-anchors_preset = 12
-anchor_top = 1.0
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 392.0
-offset_top = -640.0
-offset_right = -584.0
-offset_bottom = -400.0
+offset_right = -664.0
+offset_bottom = -480.0
 grow_horizontal = 2
-grow_vertical = 0
+grow_vertical = 2
 texture = ExtResource("7_j7aru")
-patch_margin_left = 7
-patch_margin_top = 7
-patch_margin_right = 7
-patch_margin_bottom = 7
-axis_stretch_horizontal = 1
-axis_stretch_vertical = 1
+patch_margin_left = 10
+patch_margin_top = 10
+patch_margin_right = 10
+patch_margin_bottom = 10
+metadata/_edit_use_anchors_ = true
