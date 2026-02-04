@@ -1,9 +1,6 @@
 extends Unit
 
 # --- Tilemap Layer References ---
-#@onready var movement_label = get_node("../CanvasLayer/MovementLabel")
-#@onready var preview_layer: TileMapLayer = get_node("../PreviewLayer")
-#@onready var selection_layer: TileMapLayer = get_node("../SelectionLayer")
 var movement_label: Label
 var preview_layer: TileMapLayer
 var selection_layer: TileMapLayer

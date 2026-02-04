@@ -99,6 +99,7 @@ func set_grid_occupancy(is_occupied: bool):
 
 
 func teleport_to_grid_pos(new_grid_pos: Vector2i):
+	set_grid_occupancy(false)
 	grid_pos = new_grid_pos
 	set_grid_occupancy(true)
 

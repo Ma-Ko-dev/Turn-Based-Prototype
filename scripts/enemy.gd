@@ -9,7 +9,6 @@ func _ready():
 		self.texture = data.texture
 		self.movement_range = data.movement_range
 		self.initiative_bonus = data.initiative_bonus
-	
 	super._ready()
 	add_to_group("enemies")
 

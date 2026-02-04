@@ -2,25 +2,26 @@ extends Node
 class_name MapManager
 
 # --- References ---
-#@onready var obstacle_layer: TileMapLayer = get_node("../ObstacleLayer")
-#@onready var ground_layer: TileMapLayer = get_node("../GroundLayer")
-
+## Reference to the base terrain layer (used for map boundaries)
 var ground_layer: TileMapLayer
+## Reference to the layer containing walls, trees, or other blockades
 var obstacle_layer: TileMapLayer
 
 
 # --- Grid Configuration ---
+## The size of a single grid cell in pixels (standard for your tileset)
 @export var grid_size: int = 64
+## The AStarGrid2D instance handling pathfinding logic and tile weights
 var astar_grid: AStarGrid2D = AStarGrid2D.new()
 
 
-#func _ready():
-	#setup_astar()
-
-
+## Initializes the manager with layers from the current level and builds the navigation grid
 func setup_level(level_node: Node2D):
+	# Link the required TileMapLayers from the instantiated level
 	ground_layer = level_node.get_node("GroundLayer")
 	obstacle_layer = level_node.get_node("ObstacleLayer")
+	
+	# Generate the A* grid based on the newly assigned layers
 	setup_astar()
 
 

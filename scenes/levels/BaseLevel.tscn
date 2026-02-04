@@ -1,7 +1,7 @@
 [gd_scene format=4 uid="uid://cxfi6slnvx185"]
 
 [ext_resource type="TileSet" uid="uid://nfp0efavgx5g" path="res://assets/main_tileset.tres" id="1_xxmur"]
-[ext_resource type="Script" uid="uid://ddb326dqa48d8" path="res://scripts/debug-spawn_marker.gd" id="2_0plv3"]
+[ext_resource type="Script" uid="uid://ddb326dqa48d8" path="res://scripts/spawn_marker.gd" id="2_0plv3"]
 
 [node name="BaseLevel" type="Node2D" unique_id=1330468739]
 
@@ -45,6 +45,8 @@ tile_set = ExtResource("1_xxmur")
 [node name="PlayerSpawn" type="Marker2D" parent="Markers" unique_id=329869282]
 position = Vector2(32, 32)
 script = ExtResource("2_0plv3")
+is_player_spawn = true
 
 [node name="EnemySpawn" type="Marker2D" parent="Markers" unique_id=1634180193]
 script = ExtResource("2_0plv3")
+is_player_spawn = null
