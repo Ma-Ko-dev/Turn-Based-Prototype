@@ -17,6 +17,8 @@ A tactical 2D turn-based prototype built with **Godot 4.6**. This project is the
 * **Dynamic Initiative System**: Combat order determined by an initiative roll (d20 + bonus), easily managed via a central `TurnManager`.
 * **Resource-Driven Units**: Unit stats (HP, Movement, Initiative) are stored in `.tres` files, allowing for quick creation of new enemy types.
 * **Pathfinding with Costs**: Different tiles can have different movement costs, integrated directly into the AStar logic.
+* **Inherited Level System:** A base level scene that allows for rapid creation of new maps while keeping core layers and logic intact.
+* **Automatic Spawning:** Units (Player & Enemies) are placed automatically via Marker2D nodes during level initialization.
 
 ## 🛠️ Technical Overview
 
