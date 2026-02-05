@@ -80,7 +80,7 @@ func execute_movement(path: Array[Vector2i], cost: float):
 	
 	# Finalize state at the destination
 	grid_pos = path[-1]
-	remaining_movement -= cost
+	remaining_movement -= int(cost)
 	is_moving = false
 	
 	# Mark the new cell as occupied

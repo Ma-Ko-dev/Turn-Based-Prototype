@@ -15,9 +15,9 @@ player_scene = ExtResource("2_uebra")
 
 [node name="MovementLabel" type="Label" parent="CanvasLayer" unique_id=508116740]
 offset_left = 864.0
-offset_top = 192.0
+offset_top = 272.0
 offset_right = 1047.0
-offset_bottom = 215.0
+offset_bottom = 296.0
 text = "Movement placeholder "
 
 [node name="MapManager" type="Node" parent="." unique_id=1552409391]

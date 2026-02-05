@@ -50,13 +50,18 @@ func setup_astar():
 			var ground_data = ground_layer.get_cell_tile_data(coords)
 			if ground_data:
 				var g_cost = ground_data.get_custom_data("movement_cost")
+				if g_cost > 0: final_cost = g_cost
 				# If g_cost is 0 (because someone forgot to set the cost) take 1.0
-				final_cost = g_cost if g_cost > 0 else 1.0
+				#final_cost = g_cost if g_cost > 0 else 1.0
 			# Check decoration layer
 			var deco_data = deco_layer.get_cell_tile_data(coords)
 			if deco_data:
-				var deco_cost = deco_data.get_custom_data("movement_cost")
-				final_cost = max(final_cost, deco_cost)
+				var d_cost = deco_data.get_custom_data("movement_cost")
+				if d_cost > 0: final_cost = d_cost
+				#var deco_cost = deco_data.get_custom_data("movement_cost")				
+				#if deco_cost > 0:
+					#final_cost = deco_cost
+				#final_cost = max(final_cost, deco_cost)
 			# Check obstacle Layer
 			var obs_data = obstacle_layer.get_cell_tile_data(coords)
 			if obs_data:
@@ -64,7 +69,9 @@ func setup_astar():
 				if obs_cost >= 99:
 					astar_grid.set_point_solid(coords, true)
 					continue
-				final_cost = max(final_cost, obs_cost)
+				elif obs_cost > 0:
+					final_cost = obs_cost
+				#final_cost = max(final_cost, obs_cost)
 			astar_grid.set_point_weight_scale(coords, final_cost)
 	# Final update to apply all point modifications
 	astar_grid.update()
