@@ -73,3 +73,10 @@ func setup_astar():
 func get_grid_coords(global_mouse_pos: Vector2) -> Vector2i:
 	var local_pos = ground_layer.to_local(global_mouse_pos)
 	return ground_layer.local_to_map(local_pos)
+
+# Returns the boundaries of the map in world pixels
+func get_map_bounds_pixels() -> Rect2:
+	var rect = ground_layer.get_used_rect()
+	var pos = Vector2(rect.position) * grid_size
+	var size = Vector2(rect.size) * grid_size
+	return Rect2(pos, size)

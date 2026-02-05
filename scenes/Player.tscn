@@ -13,3 +13,5 @@ scale = Vector2(2.25, 2.25)
 texture = SubResource("AtlasTexture_jb3nc")
 region_rect = Rect2(476, 0, 16, 16)
 script = ExtResource("2_3li8b")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=702819825]

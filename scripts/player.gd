@@ -5,11 +5,19 @@ var movement_label: Label
 var preview_layer: TileMapLayer
 var selection_layer: TileMapLayer
 
+# --- Misc ---
+@onready var camera: Camera2D = $Camera2D
+
 
 func _ready():
-	# Initialize a local AStar instance for player-specific path calculations
-	#astar_grid = AStarGrid2D.new()
 	super._ready()
+	if camera:
+		camera.enabled = true
+		# Zoom setting
+		#(1, 1) is default, (0.5, 0,5) is 2x zoom out
+		camera.zoom = Vector2(0.6, 0.6)
+		# Make camera as active camera
+		camera.make_current()
 	update_ui()
 
 
@@ -98,6 +106,14 @@ func setup_player_references(m_manager, m_label, p_layer, s_layer):
 	movement_label = m_label
 	preview_layer = p_layer
 	selection_layer = s_layer
+	# --- Camera Limits ---
+	# Set the camera boundaries based on the map size
+	if camera and map_manager:
+		var bounds = map_manager.get_map_bounds_pixels()
+		camera.limit_left = bounds.position.x
+		camera.limit_top = bounds.position.y
+		camera.limit_right = bounds.end.x
+		camera.limit_bottom = bounds.end.y
 	update_ui()
 
 
