@@ -2,6 +2,34 @@ extends Unit
 
 @export var data: UnitData # Reference to the .tres resource file containing unit stats
 
+# --- Misc ---
+var detection_timer: float = 0.0
+var detection_interval: float = 0.3
+var current_sight_range: int = 0
+
+
+func _process(delta):
+	# only check during exploration
+	if TurnManager.current_state == TurnManager.State.EXPLORATION:
+		detection_timer += delta
+		if detection_timer >= detection_interval:
+			detection_timer = 0.0
+			_check_for_player_exploration()
+
+
+func _check_for_player_exploration():
+	var players = get_tree().get_nodes_in_group("players")
+	if players.is_empty(): return
+	var player = players[0]
+	# calculate distance
+	var diff = (player.grid_pos - grid_pos).abs()
+	var dist = max(diff.x, diff.y)
+	if dist <= current_sight_range:
+		# check if LOS is clear
+		if map_manager.is_line_of_sight_clear(grid_pos, player.grid_pos):
+			print(self.name, " spotted you! Starting combat...")
+			# start combar here
+
 
 func _ready():
 	# Transfer data from Resource to Unit logic
@@ -9,16 +37,9 @@ func _ready():
 		self.texture = data.texture
 		self.movement_range = data.movement_range
 		self.initiative_bonus = data.initiative_bonus
+		self.current_sight_range = data.sight_range
 	super._ready()
 	add_to_group("enemies")
-
-
-func start_new_turn():
-	super.start_new_turn()
-	print(data.name, " is thinking...")
-	# Artificial delay to simulate "thinking" time
-	await get_tree().create_timer(1.0).timeout
-	_ai_logic()
 
 
 func _ai_logic():
@@ -70,14 +91,22 @@ func _ai_logic():
 		_end_turn()
 
 
-func on_movement_finished_logic():
-	# Only proceed with combat flow if we are in combat state
-	if TurnManager.current_state == TurnManager.State.COMBAT:
-		_end_turn()
-
-
 func _end_turn():
 	is_active_unit = false
 	# Small delay before switching turns for better visual pacing
 	await get_tree().create_timer(0.5).timeout
 	TurnManager.next_combat_turn()
+
+
+func start_new_turn():
+	super.start_new_turn()
+	print(data.name, " is thinking...")
+	# Artificial delay to simulate "thinking" time
+	await get_tree().create_timer(1.0).timeout
+	_ai_logic()
+
+
+func on_movement_finished_logic():
+	# Only proceed with combat flow if we are in combat state
+	if TurnManager.current_state == TurnManager.State.COMBAT:
+		_end_turn()

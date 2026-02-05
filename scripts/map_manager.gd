@@ -27,6 +27,7 @@ func setup_level(level_node: Node2D):
 	setup_astar()
 
 
+## Setups the A* system
 func setup_astar():
 	# Define the grid area based on the ground layer size
 	var rect = ground_layer.get_used_rect()
@@ -69,12 +70,71 @@ func setup_astar():
 	astar_grid.update()
 
 
-# Converts global mouse coordinates to grid coordinates (Vector2i)
+## Checks if there are any vision-blocking tiles between two grid coordinates.
+## Returns true if the line of sight is unobstructed.
+func is_line_of_sight_clear(start_grid: Vector2i, end_grid: Vector2i) -> bool:
+	# Get all coordinates on the line between start and end
+	# This is a simplified grid-line check
+	var points = get_line_points(start_grid, end_grid)
+	for coords in points:
+		# Don't block on the start or end tile itself
+		if coords == start_grid or coords == end_grid:
+			continue
+		var tile_data = obstacle_layer.get_cell_tile_data(coords)
+		if tile_data:
+			var blocks = tile_data.get_custom_data("blocks_vision")
+			if blocks != null and blocks == true:
+				return false
+			# Check our new custom data property
+			if tile_data.get_custom_data("blocks_vision"):
+				return false # sight is blocked
+	return true #path is clear
+
+
+## Uses Bresenham's line algorithm to find all grid coordinates between two points.
+## This is highly efficient as it avoids floating-point arithmetic.
+func get_line_points(start: Vector2i, end: Vector2i) -> Array[Vector2i]:
+	var points: Array[Vector2i] = []
+	
+	# Calculate the absolute differences (distance) between start and end
+	var dx = abs(end.x - start.x)
+	var dy = -abs(end.y - start.y) # dy is negative because of the way the error is calculated
+	
+	# Determine the step direction (1 for forward, -1 for backward)
+	var sx = 1 if start.x < end.x else -1
+	var sy = 1 if start.y < end.y else -1
+	
+	# The 'error' variable tracks how far we are from the ideal straight line
+	var err = dx + dy
+	var curr = start # Start at the source position
+	
+	while true:
+		points.append(curr) # Add the current grid cell to the list
+		
+		# If we reached the target cell, stop the loop
+		if curr == end: 
+			break
+		
+		# Helper variable for the error calculation
+		var e2 = 2 * err
+		
+		# Decide whether to move horizontally or vertically (or both for diagonals)
+		if e2 >= dy: # Step in X direction
+			err += dy
+			curr.x += sx
+		if e2 <= dx: # Step in Y direction
+			err += dx
+			curr.y += sy
+			
+	return points
+
+
+## Converts global mouse coordinates to grid coordinates (Vector2i)
 func get_grid_coords(global_mouse_pos: Vector2) -> Vector2i:
 	var local_pos = ground_layer.to_local(global_mouse_pos)
 	return ground_layer.local_to_map(local_pos)
 
-# Returns the boundaries of the map in world pixels
+## Returns the boundaries of the map in world pixels
 func get_map_bounds_pixels() -> Rect2:
 	var rect = ground_layer.get_used_rect()
 	var pos = Vector2(rect.position) * grid_size
