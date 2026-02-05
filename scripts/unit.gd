@@ -36,7 +36,6 @@ func _ready():
 	remaining_movement = movement_range
 	if map_manager:
 		# Calculate initial grid position based on the starting world position in the editor
-		#grid_pos = Vector2i(floor(position.x / grid_size), floor(position.y / grid_size))
 		# Wait for a frame to ensure MapManager has initialized the AStar grid before occupying a cell
 		await get_tree().process_frame
 		set_grid_occupancy(true)
