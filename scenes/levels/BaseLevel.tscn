@@ -49,4 +49,3 @@ is_player_spawn = true
 
 [node name="EnemySpawn" type="Marker2D" parent="Markers" unique_id=1634180193]
 script = ExtResource("2_0plv3")
-is_player_spawn = null

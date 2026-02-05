@@ -49,7 +49,7 @@ func get_path_and_cost(target_cell: Vector2i):
 	var path = astar_grid.get_id_path(grid_pos, target_cell)
 	astar_grid.set_point_solid(grid_pos, true)
 	
-	var total_cost = 0
+	var total_cost = 0.0
 	# Accumulate costs from all tiles in the path (excluding the starting tile)
 	for i in range(1, path.size()):
 		var cell = path[i]
@@ -59,9 +59,9 @@ func get_path_and_cost(target_cell: Vector2i):
 
 
 # --- Core Movement Logic ---
-func execute_movement(path: Array[Vector2i], cost: int):
+func execute_movement(path: Array[Vector2i], cost: float):
 	# Cancel if the path is invalid or too short
-	if path.size() <= 1:
+	if path.size() <= 1 or cost > remaining_movement:
 		is_moving = false
 		on_movement_finished_logic()
 		return

@@ -7,6 +7,7 @@ extends Node2D
 
 @onready var map_manager = $MapManager
 var player: Unit
+var spawn_counts: Dictionary = {}
 
 
 func _ready():
@@ -72,6 +73,14 @@ func spawn_enemy(marker: SpawnMarker, container):
 	# Assign the specific stat resource (e.g., Goblin.tres) before the enemy enters the tree
 	if marker.unit_data:
 		enemy.data = marker.unit_data
+		# Unique naming logic
+		var unit_type = enemy.data.name #for example "Goblin"
+		# Initialize count if type is new
+		if not spawn_counts.has(unit_type):
+			spawn_counts[unit_type] = 1
+		# assign name and increment counter
+		enemy.name = unit_type + " " + str(spawn_counts[unit_type])
+		spawn_counts[unit_type] += 1
 	else:
 		print("WARNING: No unit_data assigned to marker: ", marker.name)
 	
