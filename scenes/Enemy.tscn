@@ -9,6 +9,6 @@ region = Rect2(612, 357, 16, 16)
 
 [node name="Enemy" type="Sprite2D" unique_id=1873449816]
 z_index = 10
-scale = Vector2(2.25, 2.25)
+scale = Vector2(3, 3)
 texture = SubResource("AtlasTexture_ft8do")
 script = ExtResource("1_55jtl")

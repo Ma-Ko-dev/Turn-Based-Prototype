@@ -23,7 +23,17 @@ class_name UnitData
 @export_range(1, 30) var wisdom: int = 10
 @export_range(1, 30) var charisma: int = 10
 
+# --- AC Bonusses ---
+@export_group("AC Bonus")
+@export var armor_bonus: int = 0 # from actual armor
+@export var shield_bonus: int = 0
+@export var size_bonus: int = 0
 
-# helper for stat modi
+
+## Helper: Pathfinder modifier calculation
 func get_modifier(score: int) -> int:
 	return floor((score - 10) /  2.0)
+
+## The "True" AC of this unit type
+func get_armor_class() -> int:
+	return 10 + get_modifier(dexterity) + armor_bonus + shield_bonus + size_bonus

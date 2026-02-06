@@ -107,9 +107,8 @@ func execute_movement(path: Array[Vector2i], cost: float):
 func check_hit(attack_roll: int) -> bool:
 	# Default AC is 10 if no data is present
 	var ac = 10
-	if data:
-		# AC = 10 + Dexterity Modifier (Standard Pathfinder)
-		ac = 10 + data.get_modifier(data.dexterity)
+	if not data: return attack_roll >= ac
+	ac = data.get_armor_class()
 	var is_hit = attack_roll >= ac
 	# Log the result for debugging (will be moved to UI Log later)
 	print(self.name, " (AC ", ac, ") was targeted. Roll: ", attack_roll, " -> Hit: ", is_hit)
