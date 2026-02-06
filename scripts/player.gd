@@ -58,6 +58,7 @@ func _input(event):
 	
 	# Turn End & Mode Switching
 	if Input.is_action_just_pressed("ui_accept"): # Default 'Enter'
+		if is_moving: return
 		if TurnManager.current_state == TurnManager.State.EXPLORATION:
 			# Exploration Mode: Refresh movement and finish 'turn'
 			start_new_turn()
