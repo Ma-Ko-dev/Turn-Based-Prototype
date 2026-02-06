@@ -10,6 +10,7 @@ var selection_layer: TileMapLayer
 
 
 func _ready():
+	movement_changed.connect(_on_movement_changed)
 	super._ready()
 	if camera:
 		camera.enabled = true
@@ -150,12 +151,17 @@ func update_ui():
 		movement_label.text = "Movement: " + str(remaining_movement)
 
 
+# Helper function for the signal
+func _on_movement_changed(_new_amount: int):
+	update_ui()
+
+
 func start_new_turn():
 	super.start_new_turn()
 	remaining_movement = movement_range
 	is_selected = true # Auto-select unit when its turn starts
 	update_selection_visual()
-	update_ui()
+	#update_ui()
 	print("New Turn! Movement points refreshed: ", remaining_movement)
 
 
@@ -166,6 +172,6 @@ func on_movement_start_logic():
 
 func on_movement_finished_logic():
 	# Update UI and visuals once movement stops
-	update_ui()
+	#update_ui()
 	preview_layer.clear()
 	update_selection_visual()

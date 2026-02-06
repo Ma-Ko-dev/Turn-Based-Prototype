@@ -14,7 +14,11 @@ var grid_pos: Vector2i:
 var max_health: int
 var movement_range: int
 var initiative_bonus: int
-var remaining_movement: int = 0
+var remaining_movement: int = 0:
+	set(value):
+		remaining_movement = value
+		movement_changed.emit(remaining_movement)
+signal movement_changed(new_amount: int)
 var current_initiative_score: int = 0
 var is_moving: bool = false
 var is_selected: bool = false
@@ -41,12 +45,12 @@ func _ready():
 		movement_range = data.movement_range
 		initiative_bonus = data.initiative_bonus
 		max_health = data.health
-	remaining_movement = movement_range
 	if map_manager:
 		# Calculate initial grid position based on the starting world position in the editor
 		# Wait for a frame to ensure MapManager has initialized the AStar grid before occupying a cell
 		await get_tree().process_frame
 		set_grid_occupancy(true)
+	remaining_movement = movement_range
 
 
 # --- Pathfinding ---
