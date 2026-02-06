@@ -31,7 +31,7 @@ A tactical 2D turn-based prototype built with **Godot 4.6**. This project is the
 1. Clone the repository.
 2. Open the project in Godot 4.x.
 3. Press 'Run'
-4. Press `Enter/Space` in Exploration mode to cycle turns or `Tab` to force-start combat (Which just makes the enemies chase you)
+4. Press `Enter/Space` in Exploration mode to cycle turns. Combat will start when an enemy spotted you.
 
 ## ⚖️ License
 
