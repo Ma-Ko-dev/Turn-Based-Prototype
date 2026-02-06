@@ -9,7 +9,7 @@ region = Rect2(476, 0, 16, 16)
 
 [node name="PlayerToken" type="Sprite2D" unique_id=2037288528]
 z_index = 10
-scale = Vector2(2.25, 2.25)
+scale = Vector2(3, 3)
 texture = SubResource("AtlasTexture_jb3nc")
 region_rect = Rect2(476, 0, 16, 16)
 script = ExtResource("2_3li8b")

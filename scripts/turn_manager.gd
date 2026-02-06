@@ -21,15 +21,21 @@ func end_exploration_turn():
 
 
 # --- Combat Logic ---
-func start_combat():
+## Starts combat with a specific list of enemies
+func start_combat(triggered_enemies: Array[Unit], starter: Unit):
+	if current_state == State.COMBAT: return # already in combat
+	
 	current_state = State.COMBAT
+	# later in UI
+	print(starter.name, " spotted you! Starting combat...")
 	var participants: Array[Unit] = []
 	
-	# Collect all participants from relevant groups
 	for node in get_tree().get_nodes_in_group("players"):
 		participants.append(node as Unit)
-	for node in get_tree().get_nodes_in_group("enemies"):
-		participants.append(node as Unit)
+	for enemy in triggered_enemies:
+		participants.append(enemy as Unit)
+		if enemy != starter:
+			print(enemy.name, " was alarmed by ", starter.name, "!")
 	
 	# Calculate Initiative: Bonus + d20 roll
 	for unit in participants:
@@ -61,7 +67,7 @@ func _start_active_unit_turn():
 	active_unit_changed.emit(current_unit)
 	
 	current_unit.start_new_turn()
-	print("Currently active: ", current_unit.name)
+	#print("Currently active: ", current_unit.name)
 
 
 func next_combat_turn():
@@ -78,6 +84,7 @@ func next_combat_turn():
 
 func end_combat():
 	current_state = State.EXPLORATION
+	round_count = 0
 	combat_queue.clear()
 	
 	# Notify UI to hide combat-specific elements

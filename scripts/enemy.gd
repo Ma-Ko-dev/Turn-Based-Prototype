@@ -17,6 +17,17 @@ func _process(delta):
 			_check_for_player_exploration()
 
 
+func _ready():
+	# Transfer data from Resource to Unit logic
+	if data:
+		self.texture = data.texture
+		self.movement_range = data.movement_range
+		self.initiative_bonus = data.initiative_bonus
+		self.current_sight_range = data.sight_range
+	super._ready()
+	add_to_group("enemies")
+
+
 func _check_for_player_exploration():
 	var players = get_tree().get_nodes_in_group("players")
 	if players.is_empty(): return
@@ -27,19 +38,18 @@ func _check_for_player_exploration():
 	if dist <= current_sight_range:
 		# check if LOS is clear
 		if map_manager.is_line_of_sight_clear(grid_pos, player.grid_pos):
-			print(self.name, " spotted you! Starting combat...")
-			# start combar here
+			_trigger_combat_neighborhood()
 
 
-func _ready():
-	# Transfer data from Resource to Unit logic
-	if data:
-		self.texture = data.texture
-		self.movement_range = data.movement_range
-		self.initiative_bonus = data.initiative_bonus
-		self.current_sight_range = data.sight_range
-	super._ready()
-	add_to_group("enemies")
+func _trigger_combat_neighborhood():
+	var triggered_enemies: Array[Unit] = []
+	var alert_radius = 3
+	var all_enemies = get_tree().get_nodes_in_group("enemies")
+	for enemy in all_enemies:
+		var d = (enemy.grid_pos - grid_pos).abs()
+		if max(d.x, d.y) <= alert_radius:
+			triggered_enemies.append(enemy)
+	TurnManager.start_combat(triggered_enemies, self)
 
 
 func _ai_logic():
@@ -100,9 +110,9 @@ func _end_turn():
 
 func start_new_turn():
 	super.start_new_turn()
-	print(data.name, " is thinking...")
+	print(self.name, " is thinking...")
 	# Artificial delay to simulate "thinking" time
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(1.5).timeout
 	_ai_logic()
 
 

@@ -70,9 +70,9 @@ func _input(event):
 			TurnManager.next_combat_turn()
 	
 	# Debug/Manual Trigger: Start Combat
-	if Input.is_action_just_pressed("ui_focus_next"): # Default 'Tab'
-		if TurnManager.current_state == TurnManager.State.EXPLORATION:
-			TurnManager.start_combat()
+	#if Input.is_action_just_pressed("ui_focus_next"): # Default 'Tab'
+		#if TurnManager.current_state == TurnManager.State.EXPLORATION:
+			#TurnManager.start_combat()
 
 
 func _process(_delta):
