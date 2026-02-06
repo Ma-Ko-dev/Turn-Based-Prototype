@@ -1,9 +1,8 @@
 extends Sprite2D
 class_name Unit
 
-# --- Constants & Exports ---
-@export var movement_range: int = 6
-@export var initiative_bonus: int = 0
+
+@export var data: UnitData
 
 # --- State Variables ---
 var grid_pos: Vector2i: 
@@ -12,6 +11,9 @@ var grid_pos: Vector2i:
 		# Synchronize pixel position with grid coordinates whenever grid_pos changes
 		position = Vector2(grid_pos) * grid_size + Vector2(grid_size / 2.0, grid_size / 2.0)
 
+var max_health: int
+var movement_range: int
+var initiative_bonus: int
 var remaining_movement: int = 0
 var current_initiative_score: int = 0
 var is_moving: bool = false
@@ -33,6 +35,13 @@ var grid_size: float:
 
 # --- Lifecycle Functions ---
 func _ready():
+	if not map_manager:
+		await get_tree().process_frame
+	if data:
+		texture = data.texture
+		movement_range = data.movement_range
+		initiative_bonus = data.initiative_bonus
+		max_health = data.health
 	remaining_movement = movement_range
 	if map_manager:
 		# Calculate initial grid position based on the starting world position in the editor

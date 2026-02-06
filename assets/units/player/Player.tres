@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="UnitData" format=3 uid="uid://deqdcl244gojl"]
+
+[ext_resource type="Script" uid="uid://bkrq17yyhro0b" path="res://scripts/UnitData.gd" id="1_ohqoi"]
+[ext_resource type="Texture2D" uid="uid://cvbmqdqxe1tgm" path="res://assets/colored-transparent.png" id="2_lkt8u"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5koo4"]
+atlas = ExtResource("2_lkt8u")
+region = Rect2(459, 0, 16, 16)
+
+[resource]
+script = ExtResource("1_ohqoi")
+name = "ThisIsThePlayerName"
+texture = SubResource("AtlasTexture_5koo4")
+health = 12
+movement_range = 6
+metadata/_custom_type_script = "uid://bkrq17yyhro0b"

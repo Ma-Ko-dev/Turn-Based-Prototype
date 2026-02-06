@@ -1,6 +1,6 @@
 extends Unit
 
-@export var data: UnitData # Reference to the .tres resource file containing unit stats
+#@export var data: UnitData # Reference to the .tres resource file containing unit stats
 
 # --- Misc ---
 var detection_timer: float = 0.0
@@ -18,13 +18,13 @@ func _process(delta):
 
 
 func _ready():
+	super._ready()
 	# Transfer data from Resource to Unit logic
 	if data:
-		self.texture = data.texture
-		self.movement_range = data.movement_range
-		self.initiative_bonus = data.initiative_bonus
-		self.current_sight_range = data.sight_range
-	super._ready()
+		#self.texture = data.texture
+		#self.movement_range = data.movement_range
+		#self.initiative_bonus = data.initiative_bonus
+		current_sight_range = data.sight_range
 	add_to_group("enemies")
 
 
@@ -97,7 +97,7 @@ func _ai_logic():
 		execute_movement(path, cost)
 	else:
 		# Log if already in range or completely blocked
-		print(data.name, " cannot move or is already at the destination.")
+		print(self.name, " cannot move or is already at the destination.")
 		_end_turn()
 
 

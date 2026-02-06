@@ -1,17 +1,13 @@
 [gd_scene format=3 uid="uid://cqdd83pfe3aqt"]
 
-[ext_resource type="Texture2D" uid="uid://cvbmqdqxe1tgm" path="res://assets/colored-transparent.png" id="1_v6fml"]
 [ext_resource type="Script" uid="uid://cifrkgcm7e1bf" path="res://scripts/player.gd" id="2_3li8b"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_jb3nc"]
-atlas = ExtResource("1_v6fml")
-region = Rect2(476, 0, 16, 16)
+[ext_resource type="Resource" uid="uid://deqdcl244gojl" path="res://assets/units/player/Player.tres" id="2_v6fml"]
 
 [node name="PlayerToken" type="Sprite2D" unique_id=2037288528]
 z_index = 10
 scale = Vector2(3, 3)
-texture = SubResource("AtlasTexture_jb3nc")
 region_rect = Rect2(476, 0, 16, 16)
 script = ExtResource("2_3li8b")
+data = ExtResource("2_v6fml")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=702819825]
