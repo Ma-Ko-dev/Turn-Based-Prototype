@@ -27,7 +27,7 @@ func start_combat(triggered_enemies: Array[Unit], starter: Unit):
 	
 	current_state = State.COMBAT
 	# later in UI
-	print(starter.name, " spotted you! Starting combat...")
+	print(starter.display_name, " spotted you! Starting combat...")
 	var participants: Array[Unit] = []
 	
 	for node in get_tree().get_nodes_in_group("players"):
@@ -35,11 +35,16 @@ func start_combat(triggered_enemies: Array[Unit], starter: Unit):
 	for enemy in triggered_enemies:
 		participants.append(enemy as Unit)
 		if enemy != starter:
-			print(enemy.name, " was alarmed by ", starter.name, "!")
+			print(enemy.display_name, " was alarmed by ", starter.name, "!")
 	
 	# Calculate Initiative: Bonus + d20 roll
 	for unit in participants:
-		unit.current_initiative_score = unit.initiative_bonus + randi_range(1, 20)
+		#unit.current_initiative_score = unit.initiative_bonus + randi_range(1, 20)
+		#unit.current_initiative_score = Dice.roll(1, 20, unit.initiative_bonus)
+		if unit.data:
+			unit.current_initiative_score = Dice.roll(1, 20, unit.data.get_initiative_bonus())
+		else:
+			unit.current_initiative_score = Dice.roll(1, 20, 0)
 	
 	# Sort participants by initiative score (highest first)
 	participants.sort_custom(func(a, b): 

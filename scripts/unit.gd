@@ -10,10 +10,11 @@ var grid_pos: Vector2i:
 		grid_pos = value
 		# Synchronize pixel position with grid coordinates whenever grid_pos changes
 		position = Vector2(grid_pos) * grid_size + Vector2(grid_size / 2.0, grid_size / 2.0)
-
+var display_name: String = ""
 var max_health: int
+var current_health: int
 var movement_range: int
-var initiative_bonus: int
+#var initiative_bonus: int
 var remaining_movement: int = 0:
 	set(value):
 		remaining_movement = value
@@ -43,8 +44,12 @@ func _ready():
 	if data:
 		texture = data.texture
 		movement_range = data.movement_range
-		initiative_bonus = data.initiative_bonus
-		max_health = data.health
+		#initiative_bonus = data.initiative_bonus
+		max_health = data.calculate_initial_hp()
+		current_health = max_health
+		if display_name == "":
+			display_name = data.name
+		print(display_name, " initialized with ", current_health, " HP") #debug
 	if map_manager:
 		# Calculate initial grid position based on the starting world position in the editor
 		# Wait for a frame to ensure MapManager has initialized the AStar grid before occupying a cell

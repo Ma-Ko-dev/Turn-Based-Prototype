@@ -79,7 +79,10 @@ func spawn_enemy(marker: SpawnMarker, container):
 		if not spawn_counts.has(unit_type):
 			spawn_counts[unit_type] = 1
 		# assign name and increment counter
-		enemy.name = unit_type + " " + str(spawn_counts[unit_type])
+		var unique_name = unit_type + " " + str(spawn_counts[unit_type])
+		enemy.name = unique_name # for scene tree
+		enemy.display_name = unique_name # for logs
+		#enemy.name = unit_type + " " + str(spawn_counts[unit_type])
 		spawn_counts[unit_type] += 1
 	else:
 		print("WARNING: No unit_data assigned to marker: ", marker.name)

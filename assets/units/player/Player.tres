@@ -5,12 +5,17 @@
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5koo4"]
 atlas = ExtResource("2_lkt8u")
-region = Rect2(459, 0, 16, 16)
+region = Rect2(476, 0, 16, 16)
 
 [resource]
 script = ExtResource("1_ohqoi")
-name = "ThisIsThePlayerName"
+name = "Hero"
 texture = SubResource("AtlasTexture_5koo4")
-health = 12
 movement_range = 6
+strength = 18
+dexterity = 14
+constitution = 14
+wisdom = 12
+armor_bonus = 5
+shield_bonus = 2
 metadata/_custom_type_script = "uid://bkrq17yyhro0b"
