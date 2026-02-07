@@ -10,8 +10,10 @@ region = Rect2(425, 34, 16, 16)
 [resource]
 script = ExtResource("1_ksvt6")
 name = "Goblin"
+size = 3
 texture = SubResource("AtlasTexture_ckaa2")
 movement_range = 6
+base_attack_bonus = 1
 strength = 11
 dexterity = 15
 constitution = 12
@@ -19,5 +21,4 @@ wisdom = 9
 charisma = 6
 armor_bonus = 2
 shield_bonus = 1
-size_bonus = 1
 metadata/_custom_type_script = "uid://bkrq17yyhro0b"
