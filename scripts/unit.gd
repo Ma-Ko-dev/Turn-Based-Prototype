@@ -153,6 +153,8 @@ func take_damage(amount: int):
 func die():
 	print(display_name, " has been defeated!")
 	set_grid_occupancy(false)
+	if TurnManager.current_state == TurnManager.State.COMBAT:
+		TurnManager.remove_unit_from_combat(self)
 	queue_free()
 
 

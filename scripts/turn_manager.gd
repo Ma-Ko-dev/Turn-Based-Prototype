@@ -60,6 +60,13 @@ func start_combat(triggered_enemies: Array[Unit], starter: Unit):
 
 
 func _start_active_unit_turn():
+	# Security check: skip dead objects that might still be in queue
+	while active_unit_index < combat_queue.size() and not is_instance_valid(combat_queue[active_unit_index]):
+		combat_queue.remove_at(active_unit_index)
+	if combat_queue.is_empty():
+		end_combat()
+		return	
+	
 	var current_unit = combat_queue[active_unit_index]
 	
 	# Ensure only the active unit has the 'is_active_unit' flag
@@ -94,3 +101,18 @@ func end_combat():
 	
 	# Notify UI to hide combat-specific elements
 	turn_mode_changed.emit(false)
+
+
+## Removes a unit from combat (e.g., when it dies)
+func remove_unit_from_combat(unit: Unit):
+	var index = combat_queue.find(unit)
+	if index != -1:
+		combat_queue.remove_at(index)
+		# If the deleted unit was BEFORE or IS the current active unit, 
+		# we must adjust the index so we don't skip anyone
+		if index <= active_unit_index and active_unit_index > 0:
+			active_unit_index -= 1
+	# If no enemies are left, end combat
+	var enemies = combat_queue.filter(func(u): return u.is_in_group("enemies"))
+	if enemies.is_empty():
+		end_combat()
