@@ -105,7 +105,6 @@ func end_combat():
 	current_state = State.EXPLORATION
 	round_count = 0
 	combat_queue.clear()
-	
 	# Notify UI to hide combat-specific elements
 	turn_mode_changed.emit(false)
 

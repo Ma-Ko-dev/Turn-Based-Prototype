@@ -33,7 +33,6 @@ func setup_astar():
 	var rect = ground_layer.get_used_rect()
 	astar_grid.region = rect
 	astar_grid.cell_size = Vector2(grid_size, grid_size)
-	
 	# Using Chebyshev heuristic for grid-based movement
 	astar_grid.default_compute_heuristic = AStarGrid2D.HEURISTIC_CHEBYSHEV
 	
@@ -58,10 +57,6 @@ func setup_astar():
 			if deco_data:
 				var d_cost = deco_data.get_custom_data("movement_cost")
 				if d_cost > 0: final_cost = d_cost
-				#var deco_cost = deco_data.get_custom_data("movement_cost")				
-				#if deco_cost > 0:
-					#final_cost = deco_cost
-				#final_cost = max(final_cost, deco_cost)
 			# Check obstacle Layer
 			var obs_data = obstacle_layer.get_cell_tile_data(coords)
 			if obs_data:
@@ -71,7 +66,6 @@ func setup_astar():
 					continue
 				elif obs_cost > 0:
 					final_cost = obs_cost
-				#final_cost = max(final_cost, obs_cost)
 			astar_grid.set_point_weight_scale(coords, final_cost)
 	# Final update to apply all point modifications
 	astar_grid.update()

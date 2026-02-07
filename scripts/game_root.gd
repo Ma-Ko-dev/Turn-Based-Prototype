@@ -65,7 +65,6 @@ func spawn_player(marker, container, level):
 func spawn_enemy(marker: SpawnMarker, container):
 	if not marker.unit_scene:
 		return
-		
 	# Instantiate the base enemy scene (e.g., Enemy.tscn)
 	var enemy = marker.unit_scene.instantiate()
 	

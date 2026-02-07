@@ -80,7 +80,6 @@ func execute_movement(path: Array[Vector2i], cost: float):
 		is_moving = false
 		on_movement_finished_logic()
 		return
-		
 	# Unmark the old cell as occupied so other units could potentially pass through
 	set_grid_occupancy(false)
 	is_moving = true

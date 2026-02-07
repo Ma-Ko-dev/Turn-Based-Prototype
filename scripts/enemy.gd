@@ -19,9 +19,6 @@ func _ready():
 	super._ready()
 	# Transfer data from Resource to Unit logic
 	if data:
-		#self.texture = data.texture
-		#self.movement_range = data.movement_range
-		#self.initiative_bonus = data.initiative_bonus
 		current_sight_range = data.sight_range
 	add_to_group("enemies")
 

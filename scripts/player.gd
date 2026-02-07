@@ -79,7 +79,6 @@ func _input(event):
 		if is_moving: return
 		if TurnManager.current_state == TurnManager.State.EXPLORATION:
 			# Exploration Mode: Refresh movement and finish 'turn'
-			#start_new_turn()
 			TurnManager.end_exploration_turn()
 		else:
 			# Combat Mode: Clean up visuals and pass turn to next unit
@@ -128,7 +127,6 @@ func setup_player_references(m_manager, p_layer, s_layer):
 		camera.limit_top = bounds.position.y
 		camera.limit_right = bounds.end.x
 		camera.limit_bottom = bounds.end.y
-	#update_ui()
 
 
 func draw_path_preview(path: Array[Vector2i]):
