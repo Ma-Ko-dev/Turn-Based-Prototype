@@ -1,7 +1,6 @@
 extends Unit
 
 # --- Tilemap Layer References ---
-var movement_label: Label
 var preview_layer: TileMapLayer
 var selection_layer: TileMapLayer
 
@@ -19,7 +18,7 @@ func _ready():
 		camera.zoom = Vector2(0.6, 0.6)
 		# Make camera as active camera
 		camera.make_current()
-	update_ui()
+	#update_ui()
  
 
 func _input(event):
@@ -110,9 +109,8 @@ func _process(_delta):
 		preview_layer.clear()
 
 
-func setup_player_references(m_manager, m_label, p_layer, s_layer):
+func setup_player_references(m_manager, p_layer, s_layer):
 	map_manager = m_manager
-	movement_label = m_label
 	preview_layer = p_layer
 	selection_layer = s_layer
 	# --- Camera Limits ---
@@ -123,7 +121,7 @@ func setup_player_references(m_manager, m_label, p_layer, s_layer):
 		camera.limit_top = bounds.position.y
 		camera.limit_right = bounds.end.x
 		camera.limit_bottom = bounds.end.y
-	update_ui()
+	#update_ui()
 
 
 func draw_path_preview(path: Array[Vector2i]):
@@ -153,15 +151,15 @@ func update_preview(target_cell, distance):
 	preview_layer.set_cell(target_cell, 0, Vector2i(27,21))
 
 
-func update_ui():
+#func update_ui():
 	# Sync the UI label with remaining movement points
-	if movement_label:
-		movement_label.text = "Movement: " + str(remaining_movement)
+	#pass
 
 
 # Helper function for the signal
-func _on_movement_changed(_new_amount: int):
-	update_ui()
+func _on_movement_changed(new_amount: int):
+	#update_ui()
+	GameEvents.log_requested.emit("Hero moved. " + str(new_amount) + " movement left.")
 
 
 func start_new_turn():

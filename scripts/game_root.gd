@@ -49,7 +49,6 @@ func spawn_player(marker, container, level):
 	# Dependency Injection: Providing the player with required system nodes
 	player.setup_player_references(
 		map_manager,
-		$CanvasLayer/MovementLabel,
 		level.get_node("PreviewLayer"),
 		level.get_node("SelectionLayer")
 	)

@@ -1,7 +1,5 @@
 extends Unit
 
-#@export var data: UnitData # Reference to the .tres resource file containing unit stats
-
 # --- Misc ---
 var detection_timer: float = 0.0
 var detection_interval: float = 0.3
