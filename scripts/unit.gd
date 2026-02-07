@@ -44,7 +44,6 @@ func _ready():
 	if data:
 		texture = data.texture
 		movement_range = data.movement_range
-		#initiative_bonus = data.initiative_bonus
 		max_health = data.calculate_initial_hp()
 		current_health = max_health
 		if display_name == "":
@@ -130,7 +129,7 @@ func attack_target(target: Unit):
 	# 1d20 + Strength Modifier + BAB
 	var roll = Dice.roll(1, 20, data.get_attack_bonus())
 	if target.check_hit(roll):
-		print("HIT! Rolled ", roll)
+		GameEvents.log_requested.emit("CRITICAL HIT! Rolled %s" % roll if roll >= 20 else "HIT! Rolled %s" % roll)
 		# Calculate damage: 1d8 (standard) + Strength modifier
 		var damage_roll = Dice.roll(data.damage_dice_count, data.damage_dice_sides, data.get_modifier(data.strength))
 		# Ensure at least 1 damage is dealt even with low strength

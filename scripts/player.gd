@@ -3,14 +3,15 @@ extends Unit
 # --- Tilemap Layer References ---
 var preview_layer: TileMapLayer
 var selection_layer: TileMapLayer
+var _last_movement_amount: int = 0
 
 # --- Misc ---
 @onready var camera: Camera2D = $Camera2D
 
 
 func _ready():
-	movement_changed.connect(_on_movement_changed)
 	super._ready()
+	movement_changed.connect(_on_movement_changed)
 	if camera:
 		camera.enabled = true
 		# Zoom setting
@@ -18,7 +19,7 @@ func _ready():
 		camera.zoom = Vector2(0.6, 0.6)
 		# Make camera as active camera
 		camera.make_current()
-	#update_ui()
+		await get_tree().process_frame
  
 
 func _input(event):
@@ -151,14 +152,12 @@ func update_preview(target_cell, distance):
 	preview_layer.set_cell(target_cell, 0, Vector2i(27,21))
 
 
-#func update_ui():
-	# Sync the UI label with remaining movement points
-	#pass
-
-
 # Helper function for the signal
 func _on_movement_changed(new_amount: int):
-	#update_ui()
+	if new_amount >= _last_movement_amount:
+		_last_movement_amount = new_amount
+		return
+	_last_movement_amount = new_amount
 	GameEvents.log_requested.emit("Hero moved. " + str(new_amount) + " movement left.")
 
 
@@ -167,7 +166,6 @@ func start_new_turn():
 	remaining_movement = movement_range
 	is_selected = true # Auto-select unit when its turn starts
 	update_selection_visual()
-	#update_ui()
 	GameEvents.log_requested.emit("--- Player Turn: Movement refreshed (%s) ---" % remaining_movement)
 
 
@@ -178,6 +176,5 @@ func on_movement_start_logic():
 
 func on_movement_finished_logic():
 	# Update UI and visuals once movement stops
-	#update_ui()
 	preview_layer.clear()
 	update_selection_visual()
