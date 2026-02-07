@@ -117,7 +117,7 @@ func check_hit(attack_roll: int) -> bool:
 	ac = data.get_armor_class()
 	var is_hit = attack_roll >= ac
 	# Log the result for debugging (will be moved to UI Log later)
-	print(self.name, " (AC ", ac, ") was targeted. Roll: ", attack_roll, " -> Hit: ", is_hit)
+	print(self.display_name, " (AC ", ac, ") was targeted. Roll: ", attack_roll, " -> Hit: ", is_hit)
 	return is_hit
 
 

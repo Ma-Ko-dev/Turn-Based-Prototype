@@ -61,6 +61,12 @@ func _ai_logic():
 		
 	var target_player = players[0]
 	
+	# Check if already in range to attack before moving
+	if is_adjacent_to(target_player):
+		attack_target(target_player)
+		_end_turn()
+		return
+	
 	# Define adjacent tiles (Up, Down, Left, Right)
 	# Note: Diagonals are currently excluded to prevent "squeezing" through corners
 	var neighbors = [
@@ -119,4 +125,10 @@ func start_new_turn():
 func on_movement_finished_logic():
 	# Only proceed with combat flow if we are in combat state
 	if TurnManager.current_state == TurnManager.State.COMBAT:
+		# Check for attack after movement finishes
+		var players = get_tree().get_nodes_in_group("players")
+		if not players.is_empty():
+			var target_player = players[0]
+			if is_adjacent_to(target_player):
+				attack_target(target_player)
 		_end_turn()
