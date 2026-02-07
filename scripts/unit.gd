@@ -14,7 +14,6 @@ var display_name: String = ""
 var max_health: int
 var current_health: int
 var movement_range: int
-#var initiative_bonus: int
 var remaining_movement: int = 0:
 	set(value):
 		remaining_movement = value
@@ -24,6 +23,7 @@ var current_initiative_score: int = 0
 var is_moving: bool = false
 var is_selected: bool = false
 var is_active_unit: bool = false
+var has_attacked: bool = false
 
 # --- References ---
 var map_manager: MapManager
@@ -123,6 +123,9 @@ func check_hit(attack_roll: int) -> bool:
 
 ## Handles the attack logic when right-clicking an enemy
 func attack_target(target: Unit):
+	if has_attacked:
+		print(display_name, " has no actions left to attack!")
+		return
 	print(display_name, " attacks ", target.display_name, "!")
 	# 1d20 + Strength Modifier + BAB
 	var roll = Dice.roll(1, 20, data.get_attack_bonus())
@@ -135,6 +138,7 @@ func attack_target(target: Unit):
 		target.take_damage(final_damage)
 	else:
 		print(display_name, " missed ", target.display_name)
+	has_attacked = true
 
 
 ## Reduces health and checks for death
@@ -169,6 +173,7 @@ func teleport_to_grid_pos(new_grid_pos: Vector2i):
 func start_new_turn():
 	# Reset movement points; this function is typically overridden in subclasses
 	remaining_movement = movement_range
+	has_attacked = false
 
 
 # Checks if another unit is in melee range (adjacent or diagonal)
