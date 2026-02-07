@@ -85,6 +85,9 @@ func _start_active_unit_turn():
 
 
 func next_combat_turn():
+	# If combat ended during the last action (e.g. death), stop here
+	if current_state == State.EXPLORATION:
+		return
 	active_unit_index += 1
 	
 	# If we reach the end of the queue, start a new round

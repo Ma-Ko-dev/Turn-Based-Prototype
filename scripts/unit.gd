@@ -158,9 +158,12 @@ func die():
 	if is_in_group("players"):
 		# Hide the player and stop processing logic
 		visible = false
+		is_selected = false
 		set_process(false)
 		set_physics_process(false)
 		remove_from_group("players")
+		if has_method("update_selection_visual"):
+			call("update_selection_visual")
 	else:
 		queue_free()
 

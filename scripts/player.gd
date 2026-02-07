@@ -20,9 +20,12 @@ func _ready():
 		# Make camera as active camera
 		camera.make_current()
 	update_ui()
-
+ 
 
 func _input(event):
+	# Do not allow any interaction if the player is dead/hidden
+	if not visible:
+		return
 	# Ignore input if it's combat and not this unit's turn
 	if TurnManager.current_state == TurnManager.State.COMBAT and not is_active_unit:
 		return
