@@ -24,11 +24,16 @@ TurnManager="*uid://di8s2awyxevhp"
 window/size/viewport_width=1280
 window/size/viewport_height=720
 window/stretch/mode="canvas_items"
+mouse_cursor/custom_image="uid://bnv1j28jh6vaf"
 
 [global_group]
 
 players=""
 enemies=""
+
+[gui]
+
+theme/custom="uid://k7s6tokk7ce2"
 
 [input]
 

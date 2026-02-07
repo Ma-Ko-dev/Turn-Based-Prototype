@@ -1,0 +1,7 @@
+[gd_resource type="Theme" format=3 uid="uid://k7s6tokk7ce2"]
+
+[ext_resource type="FontFile" uid="uid://db5l3rj17cnyq" path="res://assets/fonts/Kenney Pixel.ttf" id="1_fumun"]
+
+[resource]
+default_font = ExtResource("1_fumun")
+default_font_size = 32
