@@ -23,6 +23,10 @@ func end_exploration_turn():
 # --- Combat Logic ---
 ## Starts combat with a specific list of enemies
 func start_combat(triggered_enemies: Array[Unit], starter: Unit):
+	# Check if there are any VALID players left before starting
+	var living_players = get_tree().get_nodes_in_group("players")
+	if living_players.is_empty():
+		return
 	if current_state == State.COMBAT: return # already in combat
 	
 	current_state = State.COMBAT
@@ -39,8 +43,6 @@ func start_combat(triggered_enemies: Array[Unit], starter: Unit):
 	
 	# Calculate Initiative: Bonus + d20 roll
 	for unit in participants:
-		#unit.current_initiative_score = unit.initiative_bonus + randi_range(1, 20)
-		#unit.current_initiative_score = Dice.roll(1, 20, unit.initiative_bonus)
 		if unit.data:
 			unit.current_initiative_score = Dice.roll(1, 20, unit.data.get_initiative_bonus())
 		else:
@@ -112,7 +114,19 @@ func remove_unit_from_combat(unit: Unit):
 		# we must adjust the index so we don't skip anyone
 		if index <= active_unit_index and active_unit_index > 0:
 			active_unit_index -= 1
+	# Check if any players are left
+	var players = combat_queue.filter(func(u): return u.is_in_group("players"))
+	if players.is_empty():
+		trigger_game_over()
+		return
 	# If no enemies are left, end combat
 	var enemies = combat_queue.filter(func(u): return u.is_in_group("enemies"))
 	if enemies.is_empty():
 		end_combat()
+
+
+func trigger_game_over():
+	print("--- GAME OVER ---")
+	print("The hero has fallen. Time for a new character sheet...")
+	# Later: Show a UI Screen. For now, we stop the game.
+	end_combat()

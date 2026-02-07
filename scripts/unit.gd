@@ -155,7 +155,14 @@ func die():
 	set_grid_occupancy(false)
 	if TurnManager.current_state == TurnManager.State.COMBAT:
 		TurnManager.remove_unit_from_combat(self)
-	queue_free()
+	if is_in_group("players"):
+		# Hide the player and stop processing logic
+		visible = false
+		set_process(false)
+		set_physics_process(false)
+		remove_from_group("players")
+	else:
+		queue_free()
 
 
 # --- Grid Management ---
