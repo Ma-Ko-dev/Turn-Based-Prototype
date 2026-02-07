@@ -17,7 +17,7 @@ func add_message(text: String):
 	scroll_container.scroll_vertical = scroll_container.get_v_scroll_bar().max_value
 
 
-## handle the "End Turn" button
+## Handle the "End Turn" button
 func _on_end_turn_button_pressed():
 	if TurnManager.current_state == TurnManager.State.COMBAT:
 		TurnManager.next_combat_turn()

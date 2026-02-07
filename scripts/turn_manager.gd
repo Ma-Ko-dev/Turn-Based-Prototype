@@ -16,8 +16,7 @@ var active_unit_index: int = 0
 # --- Exploration Logic ---
 func end_exploration_turn():
 	round_count += 1
-	# This will be perfect for the Combat Log tomorrow!
-	print("Exploration round ended. New round: ", round_count)
+	GameEvents.log_requested.emit("--- Round %s Started ---" % round_count)
 
 
 # --- Combat Logic ---
@@ -30,8 +29,7 @@ func start_combat(triggered_enemies: Array[Unit], starter: Unit):
 	if current_state == State.COMBAT: return # already in combat
 	
 	current_state = State.COMBAT
-	# later in UI
-	print(starter.display_name, " spotted you! Starting combat...")
+	GameEvents.log_requested.emit("!!! %s spotted you! Starting combat !!!" % starter.display_name)
 	var participants: Array[Unit] = []
 	
 	for node in get_tree().get_nodes_in_group("players"):
@@ -39,14 +37,16 @@ func start_combat(triggered_enemies: Array[Unit], starter: Unit):
 	for enemy in triggered_enemies:
 		participants.append(enemy as Unit)
 		if enemy != starter:
-			print(enemy.display_name, " was alarmed by ", starter.name, "!")
+			GameEvents.log_requested.emit("%s was alarmed by %s!" % [enemy.display_name, starter.display_name])
 	
 	# Calculate Initiative: Bonus + d20 roll
 	for unit in participants:
 		if unit.data:
 			unit.current_initiative_score = Dice.roll(1, 20, unit.data.get_initiative_bonus())
+			GameEvents.log_requested.emit("> %s rolled %s for initiative" % [unit.display_name, unit.current_initiative_score])
 		else:
 			unit.current_initiative_score = Dice.roll(1, 20, 0)
+			GameEvents.log_requested.emit("> %s rolled %s for initiative" % [unit.display_name, unit.current_initiative_score])
 	
 	# Sort participants by initiative score (highest first)
 	participants.sort_custom(func(a, b): 
@@ -81,7 +81,6 @@ func _start_active_unit_turn():
 	active_unit_changed.emit(current_unit)
 	
 	current_unit.start_new_turn()
-	#print("Currently active: ", current_unit.name)
 
 
 func next_combat_turn():
@@ -94,7 +93,7 @@ func next_combat_turn():
 	if active_unit_index >= combat_queue.size():
 		active_unit_index = 0
 		round_count += 1
-		print("New Combat Round: ", round_count)
+		GameEvents.log_requested.emit("--- Combat Round %s ---" % round_count)
 	
 	_start_active_unit_turn()
 
@@ -129,7 +128,7 @@ func remove_unit_from_combat(unit: Unit):
 
 
 func trigger_game_over():
-	print("--- GAME OVER ---")
-	print("The hero has fallen. Time for a new character sheet...")
+	GameEvents.log_requested.emit("--- GAME OVER ---")
+	GameEvents.log_requested.emit("The hero has fallen. Time for a new character sheet...")
 	# Later: Show a UI Screen. For now, we stop the game.
 	end_combat()
