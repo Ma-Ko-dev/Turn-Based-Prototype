@@ -68,7 +68,7 @@ modulate = Color(0, 0, 0, 1)
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 21
 vertical_alignment = 2
 autowrap_mode = 3
 
@@ -76,3 +76,5 @@ autowrap_mode = 3
 layout_mode = 2
 size_flags_horizontal = 4
 text = "End Turn"
+
+[connection signal="pressed" from="UI/LogWindow/MarginContainer/VBoxContainer/EndTurnButton" to="UI" method="_on_end_turn_button_pressed"]
