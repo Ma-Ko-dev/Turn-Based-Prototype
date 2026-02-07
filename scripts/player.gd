@@ -52,7 +52,7 @@ func _input(event):
 				if is_adjacent_to(target_unit):
 					attack_target(target_unit)
 				else:
-					print("Too far away to attack!")
+					GameEvents.log_requested.emit("Target is too far away!")
 			else:
 				# --- movement logic ---
 				# Security checks for valid destination
@@ -168,7 +168,7 @@ func start_new_turn():
 	is_selected = true # Auto-select unit when its turn starts
 	update_selection_visual()
 	#update_ui()
-	print("New Turn! Movement points refreshed: ", remaining_movement)
+	GameEvents.log_requested.emit("--- Player Turn: Movement refreshed (%s) ---" % remaining_movement)
 
 
 func on_movement_start_logic():

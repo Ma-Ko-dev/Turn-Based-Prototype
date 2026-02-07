@@ -117,16 +117,16 @@ func check_hit(attack_roll: int) -> bool:
 	ac = data.get_armor_class()
 	var is_hit = attack_roll >= ac
 	# Log the result for debugging (will be moved to UI Log later)
-	print(self.display_name, " (AC ", ac, ") was targeted. Roll: ", attack_roll, " -> Hit: ", is_hit)
+	GameEvents.log_requested.emit("%s (AC %s) targeted. Roll: %s -> %s" % [display_name, ac, attack_roll, "HIT" if is_hit else "MISS"])
 	return is_hit
 
 
 ## Handles the attack logic when right-clicking an enemy
 func attack_target(target: Unit):
 	if has_attacked:
-		print(display_name, " has no actions left to attack!")
+		GameEvents.log_requested.emit("%s has no actions left!" % display_name)
 		return
-	print(display_name, " attacks ", target.display_name, "!")
+	GameEvents.log_requested.emit("%s attacks %s!" % [display_name, target.display_name])
 	# 1d20 + Strength Modifier + BAB
 	var roll = Dice.roll(1, 20, data.get_attack_bonus())
 	if target.check_hit(roll):
@@ -137,21 +137,21 @@ func attack_target(target: Unit):
 		var final_damage = max(1, damage_roll)
 		target.take_damage(final_damage)
 	else:
-		print(display_name, " missed ", target.display_name)
+		GameEvents.log_requested.emit("%s missed %s" % [display_name, target.display_name])
 	has_attacked = true
 
 
 ## Reduces health and checks for death
 func take_damage(amount: int):
 	current_health -= amount
-	print(display_name, " takes ", amount, " damage! (HP: ", current_health, "/", max_health, ")")
+	GameEvents.log_requested.emit("%s takes %s damage! (HP: %s/%s)" % [display_name, amount, current_health, max_health])
 	if current_health <= 0:
 		die()
 
 
 ## Handles unit removal
 func die():
-	print(display_name, " has been defeated!")
+	GameEvents.log_requested.emit("!!! %s has been defeated !!!" % display_name)
 	set_grid_occupancy(false)
 	if TurnManager.current_state == TurnManager.State.COMBAT:
 		TurnManager.remove_unit_from_combat(self)
