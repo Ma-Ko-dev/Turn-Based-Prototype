@@ -139,6 +139,25 @@ func start_new_turn():
 	remaining_movement = movement_range
 
 
+# Checks if another unit is in melee range (adjacent or diagonal)
+func is_adjacent_to(other_unit: Unit) -> bool:
+	var diff = (grid_pos - other_unit.grid_pos).abs()
+	# In a grid, if both X and Y differences are <= 1, they are adjacent
+	return diff.x <= 1 and diff.y <= 1
+
+
+func attack_target(target: Unit):
+	print(display_name, " attacks ", target.display_name, "!")
+	# 1d20 + Strength Modifier + BAB (Base Attack Bonus, aktuell 0)
+	var attack_bonus = data.get_modifier(data.strength)
+	var roll = Dice.roll(1, 20, attack_bonus)
+	if target.check_hit(roll):
+		# hit
+		print("HIT! Rolled ", roll)
+	else:
+		print("MISS! Rolled ", roll)
+
+
 # --- Hook Functions (Subclass Overrides) ---
 func on_movement_start_logic():
 	# Placeholder for logic triggered when the unit begins moving

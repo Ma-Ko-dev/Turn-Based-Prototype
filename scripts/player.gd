@@ -27,7 +27,7 @@ func _input(event):
 	if TurnManager.current_state == TurnManager.State.COMBAT and not is_active_unit:
 		return
 	
-	# Mouse Click Handling
+	# Left Click Handling
 	if event is InputEventMouseButton and event.pressed:
 		# Left Click: Selection / Deselection
 		if event.button_index == MOUSE_BUTTON_LEFT:
@@ -40,21 +40,30 @@ func _input(event):
 			
 			update_selection_visual()
 			
-		# Right Click: Movement Execution
+		# Right Click Handling
 		if event.button_index == MOUSE_BUTTON_RIGHT and is_selected and !is_moving:
 			var clicked_cell = map_manager.get_grid_coords(get_global_mouse_position())
+			var target_unit = map_manager.get_unit_at_cell(clicked_cell)
 			
-			# Security checks for valid destination
-			if not astar_grid.is_in_boundsv(clicked_cell):
-				preview_layer.clear()
-				return
-			if clicked_cell == grid_pos:
-				return
+			if target_unit and target_unit != self:
+				# --- attack logic ---
+				if is_adjacent_to(target_unit):
+					attack_target(target_unit)
+				else:
+					print("Too far away to attack!")
+			else:
+				# --- movement logic ---
+				# Security checks for valid destination
+				if not astar_grid.is_in_boundsv(clicked_cell):
+					preview_layer.clear()
+					return
+				if clicked_cell == grid_pos:
+					return
 				
-			# Calculate path and cost to target
-			var result = get_path_and_cost(clicked_cell)
-			if not result["path"].is_empty() and result["cost"] <= remaining_movement:
-				execute_movement(result["path"], result["cost"])
+				# Calculate path and cost to target
+				var result = get_path_and_cost(clicked_cell)
+				if not result["path"].is_empty() and result["cost"] <= remaining_movement:
+					execute_movement(result["path"], result["cost"])
 	
 	# Turn End & Mode Switching
 	if Input.is_action_just_pressed("ui_accept"): # Default 'Enter'
@@ -70,11 +79,6 @@ func _input(event):
 			update_selection_visual()
 			preview_layer.clear()
 			TurnManager.next_combat_turn()
-	
-	# Debug/Manual Trigger: Start Combat
-	#if Input.is_action_just_pressed("ui_focus_next"): # Default 'Tab'
-		#if TurnManager.current_state == TurnManager.State.EXPLORATION:
-			#TurnManager.start_combat()
 
 
 func _process(_delta):
