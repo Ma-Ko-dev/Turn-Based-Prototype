@@ -28,6 +28,8 @@ var extra_initiative_bonus: int = 0
 @export var base_fortitude: int = 0
 @export var base_reflex: int = 0
 @export var base_will: int = 0
+@export var damage_dice_count: int = 1
+@export var damage_dice_sides: int = 8
 
 # --- Attributes ---
 @export_group("Attributes")

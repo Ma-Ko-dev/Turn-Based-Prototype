@@ -125,14 +125,31 @@ func check_hit(attack_roll: int) -> bool:
 func attack_target(target: Unit):
 	print(display_name, " attacks ", target.display_name, "!")
 	# 1d20 + Strength Modifier + BAB
-	var attack_bonus = data.get_attack_bonus()
-	var roll = Dice.roll(1, 20, attack_bonus)
+	var roll = Dice.roll(1, 20, data.get_attack_bonus())
 	if target.check_hit(roll):
-		# hit
 		print("HIT! Rolled ", roll)
-		# dmg calc TODO
+		# Calculate damage: 1d8 (standard) + Strength modifier
+		var damage_roll = Dice.roll(data.damage_dice_count, data.damage_dice_sides, data.get_modifier(data.strength))
+		# Ensure at least 1 damage is dealt even with low strength
+		var final_damage = max(1, damage_roll)
+		target.take_damage(final_damage)
 	else:
-		print("MISS! Rolled ", roll)
+		print(display_name, " missed ", target.display_name)
+
+
+## Reduces health and checks for death
+func take_damage(amount: int):
+	current_health -= amount
+	print(display_name, " takes ", amount, " damage! (HP: ", current_health, "/", max_health, ")")
+	if current_health <= 0:
+		die()
+
+
+## Handles unit removal
+func die():
+	print(display_name, " has been defeated!")
+	set_grid_occupancy(false)
+	queue_free()
 
 
 # --- Grid Management ---
