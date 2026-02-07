@@ -37,9 +37,12 @@ patch_margin_bottom = 10
 metadata/_edit_use_anchors_ = true
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/LogWindow" unique_id=1784972198]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
@@ -52,14 +55,19 @@ layout_mode = 2
 modulate = Color(0, 0, 0, 1)
 layout_mode = 2
 text = "Log"
-
-[node name="EndTurnButton" type="Button" parent="UI/LogWindow/MarginContainer/VBoxContainer" unique_id=1910116896]
-layout_mode = 2
-text = "End Turn"
+horizontal_alignment = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="UI/LogWindow/MarginContainer/VBoxContainer" unique_id=1285559813]
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="LogText" type="Label" parent="UI/LogWindow/MarginContainer/VBoxContainer/ScrollContainer" unique_id=386658488]
+modulate = Color(0, 0, 0, 1)
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 autowrap_mode = 3
+
+[node name="EndTurnButton" type="Button" parent="UI/LogWindow/MarginContainer/VBoxContainer" unique_id=1910116896]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "End Turn"
