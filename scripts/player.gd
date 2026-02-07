@@ -12,6 +12,7 @@ var _last_movement_amount: int = 0
 func _ready():
 	super._ready()
 	movement_changed.connect(_on_movement_changed)
+	TurnManager.active_unit_changed.connect(_on_active_unit_changed)
 	if camera:
 		camera.enabled = true
 		# Zoom setting
@@ -21,6 +22,11 @@ func _ready():
 		camera.make_current()
 		await get_tree().process_frame
  
+
+func _on_active_unit_changed(unit: Unit):
+	if unit == self:
+		start_new_turn()
+
 
 func _input(event):
 	# Do not allow any interaction if the player is dead/hidden
@@ -73,7 +79,7 @@ func _input(event):
 		if is_moving: return
 		if TurnManager.current_state == TurnManager.State.EXPLORATION:
 			# Exploration Mode: Refresh movement and finish 'turn'
-			start_new_turn()
+			#start_new_turn()
 			TurnManager.end_exploration_turn()
 		else:
 			# Combat Mode: Clean up visuals and pass turn to next unit

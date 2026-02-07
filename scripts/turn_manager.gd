@@ -17,6 +17,9 @@ var active_unit_index: int = 0
 func end_exploration_turn():
 	round_count += 1
 	GameEvents.log_requested.emit("--- Round %s Started ---" % round_count)
+	var players = get_tree().get_nodes_in_group("players")
+	if not players.is_empty():
+		active_unit_changed.emit(players[0])
 
 
 # --- Combat Logic ---
