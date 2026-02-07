@@ -20,12 +20,13 @@ script = ExtResource("5_a1rh6")
 
 [node name="LogWindow" type="NinePatchRect" parent="UI" unique_id=1767508180]
 texture_filter = 1
-anchors_preset = 15
+anchors_preset = -1
+anchor_left = -0.0125
 anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 856.0
+anchor_bottom = 1.1888889
+offset_left = 1048.0
 offset_top = 8.0
-offset_right = -200.0
+offset_right = -8.0
 offset_bottom = -472.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -35,6 +36,7 @@ patch_margin_top = 10
 patch_margin_right = 10
 patch_margin_bottom = 10
 metadata/_edit_use_anchors_ = true
+metadata/_edit_group_ = true
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/LogWindow" unique_id=1784972198]
 layout_mode = 1
@@ -65,6 +67,9 @@ size_flags_vertical = 3
 modulate = Color(0, 0, 0, 1)
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 16
+vertical_alignment = 2
 autowrap_mode = 3
 
 [node name="EndTurnButton" type="Button" parent="UI/LogWindow/MarginContainer/VBoxContainer" unique_id=1910116896]
