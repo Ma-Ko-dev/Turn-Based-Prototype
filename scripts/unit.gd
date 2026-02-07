@@ -107,6 +107,7 @@ func execute_movement(path: Array[Vector2i], cost: float):
 	on_movement_finished_logic()
 
 
+# --- Combat ---
 ## Checks if an incoming attack roll meets or exceeds this unit's Armor Class.
 ## According to Pathfinder rules, a roll equal to AC is a hit.
 func check_hit(attack_roll: int) -> bool:
@@ -118,6 +119,20 @@ func check_hit(attack_roll: int) -> bool:
 	# Log the result for debugging (will be moved to UI Log later)
 	print(self.name, " (AC ", ac, ") was targeted. Roll: ", attack_roll, " -> Hit: ", is_hit)
 	return is_hit
+
+
+## Handles the attack logic when right-clicking an enemy
+func attack_target(target: Unit):
+	print(display_name, " attacks ", target.display_name, "!")
+	# 1d20 + Strength Modifier + BAB (Base Attack Bonus, aktuell 0)
+	var attack_bonus = data.get_modifier(data.strength)
+	var roll = Dice.roll(1, 20, attack_bonus)
+	if target.check_hit(roll):
+		# hit
+		print("HIT! Rolled ", roll)
+		# dmg calc TODO
+	else:
+		print("MISS! Rolled ", roll)
 
 
 # --- Grid Management ---
@@ -144,18 +159,6 @@ func is_adjacent_to(other_unit: Unit) -> bool:
 	var diff = (grid_pos - other_unit.grid_pos).abs()
 	# In a grid, if both X and Y differences are <= 1, they are adjacent
 	return diff.x <= 1 and diff.y <= 1
-
-
-func attack_target(target: Unit):
-	print(display_name, " attacks ", target.display_name, "!")
-	# 1d20 + Strength Modifier + BAB (Base Attack Bonus, aktuell 0)
-	var attack_bonus = data.get_modifier(data.strength)
-	var roll = Dice.roll(1, 20, attack_bonus)
-	if target.check_hit(roll):
-		# hit
-		print("HIT! Rolled ", roll)
-	else:
-		print("MISS! Rolled ", roll)
 
 
 # --- Hook Functions (Subclass Overrides) ---

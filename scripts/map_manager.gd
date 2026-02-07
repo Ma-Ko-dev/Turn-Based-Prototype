@@ -147,3 +147,13 @@ func get_map_bounds_pixels() -> Rect2:
 	var pos = Vector2(rect.position) * grid_size
 	var size = Vector2(rect.size) * grid_size
 	return Rect2(pos, size)
+
+
+func get_unit_at_cell(cell: Vector2i) -> Unit:
+	var groups_to_check = ["players", "enemies"]
+	
+	for group_name in groups_to_check:
+		for unit in get_tree().get_nodes_in_group(group_name):
+			if unit is Unit and unit.grid_pos == cell:
+				return unit
+	return null
