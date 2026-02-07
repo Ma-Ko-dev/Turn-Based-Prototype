@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://cqdd83pfe3aqt" path="res://scenes/Player.tscn" id="2_uebra"]
 [ext_resource type="PackedScene" uid="uid://chygwhunclgm0" path="res://scenes/levels/Level_01.tscn" id="2_ylec3"]
 [ext_resource type="Script" uid="uid://ckdelfqek4cv" path="res://scripts/map_manager.gd" id="6_a1rh6"]
-[ext_resource type="Texture2D" uid="uid://ca65s4dfy8qa1" path="res://assets/ui/UI_Panel_Base.tres" id="7_j7aru"]
+[ext_resource type="Texture2D" uid="uid://ca65s4dfy8qa1" path="res://ressources/ui/UI_Panel_Base.tres" id="7_j7aru"]
 
 [node name="GameRoot" type="Node2D" unique_id=1645537557]
 script = ExtResource("1_ylec3")
