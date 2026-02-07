@@ -124,8 +124,8 @@ func check_hit(attack_roll: int) -> bool:
 ## Handles the attack logic when right-clicking an enemy
 func attack_target(target: Unit):
 	print(display_name, " attacks ", target.display_name, "!")
-	# 1d20 + Strength Modifier + BAB (Base Attack Bonus, aktuell 0)
-	var attack_bonus = data.get_modifier(data.strength)
+	# 1d20 + Strength Modifier + BAB
+	var attack_bonus = data.get_attack_bonus()
 	var roll = Dice.roll(1, 20, attack_bonus)
 	if target.check_hit(roll):
 		# hit

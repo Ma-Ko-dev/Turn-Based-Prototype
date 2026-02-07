@@ -1,6 +1,11 @@
 extends Resource
 class_name UnitData
 
+# --- Progression ---
+@export_group("Progression")
+@export var level: int = 1
+@export var is_player_data: bool = false
+
 # --- Identity ---
 @export_group("Identity")
 @export var name: String = "Unknown Unit"
@@ -12,9 +17,15 @@ class_name UnitData
 @export var hp_dice_sides: int = 10
 var armor_class: int = 10 #Base AC is always 10, no editing necessary
 @export var movement_range: int = 10
-#@export var initiative_bonus: int = 0
 var extra_initiative_bonus: int = 0
 @export var sight_range: int = 12
+
+# --- Combat Stats ---
+@export_group("Combat Stats")
+@export var base_attack_bonus: int = 0
+@export var base_fortitude: int = 0
+@export var base_reflex: int = 0
+@export var base_will: int = 0
 
 # --- Attributes ---
 @export_group("Attributes")
@@ -40,11 +51,24 @@ func get_modifier(score: int) -> int:
 func get_armor_class() -> int:
 	return 10 + get_modifier(dexterity) + armor_bonus + shield_bonus + size_bonus
 
-## Calculate HP
+## Calculates initial HP. Level 1 players get max roll.
 func calculate_initial_hp() -> int:
+	if is_player_data and level == 1:
+		# Maximize the first hit die: (1 * sides) + con
+		return hp_dice_sides + get_modifier(constitution)
+	# Default roll for everyone else
 	var roll = Dice.roll(hp_dice_count, hp_dice_sides, get_modifier(constitution))
 	return max(1, roll)
 
 ## Dynamically calculate the total Initiative Bonus
 func get_initiative_bonus() -> int:
 	return get_modifier(dexterity) + extra_initiative_bonus
+
+## Get total attack bonus
+func get_attack_bonus() -> int:
+	return base_attack_bonus + get_modifier(strength)
+
+## Total Saving Throws
+func get_fort_save() -> int: return base_fortitude + get_modifier(constitution)
+func get_reflex_save() -> int: return base_reflex + get_modifier(dexterity)
+func get_will_save() -> int: return base_will + get_modifier(intelligence)

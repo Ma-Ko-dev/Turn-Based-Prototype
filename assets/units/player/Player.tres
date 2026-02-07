@@ -9,9 +9,12 @@ region = Rect2(476, 0, 16, 16)
 
 [resource]
 script = ExtResource("1_ohqoi")
+is_player_data = true
 name = "Hero"
 texture = SubResource("AtlasTexture_5koo4")
 movement_range = 6
+base_attack_bonus = 1
+base_fortitude = 2
 strength = 18
 dexterity = 14
 constitution = 14
