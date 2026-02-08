@@ -107,36 +107,28 @@ func execute_movement(path: Array[Vector2i], cost: float) -> void:
 
 
 # --- Combat ---
-## Checks if an incoming attack roll meets or exceeds this unit's Armor Class.
-## According to Pathfinder rules, a roll equal to AC is a hit.
-func check_hit(attack_roll: int) -> bool:
-	# Default AC is 10 if no data is present
-	var ac = 10
-	if not data: return attack_roll >= ac
-	ac = data.get_armor_class()
-	var is_hit = attack_roll >= ac
-	# Log the result for debugging (will be moved to UI Log later)
-	GameEvents.log_requested.emit("%s (AC %s) targeted. Roll: %s -> %s" % [display_name, ac, attack_roll, "HIT" if is_hit else "MISS"])
-	return is_hit
-
-
 ## Handles the attack logic when right-clicking an enemy
 func attack_target(target: Unit) -> void:
 	if has_attacked:
 		GameEvents.log_requested.emit("%s has no actions left!" % display_name)
 		return
-	GameEvents.log_requested.emit("%s attacks %s!" % [display_name, target.display_name])
-	# 1d20 + Strength Modifier + BAB
-	var roll = Dice.roll(1, 20, data.get_attack_bonus())
-	if target.check_hit(roll):
-		GameEvents.log_requested.emit("CRITICAL HIT! Rolled %s" % roll if roll >= 20 else "HIT! Rolled %s" % roll)
-		# Calculate damage: 1d8 (standard) + Strength modifier
-		var damage_roll = Dice.roll(data.damage_dice_count, data.damage_dice_sides, data.get_modifier(data.strength))
-		# Ensure at least 1 damage is dealt even with low strength
-		var final_damage = max(1, damage_roll)
-		target.take_damage(final_damage)
+	# Split roll into raw and bonus for proper Crit/Miss logic
+	var attack_bonus = data.get_attack_bonus()
+	var raw_roll = Dice.roll(1, 20,0) # without bonus first
+	var total_roll = raw_roll + attack_bonus
+	var target_ac = target.data.get_armor_class() if target.data else 10
+	GameEvents.log_requested.emit("%s attacks %s!" % [display_name, target.display_name])	
+	# Pathfinder Rules: Natural 20 is always a hit, Natural 1 is always a miss
+	if raw_roll >= 20:
+		GameEvents.log_requested.emit("CRITICAL HIT! (Nat 20 vs AC %d)" % target_ac)
+		_apply_damage(target, true)
+	elif raw_roll <= 1:
+		GameEvents.log_requested.emit("CRITICAL MISS! (Nat 1 vs AC %d)" % target_ac)
+	elif total_roll >= target_ac:
+		GameEvents.log_requested.emit("HIT! (%d + %d = %d vs AC %d)" % [raw_roll, attack_bonus, total_roll, target_ac])
+		_apply_damage(target, false)
 	else:
-		GameEvents.log_requested.emit("%s missed %s" % [display_name, target.display_name])
+		GameEvents.log_requested.emit("MISS! (%d + %d = %d vs AC %d)" % [raw_roll, attack_bonus, total_roll, target_ac])
 	has_attacked = true
 
 
@@ -146,6 +138,13 @@ func take_damage(amount: int) -> void:
 	GameEvents.log_requested.emit("%s takes %s damage! (HP: %s/%s)" % [display_name, amount, current_health, max_health])
 	if current_health <= 0:
 		_die()
+
+
+# Helper to avoid code duplication for damage
+func _apply_damage(target: Unit, is_crit: bool) -> void:
+	var damage = Dice.roll(data.damage_dice_count, data.damage_dice_sides, data.get_modifier(data.strength))
+	if is_crit:
+		target.take_damage(max(1, damage))
 
 
 ## Handles unit removal
