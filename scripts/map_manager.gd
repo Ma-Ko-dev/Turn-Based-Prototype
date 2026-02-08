@@ -2,11 +2,8 @@ extends Node
 class_name MapManager
 
 # --- References ---
-## Reference to the base terrain layer (used for map boundaries)
 var ground_layer: TileMapLayer
-## Reference to the layer containing walls, trees, or other blockades
 var obstacle_layer: TileMapLayer
-## Reference to the decoration layer (swamps, mud, etc.) that affects cost
 var deco_layer: TileMapLayer
 
 
@@ -17,18 +14,19 @@ var deco_layer: TileMapLayer
 var astar_grid: AStarGrid2D = AStarGrid2D.new()
 
 
+# --- Initialization ---
 ## Initializes the manager with layers from the current level and builds the navigation grid
-func setup_level(level_node: Node2D):
+func setup_level(level_node: Node2D) -> void:
 	# Link the required TileMapLayers from the instantiated level
 	ground_layer = level_node.get_node("GroundLayer")
 	obstacle_layer = level_node.get_node("ObstacleLayer")
 	deco_layer = level_node.get_node("DecorationLayer")
 	# Generate the A* grid based on the newly assigned layers
-	setup_astar()
+	_setup_astar()
 
 
 ## Setups the A* system
-func setup_astar():
+func _setup_astar() -> void:
 	# Define the grid area based on the ground layer size
 	var rect = ground_layer.get_used_rect()
 	astar_grid.region = rect
@@ -44,33 +42,41 @@ func setup_astar():
 	for x in range(rect.position.x, rect.end.x):
 		for y in range(rect.position.y, rect.end.y):
 			var coords = Vector2i(x,y)
-			# Start with ground cost (default 1.0)
-			var final_cost = 1.0
-			var ground_data = ground_layer.get_cell_tile_data(coords)
-			if ground_data:
-				var g_cost = ground_data.get_custom_data("movement_cost")
-				if g_cost > 0: final_cost = g_cost
-				# If g_cost is 0 (because someone forgot to set the cost) take 1.0
-				#final_cost = g_cost if g_cost > 0 else 1.0
-			# Check decoration layer
-			var deco_data = deco_layer.get_cell_tile_data(coords)
-			if deco_data:
-				var d_cost = deco_data.get_custom_data("movement_cost")
-				if d_cost > 0: final_cost = d_cost
-			# Check obstacle Layer
-			var obs_data = obstacle_layer.get_cell_tile_data(coords)
-			if obs_data:
-				var obs_cost = obs_data.get_custom_data("movement_cost")
-				if obs_cost >= 99:
-					astar_grid.set_point_solid(coords, true)
-					continue
-				elif obs_cost > 0:
-					final_cost = obs_cost
-			astar_grid.set_point_weight_scale(coords, final_cost)
+			_calculate_cell_properties(coords)
 	# Final update to apply all point modifications
 	astar_grid.update()
 
 
+func _calculate_cell_properties(coords: Vector2i) -> void:
+	var final_cost = 1.0
+	
+	# Ground layer cost
+	var ground_data = ground_layer.get_cell_tile_data(coords)
+	if ground_data:
+		var g_cost = ground_data.get_custom_data("movement_cost")
+		if g_cost > 0: final_cost = g_cost
+		# If g_cost is 0 (because someone forgot to set the cost) take 1.0
+		#final_cost = g_cost if g_cost > 0 else 1.0
+	
+	# Deco layer cost
+	var deco_data = deco_layer.get_cell_tile_data(coords)
+	if deco_data:
+		var d_cost = deco_data.get_custom_data("movement_cost")
+		if d_cost > 0: final_cost = d_cost
+	
+	# Obstacle layer
+	var obs_data = obstacle_layer.get_cell_tile_data(coords)
+	if obs_data:
+		var obs_cost = obs_data.get_custom_data("movement_cost")
+		if obs_cost >= 99:
+			astar_grid.set_point_solid(coords, true)
+			return
+		elif obs_cost > 0:
+			final_cost = obs_cost
+	astar_grid.set_point_weight_scale(coords, final_cost)
+
+
+# --- Vision & Line of Sight ---
 ## Checks if there are any vision-blocking tiles between two grid coordinates.
 ## Returns true if the line of sight is unobstructed.
 func is_line_of_sight_clear(start_grid: Vector2i, end_grid: Vector2i) -> bool:
@@ -84,11 +90,8 @@ func is_line_of_sight_clear(start_grid: Vector2i, end_grid: Vector2i) -> bool:
 		var tile_data = obstacle_layer.get_cell_tile_data(coords)
 		if tile_data:
 			var blocks = tile_data.get_custom_data("blocks_vision")
-			if blocks != null and blocks == true:
+			if blocks == true and blocks != null:
 				return false
-			# Check our new custom data property
-			if tile_data.get_custom_data("blocks_vision"):
-				return false # sight is blocked
 	return true #path is clear
 
 
@@ -130,24 +133,22 @@ func get_line_points(start: Vector2i, end: Vector2i) -> Array[Vector2i]:
 	return points
 
 
+# --- Coordinate Helpers ---
 ## Converts global mouse coordinates to grid coordinates (Vector2i)
-func get_grid_coords(global_mouse_pos: Vector2) -> Vector2i:
-	var local_pos = ground_layer.to_local(global_mouse_pos)
-	return ground_layer.local_to_map(local_pos)
+func get_grid_coords(global_pos: Vector2) -> Vector2i:
+	return ground_layer.local_to_map(ground_layer.to_local(global_pos))
+
 
 ## Returns the boundaries of the map in world pixels
 func get_map_bounds_pixels() -> Rect2:
 	var rect = ground_layer.get_used_rect()
-	var pos = Vector2(rect.position) * grid_size
-	var size = Vector2(rect.size) * grid_size
-	return Rect2(pos, size)
+	return Rect2(Vector2(rect.position) * grid_size, Vector2(rect.size) * grid_size)
 
 
 func get_unit_at_cell(cell: Vector2i) -> Unit:
-	var groups_to_check = ["players", "enemies"]
-	
-	for group_name in groups_to_check:
-		for unit in get_tree().get_nodes_in_group(group_name):
-			if unit is Unit and unit.grid_pos == cell:
-				return unit
+	#var groups_to_check = ["players", "enemies"]
+	#for group_name in groups_to_check:
+	for unit in get_tree().get_nodes_in_group("players") + get_tree().get_nodes_in_group("enemies"):
+		if unit.grid_pos == cell:
+			return unit as Unit
 	return null

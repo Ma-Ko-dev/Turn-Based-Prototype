@@ -7,6 +7,10 @@ static func roll(amount: int, sides: int, modifier: int = 0) -> int:
 	for i in range(amount):
 		total += randi_range(1, sides)
 	var result = total + modifier
-	# debug
-	print("Rolling ", amount, "d", sides, " + ", modifier, " -> Result: ", result)
+	# Internal logging
+	_print_roll_result(amount, sides, modifier, result)
 	return result
+
+
+static func _print_roll_result(amount: int, sides: int, modifier: int, result: int) -> void:
+	print("Dice: %sd%s + %s -> Result: %s" % [amount, sides, modifier, result])

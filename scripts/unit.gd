@@ -27,8 +27,6 @@ var has_attacked: bool = false
 
 # --- References ---
 var map_manager: MapManager
-
-# Helper properties to easily access grid data from the MapManager
 var astar_grid: AStarGrid2D:
 	get:
 		return map_manager.astar_grid
@@ -37,28 +35,32 @@ var grid_size: float:
 		return map_manager.grid_size
 
 
-# --- Lifecycle Functions ---
-func _ready():
+# --- Lifecycle  ---
+func _ready() -> void:
 	if not map_manager:
 		await get_tree().process_frame
-	if data:
-		texture = data.texture
-		movement_range = data.movement_range
-		max_health = data.calculate_initial_hp()
-		current_health = max_health
-		if display_name == "":
-			display_name = data.name
-		print(display_name, " initialized with ", current_health, " HP") #debug
+	_initialize_stats()
 	if map_manager:
 		# Calculate initial grid position based on the starting world position in the editor
 		# Wait for a frame to ensure MapManager has initialized the AStar grid before occupying a cell
 		await get_tree().process_frame
-		set_grid_occupancy(true)
+		_set_grid_occupancy(true)
 	remaining_movement = movement_range
 
 
-# --- Pathfinding ---
-func get_path_and_cost(target_cell: Vector2i):
+# --- Internal Initialization ---
+func _initialize_stats() -> void:
+	if not data: return
+	texture = data.texture
+	movement_range = data.movement_range
+	max_health = data.calculate_initial_hp()
+	current_health = max_health
+	if display_name == "":
+		display_name = data.name
+
+
+# --- Pathfinding and movement---
+func get_path_and_cost(target_cell: Vector2i) -> Dictionary:
 	# Temporarily unblock the unit's own cell so AStar can calculate a path starting from it
 	astar_grid.set_point_solid(grid_pos, false)
 	var path = astar_grid.get_id_path(grid_pos, target_cell)
@@ -73,17 +75,16 @@ func get_path_and_cost(target_cell: Vector2i):
 	return {"path": path, "cost": total_cost}
 
 
-# --- Core Movement Logic ---
-func execute_movement(path: Array[Vector2i], cost: float):
+func execute_movement(path: Array[Vector2i], cost: float) -> void:
 	# Cancel if the path is invalid or too short
 	if path.size() <= 1 or cost > remaining_movement:
 		is_moving = false
-		on_movement_finished_logic()
+		_on_movement_finished_logic()
 		return
 	# Unmark the old cell as occupied so other units could potentially pass through
-	set_grid_occupancy(false)
+	_set_grid_occupancy(false)
 	is_moving = true
-	on_movement_start_logic()
+	_on_movement_start_logic()
 	
 	# Animate the movement tile-by-tile using a Tween
 	var tween = create_tween()
@@ -99,10 +100,10 @@ func execute_movement(path: Array[Vector2i], cost: float):
 	is_moving = false
 	
 	# Mark the new cell as occupied
-	set_grid_occupancy(true)
+	_set_grid_occupancy(true)
 	
 	# Trigger post-movement logic (handled in Player/Enemy subclasses)
-	on_movement_finished_logic()
+	_on_movement_finished_logic()
 
 
 # --- Combat ---
@@ -120,7 +121,7 @@ func check_hit(attack_roll: int) -> bool:
 
 
 ## Handles the attack logic when right-clicking an enemy
-func attack_target(target: Unit):
+func attack_target(target: Unit) -> void:
 	if has_attacked:
 		GameEvents.log_requested.emit("%s has no actions left!" % display_name)
 		return
@@ -140,17 +141,17 @@ func attack_target(target: Unit):
 
 
 ## Reduces health and checks for death
-func take_damage(amount: int):
+func take_damage(amount: int) -> void:
 	current_health -= amount
 	GameEvents.log_requested.emit("%s takes %s damage! (HP: %s/%s)" % [display_name, amount, current_health, max_health])
 	if current_health <= 0:
-		die()
+		_die()
 
 
 ## Handles unit removal
-func die():
+func _die() -> void:
 	GameEvents.log_requested.emit("!!! %s has been defeated !!!" % display_name)
-	set_grid_occupancy(false)
+	_set_grid_occupancy(false)
 	if TurnManager.current_state == TurnManager.State.COMBAT:
 		TurnManager.remove_unit_from_combat(self)
 	if is_in_group("players"):
@@ -166,24 +167,11 @@ func die():
 		queue_free()
 
 
-# --- Grid Management ---
-func set_grid_occupancy(is_occupied: bool):
+# --- Grid Helpers ---
+func _set_grid_occupancy(is_occupied: bool):
 	# Marks the unit's current tile as solid/blocked in the shared AStar grid
 	if astar_grid:
 		astar_grid.set_point_solid(grid_pos, is_occupied)
-
-
-func teleport_to_grid_pos(new_grid_pos: Vector2i):
-	set_grid_occupancy(false)
-	grid_pos = new_grid_pos
-	set_grid_occupancy(true)
-
-
-# --- Turn Logic ---
-func start_new_turn():
-	# Reset movement points; this function is typically overridden in subclasses
-	remaining_movement = movement_range
-	has_attacked = false
 
 
 # Checks if another unit is in melee range (adjacent or diagonal)
@@ -193,12 +181,25 @@ func is_adjacent_to(other_unit: Unit) -> bool:
 	return diff.x <= 1 and diff.y <= 1
 
 
-# --- Hook Functions (Subclass Overrides) ---
-func on_movement_start_logic():
+func teleport_to_grid_pos(new_grid_pos: Vector2i) -> void: 
+	_set_grid_occupancy(false)
+	grid_pos = new_grid_pos
+	_set_grid_occupancy(true)
+
+
+# --- Turn Logic ---
+func start_new_turn() -> void:
+	# Reset movement points; this function is typically overridden in subclasses
+	remaining_movement = movement_range
+	has_attacked = false
+
+
+# --- Hooks ---
+func _on_movement_start_logic() -> void:
 	# Placeholder for logic triggered when the unit begins moving
 	pass
 
 
-func on_movement_finished_logic():
+func _on_movement_finished_logic() -> void:
 	# Placeholder for logic triggered when the unit stops moving
 	pass
