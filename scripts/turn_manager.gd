@@ -12,6 +12,7 @@ var current_state = State.EXPLORATION
 var round_count: int = 1
 var combat_queue: Array[Unit] = []
 var active_unit_index: int = 0
+var is_game_over: bool = false
 var _exploration_round_backup: int = 1
 
 
@@ -104,9 +105,10 @@ func end_combat() -> void:
 	combat_queue.clear()
 	# Notify UI to hide combat-specific elements
 	turn_mode_changed.emit(false)
-	var players = get_tree().get_nodes_in_group("players")
-	if not players.is_empty() and players[0].is_visible:
-		GameEvents.log_requested.emit("--- Back to Exploration (Round %s) ---" % round_count)
+	if not is_game_over:
+		var players = get_tree().get_nodes_in_group("players")
+		if not players.is_empty() and players[0].is_visible:
+			GameEvents.log_requested.emit("--- Back to Exploration (Round %s) ---" % round_count)
 
 
 # --- Unit Management ---
@@ -136,6 +138,7 @@ func _check_combat_end_conditions() -> void:
 
 
 func _trigger_game_over():
+	is_game_over = true
 	GameEvents.log_requested.emit("--- GAME OVER ---")
 	GameEvents.log_requested.emit("The hero has fallen. Time for a new character sheet...")
 	# Later: Show a UI Screen. For now, we stop the game.
