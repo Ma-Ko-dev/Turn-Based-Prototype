@@ -143,6 +143,7 @@ func take_damage(amount: int) -> void:
 # Helper to avoid code duplication for damage
 func _apply_damage(target: Unit, is_crit: bool) -> void:
 	var damage = Dice.roll(data.damage_dice_count, data.damage_dice_sides, data.get_modifier(data.strength))
+	# Note that different equip can have different crit multiplier
 	if is_crit: damage *= 2
 	target.take_damage(max(1, damage))
 
