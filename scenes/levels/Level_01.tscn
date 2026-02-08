@@ -32,7 +32,7 @@ unit_scene = ExtResource("2_wee7o")
 unit_data = ExtResource("3_xokhc")
 
 [node name="EnemySpawn3" type="Marker2D" parent="Markers" parent_id_path=PackedInt32Array(577359482) index="3" unique_id=1076420081]
-position = Vector2(608, 152)
+position = Vector2(552, 232)
 script = ExtResource("4_xokhc")
 unit_scene = ExtResource("2_wee7o")
 unit_data = ExtResource("5_hhyrm")
