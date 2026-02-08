@@ -11,12 +11,20 @@ var current_state = State.EXPLORATION
 var round_count: int = 1
 var combat_queue: Array[Unit] = []
 var active_unit_index: int = 0
+var _exploration_round_backup: int = 1
+
+
+# --- Lifecycle ---
+func _ready() -> void:
+	await get_tree().process_frame
+	GameEvents.log_requested.emit("--- Exploration Round 1 Started ---")
 
 
 # --- Exploration Logic ---
 func end_exploration_turn() -> void:
+	if current_state != State.EXPLORATION: return
 	round_count += 1
-	GameEvents.log_requested.emit("--- Round %s Started ---" % round_count)
+	GameEvents.log_requested.emit("--- Exploration Round %s Started ---" % round_count)
 	var players = get_tree().get_nodes_in_group("players")
 	if not players.is_empty():
 		active_unit_changed.emit(players[0])
@@ -30,8 +38,10 @@ func start_combat(triggered_enemies: Array[Unit], starter: Unit) -> void:
 	# Check if there are any VALID players left before starting
 	var living_players = get_tree().get_nodes_in_group("players")
 	if living_players.is_empty(): return
-	
+	_exploration_round_backup = round_count
 	current_state = State.COMBAT
+	round_count = 1
+	GameEvents.log_requested.emit("--- Combat Round %s ---" % round_count)
 	GameEvents.log_requested.emit("!!! %s spotted you! Starting combat !!!" % starter.display_name)
 	# Collect all participants
 	var participants: Array[Unit] = []
@@ -71,12 +81,13 @@ func _start_active_unit_turn() -> void:
 			unit.is_active_unit = (unit == current_unit)
 	# Notify UI which unit is currently taking its turn
 	active_unit_changed.emit(current_unit)
+	GameEvents.log_requested.emit(">>> %s's Turn <<<" % current_unit.display_name)
 	current_unit.start_new_turn()
 
 
 func next_combat_turn() -> void:
 	# If combat ended during the last action (e.g. death), stop here
-	if current_state == State.EXPLORATION: return
+	if current_state != State.COMBAT: return
 	active_unit_index += 1
 	# If we reach the end of the queue, start a new round
 	if active_unit_index >= combat_queue.size():
@@ -88,10 +99,13 @@ func next_combat_turn() -> void:
 
 func end_combat() -> void:
 	current_state = State.EXPLORATION
-	round_count = 0
+	round_count = _exploration_round_backup
 	combat_queue.clear()
 	# Notify UI to hide combat-specific elements
 	turn_mode_changed.emit(false)
+	var players = get_tree().get_nodes_in_group("players")
+	if not players.is_empty() and players[0].is_visible:
+		GameEvents.log_requested.emit("--- Back to Exploration (Round %s) ---" % round_count)
 
 
 # --- Unit Management ---

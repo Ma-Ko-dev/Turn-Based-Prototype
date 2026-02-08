@@ -78,7 +78,7 @@ func _execute_ai_behaviour() -> void:
 	if path.size() > 1:
 		# Trim path if it exceeds movement range
 		if cost > remaining_movement:
-			path = path.slide(0, remaining_movement + 1)
+			path = path.slice(0, remaining_movement + 1)
 			cost = remaining_movement
 		execute_movement(path, cost)
 	else:
