@@ -17,6 +17,7 @@ enum Size { FINE, DIMINUTIVE, TINY, SMALL, MEDIUM, LARGE, HUGE, GARGANTUAN, COLO
 @export_group("Stats")
 @export var hp_dice_count: int = 1
 @export var hp_dice_sides: int = 10
+@export var flat_hp_bonus: int = 0
 @export var movement_range: int = 10
 @export var sight_range: int = 12
 var extra_initiative_bonus: int = 0
@@ -43,6 +44,7 @@ var extra_initiative_bonus: int = 0
 @export_group("AC Bonus")
 @export var armor_bonus: int = 0 # from actual armor
 @export var shield_bonus: int = 0
+@export var natural_armor: int = 0
 
 
 # --- Calculation Helpers ---
@@ -66,17 +68,19 @@ func get_size_modifier() -> int:
 # --- Logic Getters ---
 func get_armor_class() -> int:
 	# Size bonus to AC is the same as the size bonus to Attack
-	return 10 + get_modifier(dexterity) + armor_bonus + shield_bonus + get_size_modifier()
+	return 10 + get_modifier(dexterity) + armor_bonus + shield_bonus + natural_armor + get_size_modifier()
 	
 	
 func calculate_initial_hp() -> int:
 	var con_mod = get_modifier(constitution)
+	var base_hp = 0
 	if is_player_data and level == 1:
 		# Maximize the first hit die: (1 * sides) + con
-		return hp_dice_sides + get_modifier(constitution)
-	# Default roll for everyone else
-	var roll = Dice.roll(hp_dice_count, hp_dice_sides, con_mod)
-	return max(1, roll)
+		base_hp = hp_dice_sides + con_mod
+	else:
+		# Default roll for everyone else
+		base_hp = Dice.roll(hp_dice_count, hp_dice_sides, con_mod)
+	return max(1, base_hp + flat_hp_bonus)
 
 
 func get_initiative_bonus() -> int:

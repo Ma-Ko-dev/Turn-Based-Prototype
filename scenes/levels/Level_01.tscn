@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://desyp0hxe7xot" path="res://scenes/Enemy.tscn" id="2_wee7o"]
 [ext_resource type="Resource" uid="uid://d137hrtr18uaa" path="res://ressources/units/enemies/Goblin.tres" id="3_xokhc"]
 [ext_resource type="Script" uid="uid://ddb326dqa48d8" path="res://scripts/spawn_marker.gd" id="4_xokhc"]
+[ext_resource type="Resource" uid="uid://302xlx3u0lsh" path="res://ressources/units/enemies/Zombie.tres" id="5_hhyrm"]
 
 [node name="BaseLevel" unique_id=1330468739 instance=ExtResource("1_rmf85")]
 
@@ -29,3 +30,9 @@ position = Vector2(96, 32)
 script = ExtResource("4_xokhc")
 unit_scene = ExtResource("2_wee7o")
 unit_data = ExtResource("3_xokhc")
+
+[node name="EnemySpawn3" type="Marker2D" parent="Markers" parent_id_path=PackedInt32Array(577359482) index="3" unique_id=1076420081]
+position = Vector2(608, 152)
+script = ExtResource("4_xokhc")
+unit_scene = ExtResource("2_wee7o")
+unit_data = ExtResource("5_hhyrm")
