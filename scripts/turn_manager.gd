@@ -3,6 +3,7 @@ extends Node
 # --- Signals  ---
 signal turn_mode_changed(is_combat: bool)
 signal active_unit_changed(unit: Unit)
+signal combat_queue_updated
 
 # --- State ---
 enum State { EXPLORATION, COMBAT }
@@ -114,6 +115,7 @@ func remove_unit_from_combat(unit: Unit) -> void:
 	var index = combat_queue.find(unit)
 	if index != -1:
 		combat_queue.remove_at(index)
+		combat_queue_updated.emit()
 		# If the deleted unit was BEFORE or IS the current active unit, 
 		# we must adjust the index so we don't skip anyone
 		if index <= active_unit_index and active_unit_index > 0:

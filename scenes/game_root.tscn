@@ -78,4 +78,36 @@ size_flags_horizontal = 4
 focus_mode = 0
 text = "End Turn"
 
+[node name="CombatTracker" type="NinePatchRect" parent="UI" unique_id=1457477446]
+texture_filter = 1
+anchors_preset = -1
+anchor_left = -0.0625
+anchor_right = 1.1
+anchor_bottom = 0.73333335
+offset_left = 344.0
+offset_top = 8.0
+offset_right = -712.0
+offset_bottom = -472.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("7_j7aru")
+patch_margin_left = 10
+patch_margin_top = 10
+patch_margin_right = 10
+patch_margin_bottom = 10
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/CombatTracker" unique_id=1111470133]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/CombatTracker/MarginContainer" unique_id=1210725246]
+layout_mode = 2
+
 [connection signal="pressed" from="UI/LogWindow/MarginContainer/VBoxContainer/EndTurnButton" to="UI" method="_on_end_turn_button_pressed"]

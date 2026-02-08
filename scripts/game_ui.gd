@@ -3,18 +3,39 @@ extends CanvasLayer
 @onready var _log_text: Label = $LogWindow/MarginContainer/VBoxContainer/ScrollContainer/LogText
 @onready var _scroll_container: ScrollContainer = $LogWindow/MarginContainer/VBoxContainer/ScrollContainer
 @onready var _end_turn_button: Button = $LogWindow/MarginContainer/VBoxContainer/EndTurnButton
+@onready var _tracker_container: HBoxContainer = $CombatTracker/MarginContainer/HBoxContainer
+@onready var _tracker_panel: NinePatchRect = $CombatTracker
+const TRACKER_ICON_SCENE = preload("res://scenes/CombatTrackerIcon.tscn")
 
 
 # --- Lifecycle ---
 func _ready() -> void:
 	# Listen for any log requests from anywhere in the game
 	GameEvents.log_requested.connect(_on_log_requested)
+	TurnManager.turn_mode_changed.connect(_on_turn_mode_changed)
 	TurnManager.active_unit_changed.connect(_on_active_unit_changed)
+	TurnManager.combat_queue_updated.connect(_rebuild_tracker)
+	_tracker_panel.visible = false
 
 
 # --- Signal Handlers ---
 func _on_log_requested(message: String) -> void:
 	_add_message(message)
+
+
+func _on_turn_mode_changed(is_combat: bool) -> void:
+	_tracker_panel.visible = is_combat
+	if is_combat:
+		_rebuild_tracker()
+
+
+func _rebuild_tracker() -> void:
+	for child in _tracker_container.get_children():
+		child.queue_free()
+	for unit in TurnManager.combat_queue:
+		var icon = TRACKER_ICON_SCENE.instantiate()
+		_tracker_container.add_child(icon)
+		icon.setup(unit)
 
 
 func _on_end_turn_button_pressed() -> void:
@@ -33,6 +54,9 @@ func _on_active_unit_changed(unit: Unit) -> void:
 		_end_turn_button.disabled = not unit.is_in_group("players")
 	else:
 		_end_turn_button.disabled = false
+	for icon in _tracker_container.get_children():
+		if not icon.is_queued_for_deletion():
+			icon.set_active(icon.name == str(unit.get_instance_id()))
 
 
 # --- Internal UI Logic ---
