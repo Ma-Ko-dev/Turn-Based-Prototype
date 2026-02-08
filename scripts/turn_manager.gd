@@ -61,12 +61,15 @@ func start_combat(triggered_enemies: Array[Unit], starter: Unit) -> void:
 
 
 func _roll_initiative(units: Array[Unit]) -> void:
-		# Calculate Initiative: Bonus + d20 roll
+	# Calculate Initiative: Bonus + d20 roll
 	for unit in units:
 		var bonus = unit.data.get_initiative_bonus() if unit.data else 0
 		unit.current_initiative_score = Dice.roll(1, 20, bonus)
 		GameEvents.log_requested.emit("> %s rolled %s for initiative" % [unit.display_name, unit.current_initiative_score])
 	units.sort_custom(func(a, b): return a.current_initiative_score > b.current_initiative_score)
+	# Announce the unit that goes first
+	if not units.is_empty():
+		GameEvents.log_requested.emit("!!! %s takes the lead! !!!" % units[0].display_name)
 
 
 func _start_active_unit_turn() -> void:
@@ -100,6 +103,12 @@ func next_combat_turn() -> void:
 
 
 func end_combat() -> void:
+	# Log victory stats before resetting combat data
+	if not is_game_over:
+		var living_players = combat_queue.filter(func(u): return u.is_in_group("players"))
+		if not living_players.is_empty():
+			GameEvents.log_requested.emit("--- VICTORY ---")
+			GameEvents.log_requested.emit("The battle ended after %d rounds." % round_count)
 	current_state = State.EXPLORATION
 	round_count = _exploration_round_backup
 	combat_queue.clear()
