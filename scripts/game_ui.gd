@@ -32,10 +32,21 @@ func _on_turn_mode_changed(is_combat: bool) -> void:
 func _rebuild_tracker() -> void:
 	for child in _tracker_container.get_children():
 		child.queue_free()
+	await get_tree().process_frame
 	for unit in TurnManager.combat_queue:
 		var icon = TRACKER_ICON_SCENE.instantiate()
 		_tracker_container.add_child(icon)
 		icon.setup(unit)
+	var active_u = TurnManager.get("active_unit")
+	if TurnManager.current_state == TurnManager.State.COMBAT and not TurnManager.combat_queue.is_empty():
+		var current_active = TurnManager.combat_queue[TurnManager.active_unit_index]
+		_update_tracker_highlights(current_active)
+
+
+func _update_tracker_highlights(active_unit: Unit) -> void:
+	for icon in _tracker_container.get_children():
+		if not icon.is_queued_for_deletion():
+			icon.set_active(icon.name == str(active_unit.get_instance_id()))
 
 
 func _on_end_turn_button_pressed() -> void:
@@ -54,9 +65,17 @@ func _on_active_unit_changed(unit: Unit) -> void:
 		_end_turn_button.disabled = not unit.is_in_group("players")
 	else:
 		_end_turn_button.disabled = false
-	for icon in _tracker_container.get_children():
-		if not icon.is_queued_for_deletion():
-			icon.set_active(icon.name == str(unit.get_instance_id()))
+	if TurnManager.current_state == TurnManager.State.COMBAT:
+		_update_tracker_highlights(unit)
+		#var icon_found = false
+		#for icon in _tracker_container.get_children():
+			#var is_active = (icon.name == str(unit.get_instance_id()))
+			#icon.set_active(is_active)
+			#if is_active: icon_found = true
+		#if not icon_found:
+			#_rebuild_tracker()
+			#for icon in _tracker_container.get_children():
+				#icon.set_active(icon.name == str(unit.get_instance_id()))
 
 
 # --- Internal UI Logic ---
