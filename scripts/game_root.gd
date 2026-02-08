@@ -12,6 +12,7 @@ var _spawn_counts: Dictionary = {}
 
 # --- Lifecycle ---
 func _ready() -> void:
+	randomize()
 	# Validate that essential scenes are assigned before starting
 	if start_level and player_scene:
 		_setup_game()
