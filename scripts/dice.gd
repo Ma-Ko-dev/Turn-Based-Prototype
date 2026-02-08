@@ -3,14 +3,25 @@ class_name Dice
 ## Rolls X amount of Y-sided dice and adds a modifier.
 ## Example: Dice.roll(1, 10, 2) for "1d10 + 2"
 static func roll(amount: int, sides: int, modifier: int = 0) -> int:
-	var total = 0
+	var total_rolls: int = 0
+	var individual_rolls: Array = []
+	
 	for i in range(amount):
-		total += randi_range(1, sides)
-	var result = total + modifier
-	# Internal logging
-	_print_roll_result(amount, sides, modifier, result)
-	return result
+		var r = randi_range(1, sides)
+		individual_rolls.append(r)
+		total_rolls += r
+	
+	var final_result: int = total_rolls + modifier
+	
+	# Detailed logging
+	_print_detailed_roll(amount, sides, modifier, individual_rolls, final_result)
+	
+	return final_result
 
 
-static func _print_roll_result(amount: int, sides: int, modifier: int, result: int) -> void:
-	print("Dice: %sd%s + %s -> Result: %s" % [amount, sides, modifier, result])
+static func _print_detailed_roll(amount: int, sides: int, modifier: int, rolls: Array, result: int) -> void:
+	var rolls_str = str(rolls).replace("[", "").replace("]", "")
+	var mod_str = (" + " + str(modifier)) if modifier != 0 else ""
+	
+	# Example: Dice: 1d20 (18) + 2 -> Result: 20
+	print("Dice: %sd%s (%s)%s -> Result: %s" % [amount, sides, rolls_str, mod_str, result])
