@@ -1,7 +1,9 @@
 [gd_scene format=4 uid="uid://chygwhunclgm0"]
 
 [ext_resource type="PackedScene" uid="uid://cxfi6slnvx185" path="res://scenes/levels/BaseLevel.tscn" id="1_rmf85"]
+[ext_resource type="PackedScene" uid="uid://cqdd83pfe3aqt" path="res://scenes/units/Player.tscn" id="2_10xc4"]
 [ext_resource type="PackedScene" uid="uid://desyp0hxe7xot" path="res://scenes/units/Enemy.tscn" id="2_wee7o"]
+[ext_resource type="Resource" uid="uid://deqdcl244gojl" path="res://ressources/units/player/Player.tres" id="3_dwcxj"]
 [ext_resource type="Resource" uid="uid://d137hrtr18uaa" path="res://ressources/units/enemies/Goblin.tres" id="3_xokhc"]
 [ext_resource type="Script" uid="uid://ddb326dqa48d8" path="res://scripts/spawn_marker.gd" id="4_xokhc"]
 [ext_resource type="Resource" uid="uid://302xlx3u0lsh" path="res://ressources/units/enemies/Zombie.tres" id="5_hhyrm"]
@@ -19,6 +21,8 @@ tile_map_data = PackedByteArray("AAACAAAAAAAFAAAAAAADAAEAAAAGAAAAAAAEAAAAAAAHAAA
 
 [node name="PlayerSpawn" parent="Markers" parent_id_path=PackedInt32Array(577359482) index="0" unique_id=329869282]
 position = Vector2(544, 552)
+unit_scene = ExtResource("2_10xc4")
+unit_data = ExtResource("3_dwcxj")
 
 [node name="EnemySpawn" parent="Markers" parent_id_path=PackedInt32Array(577359482) index="1" unique_id=1634180193]
 position = Vector2(288, 160)

@@ -44,10 +44,17 @@ func _setup_game() -> void:
 # --- Spawning Logic ---
 ## Creates the player and injects all necessary system references
 func _spawn_player(marker: SpawnMarker, container: Node, level: Node2D):
+	# Use marker scene if available, otherwise fallback to game_root default
+	var scene_to_use = marker.unit_scene if marker.unit_scene else player_scene
+	if not scene_to_use:
+		printerr("GameRoot: No player scene found on marker or GameRoot!")
+		return
 	player = player_scene.instantiate()
 	player.map_manager = map_manager
 	container.add_child(player)	
-	# Dependency Injection: Providing the player with required system nodes
+	# If the marker has specific UnitData, apply it
+	if marker.unit_data:
+		player.data = marker.unit_data
 	player.setup_player_references(
 		map_manager,
 		level.get_node("PreviewLayer"),
