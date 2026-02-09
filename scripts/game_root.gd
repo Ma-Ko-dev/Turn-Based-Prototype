@@ -3,7 +3,6 @@ extends Node2D
 ## The level scene that will be loaded on start
 @export var start_level: PackedScene 
 ## The player scene to be instantiated at the start marker
-@export var player_scene: PackedScene
 
 @onready var map_manager = $MapManager
 var player: Unit
@@ -14,7 +13,7 @@ var _spawn_counts: Dictionary = {}
 func _ready() -> void:
 	randomize()
 	# Validate that essential scenes are assigned before starting
-	if start_level and player_scene:
+	if start_level:
 		_setup_game()
 	else:
 		printerr("GameRoot: Essential scenes (level or player) are missing!")
@@ -44,12 +43,11 @@ func _setup_game() -> void:
 # --- Spawning Logic ---
 ## Creates the player and injects all necessary system references
 func _spawn_player(marker: SpawnMarker, container: Node, level: Node2D):
-	# Use marker scene if available, otherwise fallback to game_root default
-	var scene_to_use = marker.unit_scene if marker.unit_scene else player_scene
-	if not scene_to_use:
-		printerr("GameRoot: No player scene found on marker or GameRoot!")
+	# Marker MUST have a unit_scene
+	if not marker.unit_scene:
+		printerr("GameRoot: Player SpawnMarker is missing unit_scene!")
 		return
-	player = player_scene.instantiate()
+	player = marker.unit_scene.instantiate()
 	player.map_manager = map_manager
 	container.add_child(player)	
 	# If the marker has specific UnitData, apply it

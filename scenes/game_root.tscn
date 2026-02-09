@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://cxg7ue3k504c6"]
 
 [ext_resource type="Script" uid="uid://dfk5weuf11l2b" path="res://scripts/game_root.gd" id="1_ylec3"]
-[ext_resource type="PackedScene" uid="uid://cqdd83pfe3aqt" path="res://scenes/units/Player.tscn" id="2_uebra"]
 [ext_resource type="PackedScene" uid="uid://chygwhunclgm0" path="res://scenes/levels/Level_01.tscn" id="2_ylec3"]
 [ext_resource type="Script" uid="uid://cdxs5yvh3c3nc" path="res://scripts/game_ui.gd" id="5_a1rh6"]
 [ext_resource type="Script" uid="uid://ckdelfqek4cv" path="res://scripts/map_manager.gd" id="6_a1rh6"]
@@ -11,7 +10,6 @@
 [node name="GameRoot" type="Node2D" unique_id=1645537557]
 script = ExtResource("1_ylec3")
 start_level = ExtResource("2_ylec3")
-player_scene = ExtResource("2_uebra")
 
 [node name="MapManager" type="Node" parent="." unique_id=1552409391]
 script = ExtResource("6_a1rh6")
