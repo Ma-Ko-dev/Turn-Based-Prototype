@@ -2,6 +2,20 @@
 
 [ext_resource type="Script" uid="uid://c3bu706g8oyuw" path="res://scripts/combat_tracker_icon.gd" id="1_thgay"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3itj8"]
+bg_color = Color(0.12591082, 0.12591085, 0.12591076, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7tslk"]
+bg_color = Color(0.8357183, 3.2247603e-06, 7.70092e-07, 1)
+
 [node name="UnitIcon" type="TextureRect" unique_id=153081316]
 custom_minimum_size = Vector2(32, 32)
 offset_left = 8.0
@@ -18,5 +32,8 @@ offset_left = 24.0
 offset_top = 24.0
 offset_right = 28.0
 offset_bottom = 52.0
+theme_override_styles/background = SubResource("StyleBoxFlat_3itj8")
+theme_override_styles/fill = SubResource("StyleBoxFlat_7tslk")
 max_value = 50.0
 step = 1.0
+show_percentage = false

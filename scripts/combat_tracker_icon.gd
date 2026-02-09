@@ -30,9 +30,3 @@ func _update_health_ui() -> void:
 	if health_bar:
 		health_bar.max_value = _tracked_unit.max_health
 		health_bar.value = _tracked_unit.current_health
-		# change color to red when health is low
-		var health_pct = float(_tracked_unit.current_health) / _tracked_unit.max_health
-		if health_pct < 0.3:
-			health_bar.modulate = Color.RED
-		else:
-			health_bar.modulate = Color.WHITE
