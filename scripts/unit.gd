@@ -118,8 +118,8 @@ func attack_target(target: Unit) -> void:
 	await  _play_attack_animation(target.position)
 	# Split roll into raw and bonus for proper Crit/Miss logic
 	var attack_bonus = data.get_attack_bonus()
-	var raw_roll = Dice.roll(1, 20,0) # without bonus first
-	var total_roll = raw_roll + attack_bonus
+	var total_roll = Dice.roll(1, 20, attack_bonus)
+	var raw_roll = total_roll - attack_bonus # we do it that way to keep the nat20/1 logic working and also keep the dice roll debug accurate
 	var target_ac = target.data.get_armor_class() if target.data else 10
 	GameEvents.log_requested.emit("%s attacks %s!" % [display_name, target.display_name])	
 	# Pathfinder Rules: Natural 20 is always a hit, Natural 1 is always a miss
@@ -156,7 +156,8 @@ func take_damage(amount: int, is_crit: bool= false) -> void:
 
 # Helper to avoid code duplication for damage
 func _apply_damage(target: Unit, is_crit: bool) -> void:
-	var damage = Dice.roll(data.damage_dice_count, data.damage_dice_sides, data.get_modifier(data.strength))
+	var modifier = data.get_modifier(data.strength)
+	var damage = Dice.roll(data.damage_dice_count, data.damage_dice_sides, modifier)
 	# Note that different equip can have different crit multiplier
 	if is_crit: damage *= 2
 	target.take_damage(max(1, damage), is_crit)
