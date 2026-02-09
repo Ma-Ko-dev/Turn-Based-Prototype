@@ -5,6 +5,9 @@
 [ext_resource type="Texture2D" uid="uid://cvbmqdqxe1tgm" path="res://assets/colored-transparent.png" id="2_lq25e"]
 [ext_resource type="Texture2D" uid="uid://bt83iubroltqu" path="res://ressources/ui/UI_Tab_Panel.tres" id="3_me650"]
 
+[sub_resource type="Theme" id="Theme_lq25e"]
+Label/colors/font_color = Color(0.3372549, 0.3372549, 0.3372549, 1)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_geqdb"]
 atlas = ExtResource("2_lq25e")
 region = Rect2(714, 221, 16, 16)
@@ -33,6 +36,35 @@ texture_margin_bottom = 10.0
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_g7c81"]
 thickness = 3
 
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_me650"]
+thickness = 3
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_geqdb"]
+thickness = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_me650"]
+bg_color = Color(1, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lq25e"]
+bg_color = Color(0, 1, 0, 1)
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_ot1vu"]
+thickness = 3
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_52wmp"]
+thickness = 3
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_lq25e"]
+thickness = 3
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_oaev6"]
+thickness = 3
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ihmq4"]
+atlas = ExtResource("2_lq25e")
+region = Rect2(782, 221, 16, 16)
+
 [node name="CharacterSheet" type="Control" unique_id=732470059]
 custom_minimum_size = Vector2(1000, 600)
 layout_mode = 3
@@ -43,6 +75,7 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
+theme = SubResource("Theme_lq25e")
 script = ExtResource("1_lq25e")
 
 [node name="Background" type="NinePatchRect" parent="." unique_id=1210563768]
@@ -136,6 +169,344 @@ size_flags_vertical = 3
 
 [node name="CharacterContent" type="MarginContainer" parent="ContentWrapper/MainLayout/ContentArea" unique_id=757042507]
 layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent" unique_id=1647706161]
+layout_mode = 2
+
+[node name="TopRow" type="HBoxContainer" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer" unique_id=557364162]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="AttributesColumn" type="VBoxContainer" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow" unique_id=1016485664]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TitleLabel" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/AttributesColumn" unique_id=738234058]
+layout_mode = 2
+size_flags_vertical = 1
+text = "Attributes"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/AttributesColumn" unique_id=2085939551]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_me650")
+
+[node name="LevelLabel" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/AttributesColumn" unique_id=2017128653]
+layout_mode = 2
+text = "Level: 1"
+
+[node name="AttributesGrid" type="GridContainer" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/AttributesColumn" unique_id=542894630]
+layout_mode = 2
+columns = 3
+
+[node name="STRLabel" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=672951021]
+layout_mode = 2
+text = "STR: "
+
+[node name="STRValue" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=822064515]
+layout_mode = 2
+text = "18"
+
+[node name="STRBonus" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=1765474914]
+layout_mode = 2
+text = "(+4)"
+
+[node name="DEXLabel" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=710505248]
+layout_mode = 2
+text = "DEX:"
+
+[node name="DEXValue" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=303137255]
+layout_mode = 2
+text = "16"
+
+[node name="DEXBonus" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=576655222]
+layout_mode = 2
+text = "(+3)"
+
+[node name="CONLabel" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=1865090540]
+layout_mode = 2
+text = "CON:"
+
+[node name="CONValue" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=746873701]
+layout_mode = 2
+text = "14"
+
+[node name="CONBonus" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=208691621]
+layout_mode = 2
+text = "(+2)"
+
+[node name="INTLabel" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=2008793741]
+layout_mode = 2
+text = "INT: "
+
+[node name="INTValue" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=637557815]
+layout_mode = 2
+text = "10"
+
+[node name="INTBonus" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=1424344342]
+layout_mode = 2
+text = "(0)"
+
+[node name="WISLabel" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=1144044753]
+layout_mode = 2
+text = "WIS:"
+
+[node name="WISValue" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=1290958836]
+layout_mode = 2
+text = "12"
+
+[node name="WISBonus" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=1304495640]
+layout_mode = 2
+text = "(+1)"
+
+[node name="CHALabel" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=19862689]
+layout_mode = 2
+text = "CHA:"
+
+[node name="CHAValue" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=2079824206]
+layout_mode = 2
+text = "8"
+
+[node name="CHABonus" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=1358714285]
+layout_mode = 2
+text = "(-1)"
+
+[node name="Spacer" type="Control" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/AttributesColumn" unique_id=752269138]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="SpeedLabel" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/AttributesColumn" unique_id=620311619]
+layout_mode = 2
+text = "Speed: 30 ft"
+
+[node name="SizeLabel" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/AttributesColumn" unique_id=1277323181]
+layout_mode = 2
+text = "Size: Medium"
+
+[node name="DefenseColumn" type="VBoxContainer" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow" unique_id=1001317190]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TitleLabel" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/DefenseColumn" unique_id=1509686756]
+layout_mode = 2
+size_flags_vertical = 1
+text = "Defense (Health & AC)"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/DefenseColumn" unique_id=1134510785]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_geqdb")
+
+[node name="HealthRow" type="HBoxContainer" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/DefenseColumn" unique_id=1062221107]
+layout_mode = 2
+
+[node name="HPLabel" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/DefenseColumn/HealthRow" unique_id=1059983604]
+layout_mode = 2
+text = "HP: "
+
+[node name="HPBar" type="ProgressBar" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/DefenseColumn/HealthRow" unique_id=858815237]
+custom_minimum_size = Vector2(150, 17)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/background = SubResource("StyleBoxFlat_me650")
+theme_override_styles/fill = SubResource("StyleBoxFlat_lq25e")
+max_value = 30.0
+value = 20.0
+show_percentage = false
+
+[node name="HPValue" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/DefenseColumn/HealthRow" unique_id=814453341]
+layout_mode = 2
+text = "20/30"
+
+[node name="ACGrid" type="GridContainer" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/DefenseColumn" unique_id=144001090]
+layout_mode = 2
+columns = 2
+
+[node name="ACLabel" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/DefenseColumn/ACGrid" unique_id=1685571477]
+layout_mode = 2
+text = "AC:"
+
+[node name="ACValue" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/DefenseColumn/ACGrid" unique_id=33122398]
+layout_mode = 2
+text = "16"
+
+[node name="TouchLabel" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/DefenseColumn/ACGrid" unique_id=1678114426]
+layout_mode = 2
+text = "Touch:"
+
+[node name="TouchValue" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/DefenseColumn/ACGrid" unique_id=1639673384]
+layout_mode = 2
+text = "14"
+
+[node name="FlatLabel" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/DefenseColumn/ACGrid" unique_id=1466803773]
+layout_mode = 2
+text = "Flat:"
+
+[node name="FlatValue" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/DefenseColumn/ACGrid" unique_id=1232277732]
+layout_mode = 2
+text = "12"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/DefenseColumn" unique_id=742220029]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="Label" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/DefenseColumn/VBoxContainer" unique_id=1283213885]
+layout_mode = 2
+text = "Saves"
+
+[node name="HSeparator2" type="HSeparator" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/DefenseColumn/VBoxContainer" unique_id=1667299236]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_ot1vu")
+
+[node name="SavesGrid" type="GridContainer" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/DefenseColumn" unique_id=727394863]
+layout_mode = 2
+columns = 2
+
+[node name="FortLabel" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/DefenseColumn/SavesGrid" unique_id=301401666]
+layout_mode = 2
+text = "Fort (Con):"
+
+[node name="FortValue" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/DefenseColumn/SavesGrid" unique_id=1647464087]
+layout_mode = 2
+text = "+4"
+
+[node name="RefLabel" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/DefenseColumn/SavesGrid" unique_id=1780182159]
+layout_mode = 2
+text = "Ref (Dex):"
+
+[node name="RefValue" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/DefenseColumn/SavesGrid" unique_id=1198082902]
+layout_mode = 2
+text = "+5"
+
+[node name="WillLabel" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/DefenseColumn/SavesGrid" unique_id=419929157]
+layout_mode = 2
+text = "Will (Wis):"
+
+[node name="WillValue" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/DefenseColumn/SavesGrid" unique_id=1714250913]
+layout_mode = 2
+text = "+1"
+
+[node name="OffenseColumn" type="VBoxContainer" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow" unique_id=1215061325]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TitleLabel" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/OffenseColumn" unique_id=1509660250]
+layout_mode = 2
+size_flags_vertical = 1
+text = "Offense"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/OffenseColumn" unique_id=864467937]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_52wmp")
+
+[node name="OffenseGrid" type="GridContainer" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/OffenseColumn" unique_id=290425603]
+layout_mode = 2
+columns = 2
+
+[node name="BABLabel" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/OffenseColumn/OffenseGrid" unique_id=1556560821]
+layout_mode = 2
+text = "BAB:"
+
+[node name="BABValue" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/OffenseColumn/OffenseGrid" unique_id=649104879]
+layout_mode = 2
+text = "+1"
+
+[node name="MeleeLabel" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/OffenseColumn/OffenseGrid" unique_id=782842836]
+layout_mode = 2
+text = "Melee:"
+
+[node name="MeleeValue" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/OffenseColumn/OffenseGrid" unique_id=524491686]
+layout_mode = 2
+text = "+2"
+
+[node name="RangedLabel" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/OffenseColumn/OffenseGrid" unique_id=703672769]
+layout_mode = 2
+text = "Ranged:"
+
+[node name="RangedValue" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/OffenseColumn/OffenseGrid" unique_id=1372195586]
+layout_mode = 2
+text = "+5"
+
+[node name="CMBLabel" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/OffenseColumn/OffenseGrid" unique_id=1006024855]
+layout_mode = 2
+text = "CMB: "
+
+[node name="CMBValue" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/OffenseColumn/OffenseGrid" unique_id=219489635]
+layout_mode = 2
+text = "+0"
+
+[node name="CMDLabel" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/OffenseColumn/OffenseGrid" unique_id=1032241820]
+layout_mode = 2
+text = "CMD:"
+
+[node name="CMDValue" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/OffenseColumn/OffenseGrid" unique_id=746689605]
+layout_mode = 2
+text = "13"
+
+[node name="InitLabel" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/OffenseColumn/OffenseGrid" unique_id=1468863986]
+layout_mode = 2
+text = "Initiative:"
+
+[node name="InitValue" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/OffenseColumn/OffenseGrid" unique_id=903526040]
+layout_mode = 2
+text = "+3"
+
+[node name="WeaponBox" type="VBoxContainer" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/OffenseColumn" unique_id=614831718]
+layout_mode = 2
+
+[node name="WeaponName" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/OffenseColumn/WeaponBox" unique_id=322098453]
+layout_mode = 2
+text = "[Shortsword]"
+
+[node name="WeaponStats" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/OffenseColumn/WeaponBox" unique_id=1990674992]
+layout_mode = 2
+text = "1d4 / 19-20"
+
+[node name="HSeparator" type="HSeparator" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer" unique_id=569816253]
+layout_mode = 2
+theme_override_constants/separation = 6
+theme_override_styles/separator = SubResource("StyleBoxLine_lq25e")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer" unique_id=556842158]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="BuffTitle" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/VBoxContainer" unique_id=1096632364]
+layout_mode = 2
+text = "Buffs | Debuffs | Other"
+
+[node name="HSeparator2" type="HSeparator" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/VBoxContainer" unique_id=2094816989]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_oaev6")
+
+[node name="BuffsArea" type="ScrollContainer" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer" unique_id=123659423]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BuffListContainer" type="VBoxContainer" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/BuffsArea" unique_id=79775714]
+layout_mode = 2
+
+[node name="BuffRow1" type="HBoxContainer" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/BuffsArea/BuffListContainer" unique_id=1284720709]
+layout_mode = 2
+
+[node name="Icon" type="TextureRect" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/BuffsArea/BuffListContainer/BuffRow1" unique_id=1310194510]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = SubResource("AtlasTexture_ihmq4")
+
+[node name="Description" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/BuffsArea/BuffListContainer/BuffRow1" unique_id=1139858929]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Bless"
+
+[node name="Value" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/BuffsArea/BuffListContainer/BuffRow1" unique_id=126284700]
+layout_mode = 2
+text = "+1 "
+
+[node name="Duration" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/BuffsArea/BuffListContainer/BuffRow1" unique_id=278178094]
+layout_mode = 2
+text = "1 Round"
 
 [node name="InventoryContent" type="MarginContainer" parent="ContentWrapper/MainLayout/ContentArea" unique_id=1128091213]
 layout_mode = 2
