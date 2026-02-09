@@ -113,6 +113,8 @@ func attack_target(target: Unit) -> void:
 	if has_attacked:
 		GameEvents.log_requested.emit("%s has no actions left!" % display_name)
 		return
+	# Start the visual bump animation before calculating results
+	await  _play_attack_animation(target.position)
 	# Split roll into raw and bonus for proper Crit/Miss logic
 	var attack_bonus = data.get_attack_bonus()
 	var raw_roll = Dice.roll(1, 20,0) # without bonus first
@@ -168,6 +170,19 @@ func _die() -> void:
 			call("update_selection_visual")
 	else:
 		queue_free()
+
+
+func _play_attack_animation(target_pos: Vector2) -> void:
+	#Calculate half distance to target for the "bump"
+	var strike_pos = position + (target_pos - position) * 0.4
+	var original_pos = position
+	var tween = create_tween()
+	# Fast lunge forward
+	tween.tween_property(self, "position", strike_pos, 0.1).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
+	# Snap back to original position
+	tween.tween_property(self, "position", original_pos, 0.15).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	# Block logic until animation is nearly done
+	await tween.finished
 
 
 # --- Grid Helpers ---
