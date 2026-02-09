@@ -11,6 +11,7 @@ var grid_pos: Vector2i:
 		# Synchronize pixel position with grid coordinates whenever grid_pos changes
 		position = Vector2(grid_pos) * grid_size + Vector2(grid_size / 2.0, grid_size / 2.0)
 var display_name: String = ""
+signal hp_changed
 var max_health: int
 var current_health: int
 var movement_range: int
@@ -135,6 +136,8 @@ func attack_target(target: Unit) -> void:
 ## Reduces health and checks for death
 func take_damage(amount: int) -> void:
 	current_health -= amount
+	# Emit signal so UI/Tracker can react
+	hp_changed.emit()
 	GameEvents.log_requested.emit("%s takes %s damage! (HP: %s/%s)" % [display_name, amount, current_health, max_health])
 	if current_health <= 0:
 		_die()

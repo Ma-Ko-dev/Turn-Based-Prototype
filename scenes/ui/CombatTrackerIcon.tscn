@@ -11,3 +11,12 @@ offset_bottom = 56.0
 expand_mode = 1
 stretch_mode = 5
 script = ExtResource("1_thgay")
+
+[node name="HealthBar" type="ProgressBar" parent="." unique_id=1647407040]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 28.0
+offset_bottom = 52.0
+max_value = 50.0
+step = 1.0
