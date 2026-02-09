@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://b4wyp6ivrmc2g"]
 
+[ext_resource type="Script" uid="uid://bks3j8id4sn4p" path="res://scripts/character_sheet.gd" id="1_lq25e"]
 [ext_resource type="Texture2D" uid="uid://ca65s4dfy8qa1" path="res://ressources/ui/UI_Panel_Base.tres" id="1_v5raf"]
 [ext_resource type="Texture2D" uid="uid://cvbmqdqxe1tgm" path="res://assets/colored-transparent.png" id="2_lq25e"]
 [ext_resource type="Texture2D" uid="uid://bt83iubroltqu" path="res://ressources/ui/UI_Tab_Panel.tres" id="3_me650"]
@@ -30,7 +31,7 @@ texture_margin_right = 10.0
 texture_margin_bottom = 10.0
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_g7c81"]
-thickness = 2
+thickness = 3
 
 [node name="CharacterSheet" type="Control" unique_id=732470059]
 custom_minimum_size = Vector2(1000, 600)
@@ -42,6 +43,7 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_lq25e")
 
 [node name="Background" type="NinePatchRect" parent="." unique_id=1210563768]
 layout_mode = 1
@@ -103,42 +105,6 @@ current_tab = 0
 layout_mode = 2
 metadata/_tab_index = 0
 
-[node name="ScrollContainer" type="ScrollContainer" parent="ContentWrapper/MainLayout/TabContainer/Character" unique_id=1700055980]
-layout_mode = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="ContentWrapper/MainLayout/TabContainer/Character/ScrollContainer" unique_id=997754764]
-layout_mode = 2
-
-[node name="VitalsGroup" type="VBoxContainer" parent="ContentWrapper/MainLayout/TabContainer/Character/ScrollContainer/VBoxContainer" unique_id=1325166297]
-layout_mode = 2
-
-[node name="HPLabel" type="Label" parent="ContentWrapper/MainLayout/TabContainer/Character/ScrollContainer/VBoxContainer/VitalsGroup" unique_id=225134272]
-layout_mode = 2
-text = "HP: 20/20"
-
-[node name="HSeparator" type="HSeparator" parent="ContentWrapper/MainLayout/TabContainer/Character/ScrollContainer/VBoxContainer" unique_id=1460484706]
-layout_mode = 2
-
-[node name="AttributeGrid" type="GridContainer" parent="ContentWrapper/MainLayout/TabContainer/Character/ScrollContainer/VBoxContainer" unique_id=481610012]
-layout_mode = 2
-columns = 2
-
-[node name="STRLabel" type="Label" parent="ContentWrapper/MainLayout/TabContainer/Character/ScrollContainer/VBoxContainer/AttributeGrid" unique_id=206869279]
-layout_mode = 2
-text = "Strength"
-
-[node name="STRValue" type="Label" parent="ContentWrapper/MainLayout/TabContainer/Character/ScrollContainer/VBoxContainer/AttributeGrid" unique_id=986954112]
-layout_mode = 2
-text = "10"
-
-[node name="DEXLabel" type="Label" parent="ContentWrapper/MainLayout/TabContainer/Character/ScrollContainer/VBoxContainer/AttributeGrid" unique_id=360544007]
-layout_mode = 2
-text = "Dexterity"
-
-[node name="DEXValue" type="Label" parent="ContentWrapper/MainLayout/TabContainer/Character/ScrollContainer/VBoxContainer/AttributeGrid" unique_id=2079660688]
-layout_mode = 2
-text = "10"
-
 [node name="Inventory" type="MarginContainer" parent="ContentWrapper/MainLayout/TabContainer" unique_id=1449593671]
 visible = false
 layout_mode = 2
@@ -161,4 +127,15 @@ metadata/_tab_index = 4
 
 [node name="HSeparator" type="HSeparator" parent="ContentWrapper/MainLayout" unique_id=81959013]
 layout_mode = 2
+theme_override_constants/separation = 6
 theme_override_styles/separator = SubResource("StyleBoxLine_g7c81")
+
+[node name="ContentArea" type="MarginContainer" parent="ContentWrapper/MainLayout" unique_id=592142715]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CharacterContent" type="MarginContainer" parent="ContentWrapper/MainLayout/ContentArea" unique_id=757042507]
+layout_mode = 2
+
+[node name="InventoryContent" type="MarginContainer" parent="ContentWrapper/MainLayout/ContentArea" unique_id=1128091213]
+layout_mode = 2
