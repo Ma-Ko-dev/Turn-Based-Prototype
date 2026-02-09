@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://ojd7oenehk2a"]
+
+[ext_resource type="Texture2D" uid="uid://ca65s4dfy8qa1" path="res://ressources/ui/UI_Panel_Base.tres" id="1_5mpw1"]
+
+[node name="LogWindow" type="NinePatchRect" unique_id=1249553263]
+texture_filter = 1
+anchors_preset = -1
+anchor_left = -0.0625
+anchor_right = 1.0
+anchor_bottom = 1.1888889
+offset_left = 1048.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -472.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_5mpw1")
+patch_margin_left = 10
+patch_margin_top = 10
+patch_margin_right = 10
+patch_margin_bottom = 10
+metadata/_edit_use_anchors_ = true
+metadata/_edit_group_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=541129767]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=145987902]
+layout_mode = 2
+
+[node name="LogTitle" type="Label" parent="MarginContainer/VBoxContainer" unique_id=40291991]
+modulate = Color(0, 0, 0, 1)
+layout_mode = 2
+text = "Log"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer" unique_id=1952339349]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="LogText" type="Label" parent="MarginContainer/VBoxContainer/ScrollContainer" unique_id=1945632595]
+modulate = Color(0, 0, 0, 1)
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 21
+vertical_alignment = 2
+autowrap_mode = 3
+
+[node name="EndTurnButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=626777935]
+layout_mode = 2
+size_flags_horizontal = 4
+focus_mode = 0
+text = "End Turn"

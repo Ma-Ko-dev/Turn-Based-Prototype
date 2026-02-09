@@ -5,7 +5,9 @@
 [ext_resource type="Script" uid="uid://cdxs5yvh3c3nc" path="res://scripts/game_ui.gd" id="5_a1rh6"]
 [ext_resource type="Script" uid="uid://ckdelfqek4cv" path="res://scripts/map_manager.gd" id="6_a1rh6"]
 [ext_resource type="PackedScene" uid="uid://dunnflwlnd847" path="res://scenes/ui/CombatTrackerIcon.tscn" id="6_j7aru"]
-[ext_resource type="Texture2D" uid="uid://ca65s4dfy8qa1" path="res://ressources/ui/UI_Panel_Base.tres" id="7_j7aru"]
+[ext_resource type="PackedScene" uid="uid://ojd7oenehk2a" path="res://scenes/ui/LogWindow.tscn" id="6_ylec3"]
+[ext_resource type="PackedScene" uid="uid://ddqo1ljrqf6lb" path="res://scenes/ui/CombatTracker.tscn" id="7_6v30a"]
+[ext_resource type="PackedScene" uid="uid://b4wyp6ivrmc2g" path="res://scenes/ui/CharacterSheet.tscn" id="8_1brn0"]
 
 [node name="GameRoot" type="Node2D" unique_id=1645537557]
 script = ExtResource("1_ylec3")
@@ -18,96 +20,8 @@ script = ExtResource("6_a1rh6")
 script = ExtResource("5_a1rh6")
 tracker_icon_scene = ExtResource("6_j7aru")
 
-[node name="LogWindow" type="NinePatchRect" parent="UI" unique_id=1767508180]
-texture_filter = 1
-anchors_preset = -1
-anchor_left = -0.0625
-anchor_right = 1.0
-anchor_bottom = 1.1888889
-offset_left = 1048.0
-offset_top = 8.0
-offset_right = -8.0
-offset_bottom = -472.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("7_j7aru")
-patch_margin_left = 10
-patch_margin_top = 10
-patch_margin_right = 10
-patch_margin_bottom = 10
-metadata/_edit_use_anchors_ = true
-metadata/_edit_group_ = true
+[node name="LogWindow" parent="UI" unique_id=1249553263 instance=ExtResource("6_ylec3")]
 
-[node name="MarginContainer" type="MarginContainer" parent="UI/LogWindow" unique_id=1784972198]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+[node name="CombatTracker" parent="UI" unique_id=1991035731 instance=ExtResource("7_6v30a")]
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/LogWindow/MarginContainer" unique_id=133209796]
-layout_mode = 2
-
-[node name="LogTitle" type="Label" parent="UI/LogWindow/MarginContainer/VBoxContainer" unique_id=478428791]
-modulate = Color(0, 0, 0, 1)
-layout_mode = 2
-text = "Log"
-horizontal_alignment = 1
-
-[node name="ScrollContainer" type="ScrollContainer" parent="UI/LogWindow/MarginContainer/VBoxContainer" unique_id=1285559813]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="LogText" type="Label" parent="UI/LogWindow/MarginContainer/VBoxContainer/ScrollContainer" unique_id=386658488]
-modulate = Color(0, 0, 0, 1)
-custom_minimum_size = Vector2(200, 0)
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_font_sizes/font_size = 21
-vertical_alignment = 2
-autowrap_mode = 3
-
-[node name="EndTurnButton" type="Button" parent="UI/LogWindow/MarginContainer/VBoxContainer" unique_id=1910116896]
-layout_mode = 2
-size_flags_horizontal = 4
-focus_mode = 0
-text = "End Turn"
-
-[node name="CombatTracker" type="NinePatchRect" parent="UI" unique_id=1457477446]
-texture_filter = 1
-anchors_preset = -1
-anchor_left = -0.0625
-anchor_right = 1.1
-anchor_bottom = 0.73333335
-offset_left = 344.0
-offset_top = 8.0
-offset_right = -712.0
-offset_bottom = -472.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("7_j7aru")
-patch_margin_left = 10
-patch_margin_top = 10
-patch_margin_right = 10
-patch_margin_bottom = 10
-metadata/_edit_use_anchors_ = true
-
-[node name="MarginContainer" type="MarginContainer" parent="UI/CombatTracker" unique_id=1111470133]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/CombatTracker/MarginContainer" unique_id=1210725246]
-layout_mode = 2
-
-[connection signal="pressed" from="UI/LogWindow/MarginContainer/VBoxContainer/EndTurnButton" to="UI" method="_on_end_turn_button_pressed"]
+[node name="CharacterSheet" parent="UI" unique_id=202426208 instance=ExtResource("8_1brn0")]

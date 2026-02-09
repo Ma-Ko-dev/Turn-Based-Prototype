@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://b4wyp6ivrmc2g"]
+
+[node name="CharacterSheet" type="PanelContainer" unique_id=202426208]
+offset_right = 40.0
+offset_bottom = 40.0
