@@ -4,10 +4,10 @@
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3itj8"]
 bg_color = Color(0.12591082, 0.12591085, 0.12591076, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
 expand_margin_left = 2.0
 expand_margin_top = 2.0
 expand_margin_right = 2.0
@@ -16,22 +16,22 @@ expand_margin_bottom = 2.0
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7tslk"]
 bg_color = Color(0.8357183, 3.2247603e-06, 7.70092e-07, 1)
 
-[node name="UnitIcon" type="TextureRect" unique_id=153081316]
-custom_minimum_size = Vector2(32, 32)
+[node name="UnitIcon" type="VBoxContainer" unique_id=1451240276]
 offset_left = 8.0
 offset_top = 8.0
 offset_right = 56.0
 offset_bottom = 56.0
-expand_mode = 1
-stretch_mode = 5
 script = ExtResource("1_thgay")
 
+[node name="Portrait" type="TextureRect" parent="." unique_id=258216421]
+layout_mode = 2
+size_flags_vertical = 3
+stretch_mode = 5
+
 [node name="HealthBar" type="ProgressBar" parent="." unique_id=1647407040]
-layout_mode = 0
-offset_left = 24.0
-offset_top = 24.0
-offset_right = 28.0
-offset_bottom = 52.0
+custom_minimum_size = Vector2(25, 0)
+layout_mode = 2
+size_flags_horizontal = 4
 theme_override_styles/background = SubResource("StyleBoxFlat_3itj8")
 theme_override_styles/fill = SubResource("StyleBoxFlat_7tslk")
 max_value = 50.0
