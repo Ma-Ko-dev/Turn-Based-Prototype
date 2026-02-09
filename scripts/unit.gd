@@ -181,24 +181,28 @@ func _play_attack_animation(target_pos: Vector2) -> void:
 	var tween = create_tween()
 	# Fast lunge forward
 	tween.tween_property(self, "position", strike_pos, 0.1).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
-	# Snap back to original position
-	tween.tween_property(self, "position", original_pos, 0.15).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	# Block logic until animation is nearly done
 	await tween.finished
+	# Snap back to original position
+	var return_tween = create_tween()
+	return_tween.tween_property(self, "position", original_pos, 0.15).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	# Block logic until animation is nearly done
+	#await tween.finished
 
 
 func _play_hit_animation() -> void:
 	# Create a shake and flash effect
 	var tween = create_tween()
+	tween.set_parallel(true)
 	# Flash red
 	modulate = Color.RED
 	tween.tween_property(self, "modulate", Color.WHITE, 0.2)
 	# Shake effect using offset to not interfere with grid position
+	var shake_tween = create_tween()
 	for i in range(4):
 		var shake_offset = Vector2(randf_range(-5, 5), randf_range(-5, 5))
-		tween.tween_property(self, "offset", shake_offset, 0.05)
+		shake_tween.tween_property(self, "offset", shake_offset, 0.05)
 	# Reset offset
-	tween.tween_property(self, "offset", Vector2.ZERO, 0.05)
+	shake_tween.tween_property(self, "offset", Vector2.ZERO, 0.05)
 
 
 # --- Grid Helpers ---
