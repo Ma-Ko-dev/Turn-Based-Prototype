@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cifrkgcm7e1bf" path="res://scripts/player.gd" id="2_3li8b"]
 [ext_resource type="Resource" uid="uid://deqdcl244gojl" path="res://ressources/units/player/Player.tres" id="2_v6fml"]
+[ext_resource type="PackedScene" uid="uid://bjub3j7sbdj6w" path="res://scenes/ui/DamageText.tscn" id="3_x5loq"]
 
 [node name="PlayerToken" type="Sprite2D" unique_id=2037288528]
 z_index = 10
@@ -9,5 +10,6 @@ scale = Vector2(3, 3)
 region_rect = Rect2(476, 0, 16, 16)
 script = ExtResource("2_3li8b")
 data = ExtResource("2_v6fml")
+damage_text_scene = ExtResource("3_x5loq")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=702819825]

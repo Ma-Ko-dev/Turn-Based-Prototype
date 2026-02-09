@@ -3,6 +3,7 @@ class_name Unit
 
 
 @export var data: UnitData
+@export var damage_text_scene: PackedScene
 
 # --- State Variables ---
 var grid_pos: Vector2i: 
@@ -142,6 +143,12 @@ func take_damage(amount: int) -> void:
 	hp_changed.emit()
 	# Play the hit feedback
 	_play_hit_animation()
+	if damage_text_scene:
+		var dmg_text = damage_text_scene.instantiate()
+		# Add to the level, not the unit, so it doesn't move with the unit
+		get_parent().add_child(dmg_text)
+		dmg_text.global_position = global_position + Vector2(0, -20)
+		dmg_text.setup(amount)
 	GameEvents.log_requested.emit("%s takes %s damage! (HP: %s/%s)" % [display_name, amount, current_health, max_health])
 	if current_health <= 0:
 		_die()

@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://jjepe2o48qmg" path="res://scripts/enemy.gd" id="1_55jtl"]
 [ext_resource type="Texture2D" uid="uid://cvbmqdqxe1tgm" path="res://assets/colored-transparent.png" id="1_mpr68"]
+[ext_resource type="PackedScene" uid="uid://bjub3j7sbdj6w" path="res://scenes/ui/DamageText.tscn" id="3_20l3p"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ft8do"]
 atlas = ExtResource("1_mpr68")
@@ -12,3 +13,4 @@ z_index = 10
 scale = Vector2(3, 3)
 texture = SubResource("AtlasTexture_ft8do")
 script = ExtResource("1_55jtl")
+damage_text_scene = ExtResource("3_20l3p")
