@@ -137,7 +137,7 @@ func attack_target(target: Unit) -> void:
 
 
 ## Reduces health and checks for death
-func take_damage(amount: int) -> void:
+func take_damage(amount: int, is_crit: bool= false) -> void:
 	current_health -= amount
 	# Emit signal so UI/Tracker can react
 	hp_changed.emit()
@@ -148,7 +148,7 @@ func take_damage(amount: int) -> void:
 		# Add to the level, not the unit, so it doesn't move with the unit
 		get_parent().add_child(dmg_text)
 		dmg_text.global_position = global_position + Vector2(0, -20)
-		dmg_text.setup(amount)
+		dmg_text.setup(amount, is_crit)
 	GameEvents.log_requested.emit("%s takes %s damage! (HP: %s/%s)" % [display_name, amount, current_health, max_health])
 	if current_health <= 0:
 		_die()
@@ -159,7 +159,7 @@ func _apply_damage(target: Unit, is_crit: bool) -> void:
 	var damage = Dice.roll(data.damage_dice_count, data.damage_dice_sides, data.get_modifier(data.strength))
 	# Note that different equip can have different crit multiplier
 	if is_crit: damage *= 2
-	target.take_damage(max(1, damage))
+	target.take_damage(max(1, damage), is_crit)
 
 
 ## Handles unit removal
