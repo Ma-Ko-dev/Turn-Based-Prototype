@@ -1,5 +1,164 @@
 [gd_scene format=3 uid="uid://b4wyp6ivrmc2g"]
 
-[node name="CharacterSheet" type="PanelContainer" unique_id=202426208]
-offset_right = 40.0
-offset_bottom = 40.0
+[ext_resource type="Texture2D" uid="uid://ca65s4dfy8qa1" path="res://ressources/ui/UI_Panel_Base.tres" id="1_v5raf"]
+[ext_resource type="Texture2D" uid="uid://cvbmqdqxe1tgm" path="res://assets/colored-transparent.png" id="2_lq25e"]
+[ext_resource type="Texture2D" uid="uid://bt83iubroltqu" path="res://ressources/ui/UI_Tab_Panel.tres" id="3_me650"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_geqdb"]
+atlas = ExtResource("2_lq25e")
+region = Rect2(714, 221, 16, 16)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ot1vu"]
+texture = ExtResource("3_me650")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_v5raf"]
+texture = ExtResource("3_me650")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_52wmp"]
+texture = ExtResource("3_me650")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_g7c81"]
+thickness = 2
+
+[node name="CharacterSheet" type="Control" unique_id=732470059]
+custom_minimum_size = Vector2(1000, 600)
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="NinePatchRect" parent="." unique_id=1210563768]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_v5raf")
+patch_margin_left = 10
+patch_margin_top = 10
+patch_margin_right = 10
+patch_margin_bottom = 10
+
+[node name="ContentWrapper" type="MarginContainer" parent="." unique_id=701778732]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="MainLayout" type="VBoxContainer" parent="ContentWrapper" unique_id=545632219]
+layout_mode = 2
+
+[node name="Header" type="HBoxContainer" parent="ContentWrapper/MainLayout" unique_id=797827397]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="ContentWrapper/MainLayout/Header" unique_id=842081963]
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="ContentWrapper/MainLayout/Header" unique_id=591476918]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CloseButton" type="TextureButton" parent="ContentWrapper/MainLayout/Header" unique_id=503070694]
+modulate = Color(0.48962224, 0.48962224, 0.48962218, 1)
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+texture_normal = SubResource("AtlasTexture_geqdb")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="TabContainer" type="TabContainer" parent="ContentWrapper/MainLayout" unique_id=1615810895]
+layout_mode = 2
+theme_override_colors/font_unselected_color = Color(0.33660764, 0.3366076, 0.3366076, 1)
+theme_override_constants/tab_separation = 16
+theme_override_styles/tab_unselected = SubResource("StyleBoxTexture_ot1vu")
+theme_override_styles/tab_hovered = SubResource("StyleBoxTexture_v5raf")
+theme_override_styles/tab_selected = SubResource("StyleBoxTexture_52wmp")
+tab_alignment = 1
+current_tab = 0
+
+[node name="Character" type="MarginContainer" parent="ContentWrapper/MainLayout/TabContainer" unique_id=961137109]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="ContentWrapper/MainLayout/TabContainer/Character" unique_id=1700055980]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ContentWrapper/MainLayout/TabContainer/Character/ScrollContainer" unique_id=997754764]
+layout_mode = 2
+
+[node name="VitalsGroup" type="VBoxContainer" parent="ContentWrapper/MainLayout/TabContainer/Character/ScrollContainer/VBoxContainer" unique_id=1325166297]
+layout_mode = 2
+
+[node name="HPLabel" type="Label" parent="ContentWrapper/MainLayout/TabContainer/Character/ScrollContainer/VBoxContainer/VitalsGroup" unique_id=225134272]
+layout_mode = 2
+text = "HP: 20/20"
+
+[node name="HSeparator" type="HSeparator" parent="ContentWrapper/MainLayout/TabContainer/Character/ScrollContainer/VBoxContainer" unique_id=1460484706]
+layout_mode = 2
+
+[node name="AttributeGrid" type="GridContainer" parent="ContentWrapper/MainLayout/TabContainer/Character/ScrollContainer/VBoxContainer" unique_id=481610012]
+layout_mode = 2
+columns = 2
+
+[node name="STRLabel" type="Label" parent="ContentWrapper/MainLayout/TabContainer/Character/ScrollContainer/VBoxContainer/AttributeGrid" unique_id=206869279]
+layout_mode = 2
+text = "Strength"
+
+[node name="STRValue" type="Label" parent="ContentWrapper/MainLayout/TabContainer/Character/ScrollContainer/VBoxContainer/AttributeGrid" unique_id=986954112]
+layout_mode = 2
+text = "10"
+
+[node name="DEXLabel" type="Label" parent="ContentWrapper/MainLayout/TabContainer/Character/ScrollContainer/VBoxContainer/AttributeGrid" unique_id=360544007]
+layout_mode = 2
+text = "Dexterity"
+
+[node name="DEXValue" type="Label" parent="ContentWrapper/MainLayout/TabContainer/Character/ScrollContainer/VBoxContainer/AttributeGrid" unique_id=2079660688]
+layout_mode = 2
+text = "10"
+
+[node name="Inventory" type="MarginContainer" parent="ContentWrapper/MainLayout/TabContainer" unique_id=1449593671]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="Skills" type="MarginContainer" parent="ContentWrapper/MainLayout/TabContainer" unique_id=279289078]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="Abilities" type="MarginContainer" parent="ContentWrapper/MainLayout/TabContainer" unique_id=595198422]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 3
+
+[node name="Spells" type="MarginContainer" parent="ContentWrapper/MainLayout/TabContainer" unique_id=959651640]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 4
+
+[node name="HSeparator" type="HSeparator" parent="ContentWrapper/MainLayout" unique_id=81959013]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_g7c81")
