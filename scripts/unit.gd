@@ -140,6 +140,8 @@ func take_damage(amount: int) -> void:
 	current_health -= amount
 	# Emit signal so UI/Tracker can react
 	hp_changed.emit()
+	# Play the hit feedback
+	_play_hit_animation()
 	GameEvents.log_requested.emit("%s takes %s damage! (HP: %s/%s)" % [display_name, amount, current_health, max_health])
 	if current_health <= 0:
 		_die()
@@ -183,6 +185,20 @@ func _play_attack_animation(target_pos: Vector2) -> void:
 	tween.tween_property(self, "position", original_pos, 0.15).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	# Block logic until animation is nearly done
 	await tween.finished
+
+
+func _play_hit_animation() -> void:
+	# Create a shake and flash effect
+	var tween = create_tween()
+	# Flash red
+	modulate = Color.RED
+	tween.tween_property(self, "modulate", Color.WHITE, 0.2)
+	# Shake effect using offset to not interfere with grid position
+	for i in range(4):
+		var shake_offset = Vector2(randf_range(-5, 5), randf_range(-5, 5))
+		tween.tween_property(self, "offset", shake_offset, 0.05)
+	# Reset offset
+	tween.tween_property(self, "offset", Vector2.ZERO, 0.05)
 
 
 # --- Grid Helpers ---
