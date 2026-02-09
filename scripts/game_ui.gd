@@ -5,7 +5,7 @@ extends CanvasLayer
 @onready var _end_turn_button: Button = $LogWindow/MarginContainer/VBoxContainer/EndTurnButton
 @onready var _tracker_container: HBoxContainer = $CombatTracker/MarginContainer/HBoxContainer
 @onready var _tracker_panel: NinePatchRect = $CombatTracker
-const TRACKER_ICON_SCENE = preload("res://scenes/CombatTrackerIcon.tscn")
+@export var tracker_icon_scene: PackedScene
 
 
 # --- Lifecycle ---
@@ -34,7 +34,7 @@ func _rebuild_tracker() -> void:
 		child.queue_free()
 	await get_tree().process_frame
 	for unit in TurnManager.combat_queue:
-		var icon = TRACKER_ICON_SCENE.instantiate()
+		var icon = tracker_icon_scene.instantiate()
 		_tracker_container.add_child(icon)
 		icon.setup(unit)
 	var active_u = TurnManager.get("active_unit")
@@ -67,15 +67,6 @@ func _on_active_unit_changed(unit: Unit) -> void:
 		_end_turn_button.disabled = false
 	if TurnManager.current_state == TurnManager.State.COMBAT:
 		_update_tracker_highlights(unit)
-		#var icon_found = false
-		#for icon in _tracker_container.get_children():
-			#var is_active = (icon.name == str(unit.get_instance_id()))
-			#icon.set_active(is_active)
-			#if is_active: icon_found = true
-		#if not icon_found:
-			#_rebuild_tracker()
-			#for icon in _tracker_container.get_children():
-				#icon.set_active(icon.name == str(unit.get_instance_id()))
 
 
 # --- Internal UI Logic ---

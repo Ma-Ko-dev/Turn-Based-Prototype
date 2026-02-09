@@ -5,7 +5,6 @@
 [ext_resource type="PackedScene" uid="uid://chygwhunclgm0" path="res://scenes/levels/Level_01.tscn" id="2_ylec3"]
 [ext_resource type="Script" uid="uid://cdxs5yvh3c3nc" path="res://scripts/game_ui.gd" id="5_a1rh6"]
 [ext_resource type="Script" uid="uid://ckdelfqek4cv" path="res://scripts/map_manager.gd" id="6_a1rh6"]
-[ext_resource type="PackedScene" uid="uid://dunnflwlnd847" path="res://scenes/ui/CombatTrackerIcon.tscn" id="6_j7aru"]
 [ext_resource type="Texture2D" uid="uid://ca65s4dfy8qa1" path="res://ressources/ui/UI_Panel_Base.tres" id="7_j7aru"]
 
 [node name="GameRoot" type="Node2D" unique_id=1645537557]
@@ -18,7 +17,6 @@ script = ExtResource("6_a1rh6")
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=1437100580]
 script = ExtResource("5_a1rh6")
-tracker_icon_scene = ExtResource("6_j7aru")
 
 [node name="LogWindow" type="NinePatchRect" parent="UI" unique_id=1767508180]
 texture_filter = 1
