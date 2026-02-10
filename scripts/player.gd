@@ -105,9 +105,10 @@ func _handle_turn_end() -> void:
 func _toggle_character_sheet() -> void:
 	if not character_sheet: return
 	character_sheet.visible = !character_sheet.visible
-	# Optional: Handle mouse mode or freezing player logic here
 	if character_sheet.visible:
 		preview_layer.clear()
+		# Pass our unit data to the UI before it shows up
+		character_sheet.display_unit(self.data, self.current_health)
 
 
 # ---Process and Visuals

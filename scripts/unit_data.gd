@@ -66,11 +66,10 @@ func get_size_modifier() -> int:
 
 
 # --- Logic Getters ---
-func get_armor_class() -> int:
-	# Size bonus to AC is the same as the size bonus to Attack
-	return 10 + get_modifier(dexterity) + armor_bonus + shield_bonus + natural_armor + get_size_modifier()
-	
-	
+func get_armor_class() -> int: return 10 + get_modifier(dexterity) + armor_bonus + shield_bonus + natural_armor + get_size_modifier()
+func get_touch_ac() -> int: return 10 + get_modifier(dexterity) + get_size_modifier()
+func get_flat_ac() -> int: return 10 + armor_bonus + shield_bonus + natural_armor + get_size_modifier()
+
 func calculate_initial_hp() -> int:
 	var con_mod = get_modifier(constitution)
 	var base_hp = 0
@@ -82,14 +81,15 @@ func calculate_initial_hp() -> int:
 		base_hp = Dice.roll(hp_dice_count, hp_dice_sides, con_mod)
 	return max(1, base_hp + flat_hp_bonus)
 
+func get_max_hp() -> int: return calculate_initial_hp()
 
-func get_initiative_bonus() -> int:
-	return get_modifier(dexterity) + extra_initiative_bonus
+func get_initiative_bonus() -> int: return get_modifier(dexterity) + extra_initiative_bonus
 
+func get_attack_bonus() -> int: return base_attack_bonus + get_modifier(strength) + get_size_modifier()
+func get_ranged_bonus() -> int: return base_attack_bonus + get_modifier(dexterity) + get_size_modifier()
 
-func get_attack_bonus() -> int:
-	return base_attack_bonus + get_modifier(strength) + get_size_modifier()
-
+func get_cmb() -> int: return base_attack_bonus + get_modifier(strength) - get_size_modifier()
+func get_cmd() -> int: return 10 + base_attack_bonus + get_modifier(strength) + get_modifier(dexterity) - get_size_modifier()
 
 func get_fort_save() -> int: return base_fortitude + get_modifier(constitution)
 func get_reflex_save() -> int: return base_reflex + get_modifier(dexterity)

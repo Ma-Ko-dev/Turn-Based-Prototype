@@ -4,6 +4,7 @@ extends Control
 @onready var tabs: TabContainer = $ContentWrapper/MainLayout/TabContainer
 @onready var content_area: MarginContainer = $ContentWrapper/MainLayout/ContentArea
 @onready var close_button: TextureButton = $ContentWrapper/MainLayout/Header/CloseButton
+@onready var character_content = $ContentWrapper/MainLayout/ContentArea/CharacterContent
 
 
 func _ready() -> void:
@@ -19,11 +20,19 @@ func _on_tab_changed(tab_index: int) -> void:
 	_update_view(tab_index)
 
 
+# toggle visibility based on selected tab index
 func _update_view(index: int) -> void:
-	# toggle visibility based on selected tab index
 	for i in range(content_area.get_child_count()):
 		content_area.get_child(i).visible = (i == index)
+	# TODO: Trigger a refresh of the newly shown tab
 
 
 func _on_close_pressed() -> void:
 	self.hide()
+
+
+# Main function to fill the UI with data
+func display_unit(data: UnitData, current_hp: int) -> void:
+	if character_content:
+		character_content.update_ui(data, current_hp)
+	# Note: Future tabs will be added here

@@ -19,6 +19,7 @@ strength = 18
 dexterity = 14
 constitution = 14
 wisdom = 12
+charisma = 8
 armor_bonus = 5
 shield_bonus = 2
 metadata/_custom_type_script = "uid://bkrq17yyhro0b"

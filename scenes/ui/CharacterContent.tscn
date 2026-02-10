@@ -1,0 +1,398 @@
+[gd_scene format=3 uid="uid://cydqyxh4nautx"]
+
+[ext_resource type="Texture2D" uid="uid://cvbmqdqxe1tgm" path="res://assets/colored-transparent.png" id="1_k0x8o"]
+[ext_resource type="Script" uid="uid://epxve7dyrhvx" path="res://scripts/character_content.gd" id="1_wrhci"]
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_me650"]
+thickness = 3
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_geqdb"]
+thickness = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_me650"]
+bg_color = Color(1, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lq25e"]
+bg_color = Color(0, 1, 0, 1)
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_ot1vu"]
+thickness = 3
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_52wmp"]
+thickness = 3
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_ihmq4"]
+thickness = 3
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_lq25e"]
+thickness = 3
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_oaev6"]
+thickness = 3
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ihmq4"]
+atlas = ExtResource("1_k0x8o")
+region = Rect2(782, 221, 16, 16)
+
+[node name="CharacterContent" type="MarginContainer" unique_id=587292795]
+script = ExtResource("1_wrhci")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1720298153]
+layout_mode = 2
+
+[node name="TopRow" type="HBoxContainer" parent="VBoxContainer" unique_id=1332715383]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="AttributesColumn" type="VBoxContainer" parent="VBoxContainer/TopRow" unique_id=634904393]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TitleLabel" type="Label" parent="VBoxContainer/TopRow/AttributesColumn" unique_id=970730413]
+layout_mode = 2
+size_flags_vertical = 1
+text = "Attributes"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/TopRow/AttributesColumn" unique_id=897509106]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_me650")
+
+[node name="LevelLabel" type="Label" parent="VBoxContainer/TopRow/AttributesColumn" unique_id=50455713]
+layout_mode = 2
+text = "Level: 99"
+
+[node name="AttributesGrid" type="GridContainer" parent="VBoxContainer/TopRow/AttributesColumn" unique_id=977857588]
+layout_mode = 2
+columns = 3
+
+[node name="STRLabel" type="Label" parent="VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=987848132]
+layout_mode = 2
+text = "STR: "
+
+[node name="STRValue" type="Label" parent="VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=897621343]
+layout_mode = 2
+text = "99"
+
+[node name="STRBonus" type="Label" parent="VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=417337387]
+layout_mode = 2
+text = "(+99)"
+
+[node name="DEXLabel" type="Label" parent="VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=265851632]
+layout_mode = 2
+text = "DEX:"
+
+[node name="DEXValue" type="Label" parent="VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=1187684193]
+layout_mode = 2
+text = "99"
+
+[node name="DEXBonus" type="Label" parent="VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=417986743]
+layout_mode = 2
+text = "(+99)"
+
+[node name="CONLabel" type="Label" parent="VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=1815800916]
+layout_mode = 2
+text = "CON:"
+
+[node name="CONValue" type="Label" parent="VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=922650841]
+layout_mode = 2
+text = "99"
+
+[node name="CONBonus" type="Label" parent="VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=2131362666]
+layout_mode = 2
+text = "(+99)"
+
+[node name="INTLabel" type="Label" parent="VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=1849950014]
+layout_mode = 2
+text = "INT: "
+
+[node name="INTValue" type="Label" parent="VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=964664430]
+layout_mode = 2
+text = "99"
+
+[node name="INTBonus" type="Label" parent="VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=2054030780]
+layout_mode = 2
+text = "(+99)"
+
+[node name="WISLabel" type="Label" parent="VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=759467940]
+layout_mode = 2
+text = "WIS:"
+
+[node name="WISValue" type="Label" parent="VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=342841516]
+layout_mode = 2
+text = "99"
+
+[node name="WISBonus" type="Label" parent="VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=1398346540]
+layout_mode = 2
+text = "(+99)"
+
+[node name="CHALabel" type="Label" parent="VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=328296068]
+layout_mode = 2
+text = "CHA:"
+
+[node name="CHAValue" type="Label" parent="VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=521221802]
+layout_mode = 2
+text = "99"
+
+[node name="CHABonus" type="Label" parent="VBoxContainer/TopRow/AttributesColumn/AttributesGrid" unique_id=1259134303]
+layout_mode = 2
+text = "(+99)"
+
+[node name="Spacer" type="Control" parent="VBoxContainer/TopRow/AttributesColumn" unique_id=661047857]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="SpeedLabel" type="Label" parent="VBoxContainer/TopRow/AttributesColumn" unique_id=1498607226]
+layout_mode = 2
+text = "Speed: 99 ft"
+
+[node name="SizeLabel" type="Label" parent="VBoxContainer/TopRow/AttributesColumn" unique_id=1944008412]
+layout_mode = 2
+text = "Size: Small"
+
+[node name="DefenseColumn" type="VBoxContainer" parent="VBoxContainer/TopRow" unique_id=1425548554]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TitleLabel" type="Label" parent="VBoxContainer/TopRow/DefenseColumn" unique_id=862388709]
+layout_mode = 2
+size_flags_vertical = 1
+text = "Defense (Health & AC)"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/TopRow/DefenseColumn" unique_id=1512393751]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_geqdb")
+
+[node name="HealthRow" type="HBoxContainer" parent="VBoxContainer/TopRow/DefenseColumn" unique_id=1880559179]
+layout_mode = 2
+
+[node name="HPLabel" type="Label" parent="VBoxContainer/TopRow/DefenseColumn/HealthRow" unique_id=1092401057]
+layout_mode = 2
+text = "HP: "
+
+[node name="HPBar" type="ProgressBar" parent="VBoxContainer/TopRow/DefenseColumn/HealthRow" unique_id=1085934006]
+custom_minimum_size = Vector2(150, 17)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/background = SubResource("StyleBoxFlat_me650")
+theme_override_styles/fill = SubResource("StyleBoxFlat_lq25e")
+max_value = 99.0
+value = 9.0
+show_percentage = false
+
+[node name="HPValue" type="Label" parent="VBoxContainer/TopRow/DefenseColumn/HealthRow" unique_id=1262415261]
+layout_mode = 2
+text = "99/99"
+
+[node name="ACGrid" type="GridContainer" parent="VBoxContainer/TopRow/DefenseColumn" unique_id=1757279963]
+layout_mode = 2
+columns = 2
+
+[node name="ACLabel" type="Label" parent="VBoxContainer/TopRow/DefenseColumn/ACGrid" unique_id=866112500]
+layout_mode = 2
+text = "AC:"
+
+[node name="ACValue" type="Label" parent="VBoxContainer/TopRow/DefenseColumn/ACGrid" unique_id=2003807699]
+layout_mode = 2
+text = "99"
+
+[node name="TouchLabel" type="Label" parent="VBoxContainer/TopRow/DefenseColumn/ACGrid" unique_id=1840215052]
+layout_mode = 2
+text = "Touch:"
+
+[node name="TouchValue" type="Label" parent="VBoxContainer/TopRow/DefenseColumn/ACGrid" unique_id=421240117]
+layout_mode = 2
+text = "99"
+
+[node name="FlatLabel" type="Label" parent="VBoxContainer/TopRow/DefenseColumn/ACGrid" unique_id=349386446]
+layout_mode = 2
+text = "Flat:"
+
+[node name="FlatValue" type="Label" parent="VBoxContainer/TopRow/DefenseColumn/ACGrid" unique_id=1904662438]
+layout_mode = 2
+text = "99"
+
+[node name="Control" type="Control" parent="VBoxContainer/TopRow/DefenseColumn" unique_id=1500343820]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/TopRow/DefenseColumn" unique_id=1264371893]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="Label" type="Label" parent="VBoxContainer/TopRow/DefenseColumn/VBoxContainer" unique_id=164366288]
+layout_mode = 2
+text = "Saves"
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer/TopRow/DefenseColumn/VBoxContainer" unique_id=4499629]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_ot1vu")
+
+[node name="SavesGrid" type="GridContainer" parent="VBoxContainer/TopRow/DefenseColumn" unique_id=1311212527]
+layout_mode = 2
+columns = 2
+
+[node name="FortLabel" type="Label" parent="VBoxContainer/TopRow/DefenseColumn/SavesGrid" unique_id=699524143]
+layout_mode = 2
+text = "Fort (Con):"
+
+[node name="FortValue" type="Label" parent="VBoxContainer/TopRow/DefenseColumn/SavesGrid" unique_id=272839313]
+layout_mode = 2
+text = "+99"
+
+[node name="RefLabel" type="Label" parent="VBoxContainer/TopRow/DefenseColumn/SavesGrid" unique_id=1092780231]
+layout_mode = 2
+text = "Ref (Dex):"
+
+[node name="RefValue" type="Label" parent="VBoxContainer/TopRow/DefenseColumn/SavesGrid" unique_id=772494691]
+layout_mode = 2
+text = "+99"
+
+[node name="WillLabel" type="Label" parent="VBoxContainer/TopRow/DefenseColumn/SavesGrid" unique_id=1700039802]
+layout_mode = 2
+text = "Will (Wis):"
+
+[node name="WillValue" type="Label" parent="VBoxContainer/TopRow/DefenseColumn/SavesGrid" unique_id=1312485317]
+layout_mode = 2
+text = "+99"
+
+[node name="OffenseColumn" type="VBoxContainer" parent="VBoxContainer/TopRow" unique_id=1612962469]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TitleLabel" type="Label" parent="VBoxContainer/TopRow/OffenseColumn" unique_id=207958646]
+layout_mode = 2
+size_flags_vertical = 1
+text = "Offense"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/TopRow/OffenseColumn" unique_id=205851031]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_52wmp")
+
+[node name="OffenseGrid" type="GridContainer" parent="VBoxContainer/TopRow/OffenseColumn" unique_id=2351950]
+layout_mode = 2
+columns = 2
+
+[node name="BABLabel" type="Label" parent="VBoxContainer/TopRow/OffenseColumn/OffenseGrid" unique_id=913007583]
+layout_mode = 2
+text = "BAB:"
+
+[node name="BABValue" type="Label" parent="VBoxContainer/TopRow/OffenseColumn/OffenseGrid" unique_id=250627489]
+layout_mode = 2
+text = "+99"
+
+[node name="MeleeLabel" type="Label" parent="VBoxContainer/TopRow/OffenseColumn/OffenseGrid" unique_id=1366474274]
+layout_mode = 2
+text = "Melee:"
+
+[node name="MeleeValue" type="Label" parent="VBoxContainer/TopRow/OffenseColumn/OffenseGrid" unique_id=1381876983]
+layout_mode = 2
+text = "+99"
+
+[node name="RangedLabel" type="Label" parent="VBoxContainer/TopRow/OffenseColumn/OffenseGrid" unique_id=1089198111]
+layout_mode = 2
+text = "Ranged:"
+
+[node name="RangedValue" type="Label" parent="VBoxContainer/TopRow/OffenseColumn/OffenseGrid" unique_id=562122356]
+layout_mode = 2
+text = "+99"
+
+[node name="CMBLabel" type="Label" parent="VBoxContainer/TopRow/OffenseColumn/OffenseGrid" unique_id=529919792]
+layout_mode = 2
+text = "CMB: "
+
+[node name="CMBValue" type="Label" parent="VBoxContainer/TopRow/OffenseColumn/OffenseGrid" unique_id=1298677471]
+layout_mode = 2
+text = "+99"
+
+[node name="CMDLabel" type="Label" parent="VBoxContainer/TopRow/OffenseColumn/OffenseGrid" unique_id=1470127537]
+layout_mode = 2
+text = "CMD:"
+
+[node name="CMDValue" type="Label" parent="VBoxContainer/TopRow/OffenseColumn/OffenseGrid" unique_id=1280776072]
+layout_mode = 2
+text = "99"
+
+[node name="InitLabel" type="Label" parent="VBoxContainer/TopRow/OffenseColumn/OffenseGrid" unique_id=1078906202]
+layout_mode = 2
+text = "Initiative:"
+
+[node name="InitValue" type="Label" parent="VBoxContainer/TopRow/OffenseColumn/OffenseGrid" unique_id=571089703]
+layout_mode = 2
+text = "+99"
+
+[node name="Spacer" type="Control" parent="VBoxContainer/TopRow/OffenseColumn" unique_id=2112390846]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/TopRow/OffenseColumn" unique_id=92293819]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="Label" type="Label" parent="VBoxContainer/TopRow/OffenseColumn/VBoxContainer" unique_id=809708177]
+layout_mode = 2
+text = "Weapon Set"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/TopRow/OffenseColumn/VBoxContainer" unique_id=1253435824]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_ihmq4")
+
+[node name="WeaponBox" type="VBoxContainer" parent="VBoxContainer/TopRow/OffenseColumn" unique_id=1520994382]
+layout_mode = 2
+
+[node name="WeaponName" type="Label" parent="VBoxContainer/TopRow/OffenseColumn/WeaponBox" unique_id=699168115]
+layout_mode = 2
+text = "[Shortsword]"
+
+[node name="WeaponStats" type="Label" parent="VBoxContainer/TopRow/OffenseColumn/WeaponBox" unique_id=684865489]
+layout_mode = 2
+text = "1d4 / 19-20"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer" unique_id=1302811890]
+layout_mode = 2
+theme_override_constants/separation = 6
+theme_override_styles/separator = SubResource("StyleBoxLine_lq25e")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=1440163882]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="BuffTitle" type="Label" parent="VBoxContainer/VBoxContainer" unique_id=925853910]
+layout_mode = 2
+text = "Buffs | Debuffs | Other"
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer/VBoxContainer" unique_id=1954178496]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_oaev6")
+
+[node name="BuffsArea" type="ScrollContainer" parent="VBoxContainer" unique_id=1347785661]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BuffListContainer" type="VBoxContainer" parent="VBoxContainer/BuffsArea" unique_id=438243571]
+layout_mode = 2
+
+[node name="BuffRow1" type="HBoxContainer" parent="VBoxContainer/BuffsArea/BuffListContainer" unique_id=49999923]
+visible = false
+layout_mode = 2
+
+[node name="Icon" type="TextureRect" parent="VBoxContainer/BuffsArea/BuffListContainer/BuffRow1" unique_id=279389498]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = SubResource("AtlasTexture_ihmq4")
+
+[node name="Description" type="Label" parent="VBoxContainer/BuffsArea/BuffListContainer/BuffRow1" unique_id=1451132546]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Bless"
+
+[node name="Value" type="Label" parent="VBoxContainer/BuffsArea/BuffListContainer/BuffRow1" unique_id=1962435852]
+layout_mode = 2
+text = "+1 "
+
+[node name="Duration" type="Label" parent="VBoxContainer/BuffsArea/BuffListContainer/BuffRow1" unique_id=1569692941]
+layout_mode = 2
+text = "1 Round"
