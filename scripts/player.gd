@@ -112,6 +112,9 @@ func _toggle_character_sheet() -> void:
 
 # ---Process and Visuals
 func _process(_delta) -> void:
+	if character_sheet and character_sheet.visible:
+		preview_layer.clear()
+		return
 	# Stop drawing path previews if it's not our turn
 	if TurnManager.current_state == TurnManager.State.COMBAT and not is_active_unit:
 		preview_layer.clear()
@@ -124,6 +127,9 @@ func _process(_delta) -> void:
 
 
 func _update_path_preview() -> void:
+	# Guard clause for open UI
+	if character_sheet and character_sheet.visible:
+		return
 	var hovered_cell = map_manager.get_grid_coords(get_global_mouse_position())
 	preview_layer.clear()
 	if not astar_grid.is_in_boundsv(hovered_cell) or hovered_cell == grid_pos:

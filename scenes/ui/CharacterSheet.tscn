@@ -55,6 +55,9 @@ thickness = 3
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_52wmp"]
 thickness = 3
 
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_ihmq4"]
+thickness = 3
+
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_lq25e"]
 thickness = 3
 
@@ -347,6 +350,10 @@ text = "Flat:"
 layout_mode = 2
 text = "12"
 
+[node name="Control" type="Control" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/DefenseColumn" unique_id=261039718]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
 [node name="VBoxContainer" type="VBoxContainer" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/DefenseColumn" unique_id=742220029]
 layout_mode = 2
 size_flags_horizontal = 0
@@ -452,6 +459,22 @@ text = "Initiative:"
 [node name="InitValue" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/OffenseColumn/OffenseGrid" unique_id=903526040]
 layout_mode = 2
 text = "+3"
+
+[node name="Spacer" type="Control" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/OffenseColumn" unique_id=1517374913]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/OffenseColumn" unique_id=89721756]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="Label" type="Label" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/OffenseColumn/VBoxContainer" unique_id=1276488854]
+layout_mode = 2
+text = "Weapon Set"
+
+[node name="HSeparator" type="HSeparator" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/OffenseColumn/VBoxContainer" unique_id=1991519175]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_ihmq4")
 
 [node name="WeaponBox" type="VBoxContainer" parent="ContentWrapper/MainLayout/ContentArea/CharacterContent/VBoxContainer/TopRow/OffenseColumn" unique_id=614831718]
 layout_mode = 2
