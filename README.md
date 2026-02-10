@@ -34,5 +34,10 @@ A tactical 2D turn-based prototype built with **Godot 4.6**. This project is the
 4. Press `Enter/Space` in Exploration mode to cycle turns. Combat will start when an enemy spotted you.
 
 ## ⚖️ License
+This project uses a dual-license model:
 
-This project is licensed under the MIT License - see the `LICENSE` file for details.
+- Source code is licensed under the MIT License.
+- Game mechanics and rules are licensed as Open Game Content
+  under the Open Game License v1.0a.
+
+See NOTICE.md for details.
