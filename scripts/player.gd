@@ -7,6 +7,7 @@ var _last_movement_amount: int = 0
 
 # --- Misc ---
 @onready var camera: Camera2D = $Camera2D
+@onready var character_sheet = get_tree().root.find_child("CharacterSheet", true, false)
 
 
 # --- Lifecycle ---
@@ -44,8 +45,13 @@ func _on_movement_changed(new_amount: int) -> void:
 
 # --- Input Handling ---
 func _input(event: InputEvent) -> void:
-	# Do not allow any interaction if the player is dead/hidden
-	if not visible: return
+	# Toggle Character Sheet with C or Tab
+	if event.is_action_pressed("toggle_character_sheet"):
+		_toggle_character_sheet()
+		# Stop processing to avoid accidental clicks
+		return
+	# Do not allow any interaction if the player is dead/hidden or UI is open
+	if not visible or (character_sheet and character_sheet.visible): return
 	# Ignore input if it's combat and not this unit's turn
 	if TurnManager.current_state == TurnManager.State.COMBAT and not is_active_unit:
 		return
@@ -94,6 +100,14 @@ func _handle_turn_end() -> void:
 		update_selection_visual()
 		preview_layer.clear()
 		TurnManager.next_combat_turn()
+
+
+func _toggle_character_sheet() -> void:
+	if not character_sheet: return
+	character_sheet.visible = !character_sheet.visible
+	# Optional: Handle mouse mode or freezing player logic here
+	if character_sheet.visible:
+		preview_layer.clear()
 
 
 # ---Process and Visuals
