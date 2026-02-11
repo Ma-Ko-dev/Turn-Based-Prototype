@@ -10,7 +10,7 @@ region = Rect2(544, 119, 16, 16)
 [resource]
 script = ExtResource("1_smd3y")
 damage_small = "1d6"
-damage_medium = "1d12"
+damage_medium = "1d8"
 critical_range = 19
 item_name = "Longsword"
 slot_type = 1
