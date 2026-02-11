@@ -9,6 +9,12 @@ enum Alignment {
 }
 enum Size { FINE, DIMINUTIVE, TINY, SMALL, MEDIUM, LARGE, HUGE, GARGANTUAN, COLOSSAL }
 
+# --- Equipment ---
+@export_group("Equipment")
+@export var main_hand: WeaponData
+@export var off_hand: ItemData # can be a shield (armor data) or weapon (weapon data)
+@export var body_armor: ArmorData
+
 # --- Progression ---
 @export_group("Progression")
 @export var level: int = 1
@@ -77,9 +83,26 @@ func get_size_modifier() -> int:
 
 
 # --- Logic Getters ---
-func get_armor_class() -> int: return 10 + get_modifier(dexterity) + armor_bonus + shield_bonus + natural_armor + get_size_modifier()
+func get_clamped_dex_modifier() -> int:
+	var dex_mod = get_modifier(dexterity)
+	if body_armor:
+		# Return the smaller value: either actual dex or the armor's limit
+		return min(dex_mod, body_armor.max_dex_bonus)
+	return dex_mod
+func get_armor_bonus() -> int:
+	# Use armor item bonus if present, otherwise fallback to hardcoded natural/base bonus
+	var bonus = natural_armor
+	if body_armor: 
+		bonus += body_armor.ac_bonus
+	return bonus
+func get_shield_bonus() -> int:
+	if off_hand is ArmorData: # Shields are ArmorData with slot_type OFF_HAND
+		return off_hand.ac_bonus
+	return 0
+func get_armor_class() -> int: return 10 + get_clamped_dex_modifier() + get_armor_bonus() + get_shield_bonus() + get_size_modifier()
 func get_touch_ac() -> int: return 10 + get_modifier(dexterity) + get_size_modifier()
 func get_flat_ac() -> int: return 10 + armor_bonus + shield_bonus + natural_armor + get_size_modifier()
+	
 
 func calculate_initial_hp() -> int:
 	var con_mod = get_modifier(constitution)
@@ -99,6 +122,18 @@ func get_initiative_bonus() -> int: return get_modifier(dexterity) + extra_initi
 func get_attack_bonus() -> int: return base_attack_bonus + get_modifier(strength) + get_size_modifier()
 func get_ranged_bonus() -> int: return base_attack_bonus + get_modifier(dexterity) + get_size_modifier()
 
+func get_weapon_damage_dice() -> String:
+	if main_hand:
+		return main_hand.damage_medium if size >= Size.MEDIUM else main_hand.damage_small
+		# Fallback to hardcoded stats if no weapon is equipped
+	return "%dd%d" % [damage_dice_count, damage_dice_sides]
+func get_damage_data() -> Dictionary:
+	var dice_string = get_weapon_damage_dice() #1d3 1d8 etc
+	var parts = dice_string.split("d")
+	return { "count": int(parts[0]), "sides": int(parts[1])}
+func get_attack_reach() -> int:
+	return main_hand.reach_ft if main_hand else 5
+
 func get_cmb() -> int: return base_attack_bonus + get_modifier(strength) - get_size_modifier()
 func get_cmd() -> int: return 10 + base_attack_bonus + get_modifier(strength) + get_modifier(dexterity) - get_size_modifier()
 
@@ -110,14 +145,15 @@ func get_required_xp() -> int:
 	# Maybe 1000 -> 3000 -> 6000 etc
 	return int((level * (level + 1) / 2.0) * 1000)
 
+func get_alignment_name() -> String:
+	# Returns the string name of the alignment enum instead of its index
+	return Alignment.keys()[alignment].replace("_", " ").capitalize()
+
+
+
 func add_xp(amount: int) -> bool:
 	current_xp += amount
 	if current_xp >= get_required_xp():
 		# level_up() later
 		return true
 	return false
-		
-
-func get_alignment_name() -> String:
-	# Returns the string name of the alignment enum instead of its index
-	return Alignment.keys()[alignment].replace("_", " ").capitalize()

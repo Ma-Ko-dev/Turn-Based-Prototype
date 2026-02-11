@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="ArmorData" format=3 uid="uid://c1k54y0fcc2ju"]
+
+[ext_resource type="Script" uid="uid://ctp1166oqcfse" path="res://scripts/amor_data.gd" id="1_jjgr0"]
+[ext_resource type="Texture2D" uid="uid://cvbmqdqxe1tgm" path="res://assets/colored-transparent.png" id="2_p7f76"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mpmwj"]
+atlas = ExtResource("2_p7f76")
+region = Rect2(663, 68, 16, 16)
+
+[resource]
+script = ExtResource("1_jjgr0")
+ac_bonus = 2
+max_dex_bonus = 0
+armor_check_penalty = 2
+arcane_spell_failure = 15
+item_name = "Metal Shield"
+item_type = 2
+slot_type = 2
+texture = SubResource("AtlasTexture_mpmwj")
+description = "A sturdy Metal Shield"
+cost = 20
+weight = 15.0
+metadata/_custom_type_script = "uid://ctp1166oqcfse"

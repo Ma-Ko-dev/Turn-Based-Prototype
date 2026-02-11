@@ -158,9 +158,11 @@ func take_damage(amount: int, is_crit: bool= false) -> void:
 # Helper to avoid code duplication for damage
 func _apply_damage(target: Unit, is_crit: bool) -> void:
 	var modifier = data.get_modifier(data.strength)
-	var damage = Dice.roll(data.damage_dice_count, data.damage_dice_sides, modifier)
-	# Note that different equip can have different crit multiplier
-	if is_crit: damage *= 2
+	var dmg_stats = data.get_damage_data()
+	var damage = Dice.roll(dmg_stats.count, dmg_stats.sides, modifier)
+	# Use weapon's crit multiplier if it exists, otherwise default to 2
+	var crit_mult = data.main_hand.critical_multiplier if data.main_hand else 2
+	if is_crit: damage *= crit_mult
 	target.take_damage(max(1, damage), is_crit)
 
 

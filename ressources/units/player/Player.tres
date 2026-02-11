@@ -1,7 +1,10 @@
 [gd_resource type="Resource" script_class="UnitData" format=3 uid="uid://deqdcl244gojl"]
 
 [ext_resource type="Script" uid="uid://bkrq17yyhro0b" path="res://scripts/unit_data.gd" id="1_bmmou"]
+[ext_resource type="Resource" uid="uid://djuhbhlu5hf0o" path="res://ressources/ui/items/weapons/longsword.tres" id="1_jlfo3"]
+[ext_resource type="Resource" uid="uid://c60is5xx7fejg" path="res://ressources/ui/items/armor/scale_mail.tres" id="1_tjf5t"]
 [ext_resource type="Texture2D" uid="uid://cvbmqdqxe1tgm" path="res://assets/colored-transparent.png" id="2_lkt8u"]
+[ext_resource type="Resource" uid="uid://c1k54y0fcc2ju" path="res://ressources/ui/items/armor/shields/metal_shield.tres" id="3_s10kb"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5koo4"]
 atlas = ExtResource("2_lkt8u")
@@ -9,12 +12,16 @@ region = Rect2(476, 0, 16, 16)
 
 [resource]
 script = ExtResource("1_bmmou")
+main_hand = ExtResource("1_jlfo3")
+off_hand = ExtResource("3_s10kb")
+body_armor = ExtResource("1_tjf5t")
 is_player_data = true
 name = "Hero"
 texture = SubResource("AtlasTexture_5koo4")
 movement_range = 6
 base_attack_bonus = 1
 base_fortitude = 2
+damage_dice_sides = 3
 strength = 18
 dexterity = 14
 constitution = 14
