@@ -9,8 +9,11 @@ region = Rect2(425, 51, 16, 16)
 
 [resource]
 script = ExtResource("1_0f3a6")
+xp_reward = 200
+threat_rating = 0.5
 name = "Zombie"
 texture = SubResource("AtlasTexture_ckaa2")
+alignment = 7
 hp_dice_count = 2
 hp_dice_sides = 8
 flat_hp_bonus = 3

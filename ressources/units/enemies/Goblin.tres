@@ -9,9 +9,12 @@ region = Rect2(425, 34, 16, 16)
 
 [resource]
 script = ExtResource("1_to8mc")
+xp_reward = 135
+threat_rating = 0.3
 name = "Goblin"
 size = 3
 texture = SubResource("AtlasTexture_ckaa2")
+alignment = 7
 movement_range = 6
 base_attack_bonus = 1
 damage_dice_sides = 4

@@ -151,6 +151,7 @@ func take_damage(amount: int, is_crit: bool= false) -> void:
 		dmg_text.setup(amount, is_crit)
 	GameEvents.log_requested.emit("%s takes %s damage! (HP: %s/%s)" % [display_name, amount, current_health, max_health])
 	if current_health <= 0:
+		_award_xp_to_player()
 		_die()
 
 
@@ -211,6 +212,21 @@ func _play_hit_animation() -> void:
 		shake_tween.tween_property(self, "offset", shake_offset, 0.05)
 	# Reset offset
 	shake_tween.tween_property(self, "offset", Vector2.ZERO, 0.05)
+
+
+func _award_xp_to_player() -> void:
+	# Only non-players (enemies) should award XP when they die
+	if is_in_group("players") or not data:
+		return
+	var xp_to_give = data.xp_reward
+	var players = get_tree().get_nodes_in_group("players")
+	if players.size() > 0:
+		for player in players:
+			if player is Unit and player.data:
+				var leveled_up = player.data.add_xp(xp_to_give)
+				GameEvents.log_requested.emit("%s gains %d XP!" % [player.display_name, xp_to_give])
+				if leveled_up:
+					GameEvents.log_requested.emit("LEVEL UP! %s is now Level %d!" % [player.display_name, player.data.level])
 
 
 # --- Grid Helpers ---
