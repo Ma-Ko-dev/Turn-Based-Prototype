@@ -142,8 +142,14 @@ func attack_target(target: Unit) -> void:
 
 
 ## Reduces health and checks for death
-func take_damage(amount: int, is_crit: bool= false) -> void:
-	current_health -= amount
+func take_damage(amount: int, is_crit: bool = false, type: int = -1) -> void:
+	var final_damage = amount
+	if type != -1:
+			var reduction = data.get_dr_for_type(type)
+			final_damage -= reduction
+			GameEvents.log_requested.emit("%s resists %d damage!" % [display_name, reduction])
+	final_damage = max(0, final_damage) # Ensure damage doesn't become healing
+	current_health -= final_damage
 	# Emit signal so UI/Tracker can react
 	hp_changed.emit()
 	# Play the hit feedback
@@ -154,7 +160,7 @@ func take_damage(amount: int, is_crit: bool= false) -> void:
 		get_parent().add_child(dmg_text)
 		dmg_text.global_position = global_position + Vector2(0, -20)
 		dmg_text.setup(amount, is_crit)
-	GameEvents.log_requested.emit("%s takes %s damage! (HP: %s/%s)" % [display_name, amount, current_health, max_health])
+	GameEvents.log_requested.emit("%s takes %s damage! (HP: %s/%s)" % [display_name, final_damage, current_health, max_health])
 	if current_health <= 0:
 		_award_xp_to_player()
 		_die()
@@ -165,10 +171,11 @@ func _apply_damage(target: Unit, is_crit: bool) -> void:
 	var modifier = data.get_modifier(data.strength)
 	var dmg_stats = data.get_damage_data()
 	var damage = Dice.roll(dmg_stats.count, dmg_stats.sides, modifier)
+	var dmg_type = data.main_hand.damage_type if data.main_hand else -1
 	# Use weapon's crit multiplier if it exists, otherwise default to 2
 	var crit_mult = data.main_hand.critical_multiplier if data.main_hand else 2
 	if is_crit: damage *= crit_mult
-	target.take_damage(max(1, damage), is_crit)
+	target.take_damage(max(1, damage), is_crit, dmg_type)
 
 
 ## Handles unit removal

@@ -1,7 +1,13 @@
 [gd_resource type="Resource" script_class="UnitData" format=3 uid="uid://302xlx3u0lsh"]
 
 [ext_resource type="Script" uid="uid://bkrq17yyhro0b" path="res://scripts/unit_data.gd" id="1_0f3a6"]
+[ext_resource type="Script" uid="uid://dw46ep76orpni" path="res://scripts/ResistanceEntry.gd" id="1_31k6d"]
 [ext_resource type="Texture2D" uid="uid://cvbmqdqxe1tgm" path="res://assets/colored-transparent.png" id="2_31k6d"]
+
+[sub_resource type="Resource" id="Resource_surxl"]
+script = ExtResource("1_31k6d")
+amount = 5
+metadata/_custom_type_script = "uid://dw46ep76orpni"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ckaa2"]
 atlas = ExtResource("2_31k6d")
@@ -18,6 +24,7 @@ hp_dice_count = 2
 hp_dice_sides = 8
 flat_hp_bonus = 3
 movement_range = 6
+resistances = Array[ExtResource("1_31k6d")]([SubResource("Resource_surxl")])
 base_attack_bonus = 1
 base_will = 3
 damage_dice_sides = 6

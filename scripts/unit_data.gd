@@ -39,6 +39,9 @@ enum Size { FINE, DIMINUTIVE, TINY, SMALL, MEDIUM, LARGE, HUGE, GARGANTUAN, COLO
 @export var sight_range: int = 12
 var extra_initiative_bonus: int = 0
 
+# --- Resistance Stats ---
+@export var resistances: Array[ResistanceEntry] = []
+
 # --- Combat Stats ---
 @export_group("Combat Stats")
 @export var base_attack_bonus: int = 0
@@ -102,7 +105,13 @@ func get_shield_bonus() -> int:
 func get_armor_class() -> int: return 10 + get_clamped_dex_modifier() + get_armor_bonus() + get_shield_bonus() + get_size_modifier()
 func get_touch_ac() -> int: return 10 + get_modifier(dexterity) + get_size_modifier()
 func get_flat_ac() -> int: return 10 + armor_bonus + shield_bonus + natural_armor + get_size_modifier()
-	
+
+func get_dr_for_type(damage_type: int) -> int:
+	for res in resistances:
+		if res.type == damage_type:
+			return res.amount
+	return 0
+
 
 func calculate_initial_hp() -> int:
 	var con_mod = get_modifier(constitution)
