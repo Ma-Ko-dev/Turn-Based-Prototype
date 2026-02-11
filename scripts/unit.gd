@@ -144,10 +144,12 @@ func attack_target(target: Unit) -> void:
 ## Reduces health and checks for death
 func take_damage(amount: int, is_crit: bool = false, type: int = -1) -> void:
 	var final_damage = amount
+	var reduction = 0
 	if type != -1:
-			var reduction = data.get_dr_for_type(type)
+			reduction = data.get_dr_for_type(type)
 			final_damage -= reduction
-			GameEvents.log_requested.emit("%s resists %d damage!" % [display_name, reduction])
+			if reduction > 0:
+				GameEvents.log_requested.emit("%s resists %d damage!" % [display_name, reduction])
 	final_damage = max(0, final_damage) # Ensure damage doesn't become healing
 	current_health -= final_damage
 	# Emit signal so UI/Tracker can react
