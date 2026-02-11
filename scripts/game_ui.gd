@@ -15,6 +15,7 @@ func _ready() -> void:
 	TurnManager.turn_mode_changed.connect(_on_turn_mode_changed)
 	TurnManager.active_unit_changed.connect(_on_active_unit_changed)
 	TurnManager.combat_queue_updated.connect(_rebuild_tracker)
+	_end_turn_button.pressed.connect(_on_end_turn_button_pressed)
 	_tracker_panel.visible = false
 
 
