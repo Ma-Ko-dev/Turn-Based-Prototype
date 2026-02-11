@@ -1,17 +1,28 @@
 extends Resource
 class_name UnitData
 
+# --- ENUMS ---
+enum Alignment {
+	LAWFUL_GOOD, NEUTRAL_GOOD, CHAOTIC_GOOD,
+	LAWFUL_NEUTRAL, TRUE_NEUTRAL, CHAOTIC_NEUTRAL,
+	LAWFUL_EVIL, NEUTRAL_EVIL, CHAOTIC_EVIL
+}
+enum Size { FINE, DIMINUTIVE, TINY, SMALL, MEDIUM, LARGE, HUGE, GARGANTUAN, COLOSSAL }
+
 # --- Progression ---
 @export_group("Progression")
 @export var level: int = 1
+@export var current_xp: int = 0
+@export var xp_reward: int = 100
+@export var threat_rating: float = 1.0
 @export var is_player_data: bool = false
 
 # --- Identity ---
-enum Size { FINE, DIMINUTIVE, TINY, SMALL, MEDIUM, LARGE, HUGE, GARGANTUAN, COLOSSAL }
 @export_group("Identity")
 @export var name: String = "Unknown Unit"
 @export var size: Size = Size.MEDIUM
 @export var texture: Texture2D
+@export var alignment: Alignment = Alignment.TRUE_NEUTRAL
 
 # --- Stats ---
 @export_group("Stats")
@@ -94,3 +105,15 @@ func get_cmd() -> int: return 10 + base_attack_bonus + get_modifier(strength) + 
 func get_fort_save() -> int: return base_fortitude + get_modifier(constitution)
 func get_reflex_save() -> int: return base_reflex + get_modifier(dexterity)
 func get_will_save() -> int: return base_will + get_modifier(wisdom)
+
+func get_required_xp() -> int:
+	# Maybe 1000 -> 3000 -> 6000 etc
+	return int((level * (level + 1) / 2.0) * 1000)
+
+func add_xp(amount: int) -> bool:
+	current_xp += amount
+	if current_xp >= get_required_xp():
+		# level_up() later
+		return true
+	return false
+		
