@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="ArmorData" format=3 uid="uid://dyt1ifhdgcb0f"]
+
+[ext_resource type="Script" uid="uid://ctp1166oqcfse" path="res://scripts/amor_data.gd" id="1_yn4xk"]
+[ext_resource type="Texture2D" uid="uid://cvbmqdqxe1tgm" path="res://assets/colored-transparent.png" id="2_70gnn"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7dpfs"]
+atlas = ExtResource("2_70gnn")
+region = Rect2(561, 17, 16, 16)
+
+[resource]
+script = ExtResource("1_yn4xk")
+ac_bonus = 2
+max_dex_bonus = 6
+arcane_spell_failure = 10
+item_name = "Leather Armor"
+item_tyoe = 1
+slot_type = 4
+texture = SubResource("AtlasTexture_7dpfs")
+description = "A common light armor made out of leather."
+cost = 10
+weight = 15.0
+metadata/_custom_type_script = "uid://ctp1166oqcfse"

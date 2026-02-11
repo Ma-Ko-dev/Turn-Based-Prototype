@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="WeaponData" format=3 uid="uid://djuhbhlu5hf0o"]
+
+[ext_resource type="Script" uid="uid://dvi1cieky0jqs" path="res://scripts/weapon_data.gd" id="1_smd3y"]
+[ext_resource type="Texture2D" uid="uid://cvbmqdqxe1tgm" path="res://assets/colored-transparent.png" id="2_a71uq"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vuyw8"]
+atlas = ExtResource("2_a71uq")
+region = Rect2(544, 119, 16, 16)
+
+[resource]
+script = ExtResource("1_smd3y")
+damage_small = "1d6"
+damage_medium = "1d8"
+critical_range = 19
+item_name = "Longsword"
+item_tyoe = 0
+slot_type = 1
+texture = SubResource("AtlasTexture_vuyw8")
+description = "A very common weapon called longsword, made to cut down bandits and evil creatures."
+cost = 15
+weight = 4.0
+metadata/_custom_type_script = "uid://dvi1cieky0jqs"
