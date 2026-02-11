@@ -117,3 +117,7 @@ func add_xp(amount: int) -> bool:
 		return true
 	return false
 		
+
+func get_alignment_name() -> String:
+	# Returns the string name of the alignment enum instead of its index
+	return Alignment.keys()[alignment].replace("_", " ").capitalize()

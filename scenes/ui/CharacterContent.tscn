@@ -63,6 +63,10 @@ theme_override_styles/separator = SubResource("StyleBoxLine_me650")
 layout_mode = 2
 text = "Level: 99"
 
+[node name="XPLabel" type="Label" parent="VBoxContainer/TopRow/AttributesColumn" unique_id=24086757]
+layout_mode = 2
+text = "XP: 9999"
+
 [node name="AttributesGrid" type="GridContainer" parent="VBoxContainer/TopRow/AttributesColumn" unique_id=977857588]
 layout_mode = 2
 columns = 3
@@ -214,7 +218,7 @@ text = "Flat:"
 layout_mode = 2
 text = "99"
 
-[node name="Control" type="Control" parent="VBoxContainer/TopRow/DefenseColumn" unique_id=1500343820]
+[node name="Spacer" type="Control" parent="VBoxContainer/TopRow/DefenseColumn" unique_id=1500343820]
 custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
 
@@ -257,6 +261,14 @@ text = "Will (Wis):"
 [node name="WillValue" type="Label" parent="VBoxContainer/TopRow/DefenseColumn/SavesGrid" unique_id=1312485317]
 layout_mode = 2
 text = "+99"
+
+[node name="Spacer2" type="Control" parent="VBoxContainer/TopRow/DefenseColumn" unique_id=654561198]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="AlignmentLabel" type="Label" parent="VBoxContainer/TopRow/DefenseColumn" unique_id=366270775]
+layout_mode = 2
+text = "Alignment: XXXX"
 
 [node name="OffenseColumn" type="VBoxContainer" parent="VBoxContainer/TopRow" unique_id=1612962469]
 layout_mode = 2

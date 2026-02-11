@@ -7,9 +7,11 @@ extends MarginContainer
 
 
 func update_ui(data: UnitData, current_hp: int) -> void:
-	# Level
+	# Level & xp
 	var level_label = find_child("LevelLabel")
 	if level_label: level_label.text = "Level: " + str(data.level)
+	var xp_label = find_child("XPLabel")
+	if xp_label: xp_label.text = "XP: " + str(data.current_xp)
 	
 	# Attributes
 	_update_attribute("STR", data.strength, data.get_modifier(data.strength))
@@ -49,6 +51,10 @@ func update_ui(data: UnitData, current_hp: int) -> void:
 	_update_single_label("FortValue", data.get_fort_save())
 	_update_single_label("RefValue", data.get_reflex_save())
 	_update_single_label("WillValue", data.get_will_save())
+	
+	# Alignment
+	var alignment_lavel = find_child("AlignmentLabel")
+	if alignment_lavel: alignment_lavel.text = "Alignment: " + data.get_alignment_name()
 	
 	# Offense
 	_update_single_label("BABValue", data.base_attack_bonus)

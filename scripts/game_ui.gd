@@ -37,7 +37,7 @@ func _rebuild_tracker() -> void:
 		var icon = tracker_icon_scene.instantiate()
 		_tracker_container.add_child(icon)
 		icon.setup(unit)
-	var active_u = TurnManager.get("active_unit")
+	#var active_u = TurnManager.get("active_unit")
 	if TurnManager.current_state == TurnManager.State.COMBAT and not TurnManager.combat_queue.is_empty():
 		var current_active = TurnManager.combat_queue[TurnManager.active_unit_index]
 		_update_tracker_highlights(current_active)
