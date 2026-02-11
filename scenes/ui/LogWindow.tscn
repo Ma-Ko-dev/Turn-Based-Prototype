@@ -2,6 +2,9 @@
 
 [ext_resource type="Texture2D" uid="uid://ca65s4dfy8qa1" path="res://ressources/ui/UI_Panel_Base.tres" id="1_5mpw1"]
 
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_5mpw1"]
+thickness = 3
+
 [node name="LogWindow" type="NinePatchRect" unique_id=1249553263]
 texture_filter = 1
 anchors_preset = -1
@@ -37,11 +40,19 @@ theme_override_constants/margin_bottom = 10
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=145987902]
 layout_mode = 2
 
-[node name="LogTitle" type="Label" parent="MarginContainer/VBoxContainer" unique_id=40291991]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1847980606]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="LogTitle" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer" unique_id=40291991]
 modulate = Color(0, 0, 0, 1)
 layout_mode = 2
 text = "Log"
 horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer/VBoxContainer" unique_id=1154191507]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_5mpw1")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer" unique_id=1952339349]
 layout_mode = 2
@@ -51,6 +62,7 @@ size_flags_vertical = 3
 modulate = Color(0, 0, 0, 1)
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 21
 vertical_alignment = 2
