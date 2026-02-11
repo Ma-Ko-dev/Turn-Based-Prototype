@@ -121,6 +121,7 @@ func attack_target(target: Unit) -> void:
 	var total_roll = Dice.roll(1, 20, attack_bonus)
 	var raw_roll = total_roll - attack_bonus # we do it that way to keep the nat20/1 logic working and also keep the dice roll debug accurate
 	var target_ac = target.data.get_armor_class() if target.data else 10
+	var crit_threshold = data.main_hand.critical_range if data.main_hand else 20
 	GameEvents.log_requested.emit("%s attacks %s!" % [display_name, target.display_name])	
 	# Pathfinder Rules: Natural 20 is always a hit, Natural 1 is always a miss
 	if raw_roll >= 20:
@@ -129,8 +130,12 @@ func attack_target(target: Unit) -> void:
 	elif raw_roll <= 1:
 		GameEvents.log_requested.emit("CRITICAL MISS! (Nat 1 vs AC %d)" % target_ac)
 	elif total_roll >= target_ac:
-		GameEvents.log_requested.emit("HIT! (%d + %d = %d vs AC %d)" % [raw_roll, attack_bonus, total_roll, target_ac])
-		_apply_damage(target, false)
+		if raw_roll >= crit_threshold:
+			GameEvents.log_requested.emit("CRITICAL HIT! (%d is in range)" % raw_roll)
+			_apply_damage(target, true)
+		else:
+			GameEvents.log_requested.emit("HIT! (%d + %d = %d vs AC %d)" % [raw_roll, attack_bonus, total_roll, target_ac])
+			_apply_damage(target, false)
 	else:
 		GameEvents.log_requested.emit("MISS! (%d + %d = %d vs AC %d)" % [raw_roll, attack_bonus, total_roll, target_ac])
 	has_attacked = true
