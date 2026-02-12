@@ -8,6 +8,7 @@ enum Alignment {
 	LAWFUL_EVIL, NEUTRAL_EVIL, CHAOTIC_EVIL
 }
 enum Size { FINE, DIMINUTIVE, TINY, SMALL, MEDIUM, LARGE, HUGE, GARGANTUAN, COLOSSAL }
+enum UnitType { HUMANOID, UNDEAD, CONSTRUCT, ELEMENTAL, BEAST }
 
 # --- Equipment ---
 @export_group("Equipment")
@@ -27,8 +28,9 @@ enum Size { FINE, DIMINUTIVE, TINY, SMALL, MEDIUM, LARGE, HUGE, GARGANTUAN, COLO
 @export_group("Identity")
 @export var name: String = "Unknown Unit"
 @export var size: Size = Size.MEDIUM
-@export var texture: Texture2D
+@export var unit_type: UnitType = UnitType.HUMANOID
 @export var alignment: Alignment = Alignment.TRUE_NEUTRAL
+@export var texture: Texture2D
 
 # --- Stats ---
 @export_group("Stats")
