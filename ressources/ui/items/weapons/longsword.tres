@@ -13,6 +13,7 @@ damage_small = "1d6"
 damage_medium = "1d8"
 critical_range = 19
 item_name = "Longsword"
+item_type = 0
 slot_type = 1
 texture = SubResource("AtlasTexture_vuyw8")
 description = "A very common weapon called longsword, made to cut down bandits and evil creatures."

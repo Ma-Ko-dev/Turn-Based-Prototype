@@ -10,7 +10,7 @@ border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0, 0, 0, 1)
 
-[node name="ItemSlot" type="PanelContainer" unique_id=1746360976]
+[node name="EmptySlot" type="PanelContainer" unique_id=1746360976]
 custom_minimum_size = Vector2(80, 80)
 offset_right = 40.0
 offset_bottom = 40.0
