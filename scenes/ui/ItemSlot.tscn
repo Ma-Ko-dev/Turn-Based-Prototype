@@ -31,7 +31,7 @@ stretch_mode = 5
 
 [node name="SlotnameLabel" type="Label" parent="MarginContainer" unique_id=1446379351]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 0.39215687)
+theme_override_colors/font_color = Color(1, 1, 1, 0.78431374)
 theme_override_font_sizes/font_size = 18
 text = "Empty"
 horizontal_alignment = 1
