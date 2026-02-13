@@ -5,6 +5,7 @@ extends Control
 @onready var content_area: MarginContainer = $ContentWrapper/MainLayout/ContentArea
 @onready var close_button: TextureButton = $ContentWrapper/MainLayout/Header/CloseButton
 @onready var character_content = $ContentWrapper/MainLayout/ContentArea/CharacterContent
+@onready var inventory_content = $ContentWrapper/MainLayout/ContentArea/InventoryContent
 
 
 func _ready() -> void:

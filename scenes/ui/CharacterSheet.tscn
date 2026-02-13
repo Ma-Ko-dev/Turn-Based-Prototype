@@ -5,6 +5,8 @@
 [ext_resource type="Texture2D" uid="uid://cvbmqdqxe1tgm" path="res://assets/colored-transparent.png" id="2_lq25e"]
 [ext_resource type="Texture2D" uid="uid://bt83iubroltqu" path="res://ressources/ui/UI_Tab_Panel.tres" id="3_me650"]
 [ext_resource type="PackedScene" uid="uid://cydqyxh4nautx" path="res://scenes/ui/CharacterContent.tscn" id="5_me650"]
+[ext_resource type="PackedScene" uid="uid://poi7g07ysbjv" path="res://scenes/ui/ItemSlot.tscn" id="6_geqdb"]
+[ext_resource type="Script" uid="uid://bexfyqctioidl" path="res://scenes/ui/inventory_content.gd" id="6_ot1vu"]
 
 [sub_resource type="Theme" id="Theme_lq25e"]
 Label/colors/font_color = Color(0.3372549, 0.3372549, 0.3372549, 1)
@@ -35,6 +37,9 @@ texture_margin_right = 10.0
 texture_margin_bottom = 10.0
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_g7c81"]
+thickness = 3
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_geqdb"]
 thickness = 3
 
 [node name="CharacterSheet" type="Control" unique_id=732470059]
@@ -141,10 +146,133 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="CharacterContent" parent="ContentWrapper/MainLayout/ContentArea" unique_id=587292795 instance=ExtResource("5_me650")]
+visible = false
 layout_mode = 2
 
 [node name="InventoryContent" type="MarginContainer" parent="ContentWrapper/MainLayout/ContentArea" unique_id=1128091213]
 layout_mode = 2
+script = ExtResource("6_ot1vu")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent" unique_id=53000890]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="EquipmentArea" type="VBoxContainer" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer" unique_id=1698714700]
+custom_minimum_size = Vector2(300, 400)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SlotTopRow" type="HBoxContainer" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea" unique_id=1741811819]
+layout_mode = 2
+theme_override_constants/separation = 5
+alignment = 1
+
+[node name="LeftColumn" type="VBoxContainer" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow" unique_id=334325208]
+layout_mode = 2
+
+[node name="ShoulderSlot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow/LeftColumn" unique_id=1746360976 instance=ExtResource("6_geqdb")]
+layout_mode = 2
+
+[node name="CloakSlot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow/LeftColumn" unique_id=167335102 instance=ExtResource("6_geqdb")]
+layout_mode = 2
+
+[node name="Ring1Slot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow/LeftColumn" unique_id=803712968 instance=ExtResource("6_geqdb")]
+layout_mode = 2
+
+[node name="Quick1Slot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow/LeftColumn" unique_id=412166330 instance=ExtResource("6_geqdb")]
+layout_mode = 2
+
+[node name="CenterColumn" type="VBoxContainer" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow" unique_id=1171567272]
+layout_mode = 2
+
+[node name="HeadSlot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow/CenterColumn" unique_id=948757446 instance=ExtResource("6_geqdb")]
+layout_mode = 2
+
+[node name="BodySlot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow/CenterColumn" unique_id=162384623 instance=ExtResource("6_geqdb")]
+layout_mode = 2
+
+[node name="BeltSlot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow/CenterColumn" unique_id=1961173033 instance=ExtResource("6_geqdb")]
+layout_mode = 2
+
+[node name="BootsSlot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow/CenterColumn" unique_id=1757902253 instance=ExtResource("6_geqdb")]
+layout_mode = 2
+
+[node name="RightColumn" type="VBoxContainer" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow" unique_id=391991335]
+layout_mode = 2
+
+[node name="NeckSlot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow/RightColumn" unique_id=242648152 instance=ExtResource("6_geqdb")]
+layout_mode = 2
+
+[node name="GlovesSlot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow/RightColumn" unique_id=1969764670 instance=ExtResource("6_geqdb")]
+layout_mode = 2
+
+[node name="Ring2Slot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow/RightColumn" unique_id=1548125971 instance=ExtResource("6_geqdb")]
+layout_mode = 2
+
+[node name="Quick2Slot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow/RightColumn" unique_id=2067493178 instance=ExtResource("6_geqdb")]
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea" unique_id=585507199]
+layout_mode = 2
+theme_override_constants/separation = 8
+theme_override_styles/separator = SubResource("StyleBoxLine_geqdb")
+
+[node name="WeaponRow" type="HBoxContainer" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea" unique_id=228781519]
+layout_mode = 2
+theme_override_constants/separation = 5
+alignment = 1
+
+[node name="MainhandSlot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/WeaponRow" unique_id=742503044 instance=ExtResource("6_geqdb")]
+layout_mode = 2
+
+[node name="OffhandSlot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/WeaponRow" unique_id=2032290293 instance=ExtResource("6_geqdb")]
+layout_mode = 2
+
+[node name="RightSide" type="VBoxContainer" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer" unique_id=1111169994]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="InventoryLabel" type="Label" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/RightSide" unique_id=1730763210]
+layout_mode = 2
+text = "Inventory"
+
+[node name="BackpackGrid" type="GridContainer" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/RightSide" unique_id=482200891]
+layout_mode = 2
+size_flags_vertical = 3
+columns = 5
+
+[node name="ItemDetails" type="PanelContainer" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/RightSide" unique_id=1839434381]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+
+[node name="InventoryFooter" type="HBoxContainer" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/RightSide" unique_id=890357306]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_constants/separation = 15
+
+[node name="GoldLabel" type="Label" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/RightSide/InventoryFooter" unique_id=1201065167]
+layout_mode = 2
+text = "Gold: 9999"
+
+[node name="WeightBar" type="ProgressBar" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/RightSide/InventoryFooter" unique_id=125209415]
+custom_minimum_size = Vector2(150, 25)
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Total weight of all items in your inventory. If you carry too much, you become encumbered\""
+max_value = 9999.0
+value = 9999.0
+show_percentage = false
+
+[node name="WeightLabel" type="Label" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/RightSide/InventoryFooter/WeightBar" unique_id=1278761777]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 30
+text = "Weight: 9999 / 9999 lbs"
+horizontal_alignment = 1
 
 [node name="SkillsContent" type="MarginContainer" parent="ContentWrapper/MainLayout/ContentArea" unique_id=972830470]
 layout_mode = 2

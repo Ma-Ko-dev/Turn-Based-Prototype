@@ -15,3 +15,4 @@ enum EquipmentSlot { NONE, MAIN_HAND, OFF_HAND, BOTH_HANDS, BODY, HEAD, RING, AM
 @export_group("Economy & Weight")
 @export var cost: int = 0
 @export var weight: float = 1.0
+@export var amount: int = 1

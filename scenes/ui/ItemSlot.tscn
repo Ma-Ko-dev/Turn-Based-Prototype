@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://poi7g07ysbjv"]
+
+[ext_resource type="Script" uid="uid://c50frffmh6jov" path="res://scenes/ui/item_slot.gd" id="1_m2bxx"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_16a4c"]
+bg_color = Color(0.2520276, 0.25202766, 0.25202754, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+
+[node name="ItemSlot" type="PanelContainer" unique_id=1746360976]
+custom_minimum_size = Vector2(80, 80)
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_16a4c")
+script = ExtResource("1_m2bxx")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=260062514]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="Icon" type="TextureRect" parent="MarginContainer" unique_id=974374904]
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SlotnameLabel" type="Label" parent="MarginContainer" unique_id=1446379351]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.39215687)
+theme_override_font_sizes/font_size = 18
+text = "Empty"
+horizontal_alignment = 1
+
+[node name="AmountLabel" type="Label" parent="MarginContainer" unique_id=1767889438]
+visible = false
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 17
+text = "Amount"
+horizontal_alignment = 1
+vertical_alignment = 2

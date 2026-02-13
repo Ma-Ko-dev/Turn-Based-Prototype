@@ -13,7 +13,6 @@ ac_bonus = 2
 max_dex_bonus = 6
 arcane_spell_failure = 10
 item_name = "Leather Armor"
-item_tyoe = 1
 slot_type = 4
 texture = SubResource("AtlasTexture_7dpfs")
 description = "A common light armor made out of leather."
