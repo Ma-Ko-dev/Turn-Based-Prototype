@@ -42,6 +42,7 @@ func _ready() -> void:
 	if not map_manager:
 		await get_tree().process_frame
 	_initialize_stats()
+	_initialize_inventory()
 	if map_manager:
 		# Calculate initial grid position based on the starting world position in the editor
 		# Wait for a frame to ensure MapManager has initialized the AStar grid before occupying a cell
@@ -59,6 +60,11 @@ func _initialize_stats() -> void:
 	current_health = max_health
 	if display_name == "":
 		display_name = data.name
+
+# initialize inventory
+func _initialize_inventory() -> void:
+	if not data: return
+	data.initialize_inventory()
 
 
 # --- Pathfinding and movement---

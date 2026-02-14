@@ -42,7 +42,7 @@ thickness = 3
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_geqdb"]
 thickness = 3
 
-[node name="CharacterSheet" type="Control" unique_id=732470059]
+[node name="CharacterSheet" type="Control" unique_id=732470059 groups=["character_sheet"]]
 custom_minimum_size = Vector2(1000, 600)
 layout_mode = 3
 anchors_preset = 8

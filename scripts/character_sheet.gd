@@ -6,7 +6,7 @@ extends Control
 @onready var close_button: TextureButton = $ContentWrapper/MainLayout/Header/CloseButton
 @onready var character_content = $ContentWrapper/MainLayout/ContentArea/CharacterContent
 @onready var inventory_content = $ContentWrapper/MainLayout/ContentArea/InventoryContent
-
+var last_hp: int = 0
 
 func _ready() -> void:
 	# Hide on gamestart
@@ -33,7 +33,11 @@ func _on_close_pressed() -> void:
 
 
 # Main function to fill the UI with data
-func display_unit(data: UnitData, current_hp: int) -> void:
+func display_unit(data: UnitData, current_hp: int = -1) -> void:
+	if current_hp >= 0:
+		last_hp = current_hp
 	if character_content:
-		character_content.update_ui(data, current_hp)
+		character_content.update_ui(data, last_hp)
+	if inventory_content:
+		inventory_content.refresh_backpack_ui(data)
 	# Note: Future tabs will be added here

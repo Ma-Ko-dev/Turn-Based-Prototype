@@ -78,32 +78,54 @@ func _drop_data(_at_position: Vector2, data) -> void:
 	var origin_slot = data["origin_slot"]
 	# Get reference to the inventory controller
 	var inventory_content = get_tree().get_first_node_in_group("inventory_manager")
+	var unit = inventory_content.active_unit_data
+	
+	# Get indices for backpack logic
+	var target_index = get_index()
+	var origin_index = origin_slot.get_index()
 	
 	# This is a Backpack Slot (target_slot_type is NONE)
 	if target_slot_type == ItemData.EquipmentSlot.NONE:
+		# Came from Equipment
 		if origin_slot.target_slot_type != ItemData.EquipmentSlot.NONE:
-			# Came from Equipment -> Add to backpack list
-			inventory_content.inventory_items.append(dragged_item)
-			origin_slot.set_item(null)
+			unit.inventory_items.append(dragged_item)
+			# Clear the specific equipment slot
+			_update_unit_equipment(unit, origin_slot.target_slot_type, null)
 		else:
-			# Moved within Backpack -> We just swap in the list later or ignore for now
-			pass
-		inventory_content.refresh_backpack_ui()
+			# Moving within Backpack
+			var items = unit.inventory_items
+			if target_index < items.size() and origin_index < items.size():
+				# Actual swap in the array
+				var temp = items[target_index]
+				items[target_index] = items[origin_index]
+				items[origin_index] = temp
 	# This is an Equipment Slot (Head, Body, etc.)
 	else:
-		if origin_slot.target_slot_type == ItemData.EquipmentSlot.NONE:
-			# Came from Backpack -> Remove from list
-			inventory_content.inventory_items.erase(dragged_item)
+		# Update equipment in UnitData
+		var old_item = _get_unit_equipment(unit, target_slot_type)
+		_update_unit_equipment(unit, target_slot_type, dragged_item)
 		
-		# Standard swap logic for Equipment
-		if stored_item != null:
-			var temp_item = stored_item
-			# If swapping back to backpack, add temp_item to list
-			if origin_slot.target_slot_type == ItemData.EquipmentSlot.NONE:
-				inventory_content.inventory_items.append(temp_item)
-			set_item(dragged_item)
-			origin_slot.set_item(temp_item)
+		if origin_slot.target_slot_type == ItemData.EquipmentSlot.NONE:
+			unit.inventory_items.remove_at(origin_index)
+			# If there was already something equipped, put it in the backpack
+			if old_item:
+				unit.inventory_items.insert(origin_index, old_item)
 		else:
-			set_item(dragged_item)
-			origin_slot.set_item(null)
-		inventory_content.refresh_backpack_ui()
+			# Swapping between two equipment slots
+			_update_unit_equipment(unit, origin_slot.target_slot_type, old_item)
+	get_tree().get_first_node_in_group("character_sheet").display_unit(unit)
+
+
+# Helper to set UnitData fields dynamically
+func _update_unit_equipment(unit: UnitData, type: ItemData.EquipmentSlot, item: ItemData) -> void:
+	if type == ItemData.EquipmentSlot.MAIN_HAND: unit.main_hand = item
+	elif type == ItemData.EquipmentSlot.BODY: unit.body_armor = item
+	# TODO Add more later
+
+
+# Helper to get UnitData fields dynamically
+func _get_unit_equipment(unit: UnitData, type: ItemData.EquipmentSlot) -> ItemData:
+	if type == ItemData.EquipmentSlot.MAIN_HAND: return unit.main_hand
+	elif type == ItemData.EquipmentSlot.BODY: return unit.body_armor
+	# TODO Add more later
+	return null

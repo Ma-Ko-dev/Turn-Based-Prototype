@@ -9,9 +9,11 @@ enum Alignment {
 }
 enum Size { FINE, DIMINUTIVE, TINY, SMALL, MEDIUM, LARGE, HUGE, GARGANTUAN, COLOSSAL }
 enum UnitType { HUMANOID, UNDEAD, CONSTRUCT, ELEMENTAL, BEAST }
+var inventory_items: Array[ItemData] = []
 
-# --- Equipment ---
-@export_group("Equipment")
+# --- Starting Equipment ---
+@export_group("Starting Equipment")
+@export var starting_items: Array[ItemData] = []
 @export var main_hand: WeaponData
 @export var off_hand: ItemData # can be a shield (armor data) or weapon (weapon data)
 @export var body_armor: ArmorData
@@ -87,6 +89,12 @@ func get_size_modifier() -> int:
 		_: return 0 # Medium
 
 
+# Starting equippment helper
+func initialize_inventory() -> void:
+	for item in starting_items:
+		inventory_items.append(item.duplicate())
+
+
 # --- Logic Getters ---
 func get_clamped_dex_modifier() -> int:
 	var dex_mod = get_modifier(dexterity)
@@ -160,6 +168,31 @@ func get_alignment_name() -> String:
 	# Returns the string name of the alignment enum instead of its index
 	return Alignment.keys()[alignment].replace("_", " ").capitalize()
 
+func get_max_weight() -> float:
+	# Smaller units carry less, larger carry more. Medium is 5
+	var multiplier = 5.0
+	match size:
+		Size.SMALL: multiplier = 3.5
+		Size.LARGE: multiplier = 10.0
+	return strength * multiplier
+
+func get_current_weight() -> float:
+	var total = 0.0
+	# Weight from equipped items
+	if main_hand: total += main_hand.weight
+	if off_hand: total += off_hand.weight
+	if body_armor: total += body_armor.weight
+	
+	for item in inventory_items:
+		total += item.weight * item.amount
+	return total
+
+func get_item_by_slot_type(slot_type: ItemData.EquipmentSlot) -> ItemData:
+	match slot_type:
+		ItemData.EquipmentSlot.MAIN_HAND: return main_hand
+		ItemData.EquipmentSlot.BODY: return body_armor
+		# TODO Add more later
+	return null
 
 
 func add_xp(amount: int) -> bool:
