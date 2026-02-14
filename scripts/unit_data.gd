@@ -191,7 +191,7 @@ func get_item_by_slot_type(slot_type: ItemData.EquipmentSlot) -> ItemData:
 	match slot_type:
 		ItemData.EquipmentSlot.MAIN_HAND: return main_hand
 		ItemData.EquipmentSlot.BODY: return body_armor
-		# TODO Add more later
+		# TODO: Add more later
 	return null
 
 

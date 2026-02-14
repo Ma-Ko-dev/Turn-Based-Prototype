@@ -120,12 +120,12 @@ func _drop_data(_at_position: Vector2, data) -> void:
 func _update_unit_equipment(unit: UnitData, type: ItemData.EquipmentSlot, item: ItemData) -> void:
 	if type == ItemData.EquipmentSlot.MAIN_HAND: unit.main_hand = item
 	elif type == ItemData.EquipmentSlot.BODY: unit.body_armor = item
-	# TODO Add more later
+	# TODO: Add more later
 
 
 # Helper to get UnitData fields dynamically
 func _get_unit_equipment(unit: UnitData, type: ItemData.EquipmentSlot) -> ItemData:
 	if type == ItemData.EquipmentSlot.MAIN_HAND: return unit.main_hand
 	elif type == ItemData.EquipmentSlot.BODY: return unit.body_armor
-	# TODO Add more later
+	# TODO: Add more later
 	return null

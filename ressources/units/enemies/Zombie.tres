@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://bkrq17yyhro0b" path="res://scripts/unit_data.gd" id="1_0f3a6"]
 [ext_resource type="Script" uid="uid://dw46ep76orpni" path="res://scripts/ResistanceEntry.gd" id="1_31k6d"]
 [ext_resource type="Texture2D" uid="uid://cvbmqdqxe1tgm" path="res://assets/colored-transparent.png" id="2_31k6d"]
+[ext_resource type="Script" uid="uid://cw0mtd68004ro" path="res://scripts/item_data.gd" id="3_surxl"]
 
 [sub_resource type="Resource" id="Resource_surxl"]
 script = ExtResource("1_31k6d")
