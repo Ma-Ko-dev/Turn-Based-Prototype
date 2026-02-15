@@ -9,6 +9,7 @@ region = Rect2(663, 68, 16, 16)
 
 [resource]
 script = ExtResource("1_jjgr0")
+armor_type = 3
 ac_bonus = 2
 max_dex_bonus = 0
 armor_check_penalty = 2

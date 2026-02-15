@@ -48,14 +48,14 @@ func _ready() -> void:
 		# Wait for a frame to ensure MapManager has initialized the AStar grid before occupying a cell
 		await get_tree().process_frame
 		_set_grid_occupancy(true)
-	remaining_movement = movement_range
+	remaining_movement = data.get_current_movement_range()
 
 
 # --- Internal Initialization ---
 func _initialize_stats() -> void:
 	if not data: return
 	texture = data.texture
-	movement_range = data.movement_range
+	#movement_range = data.movement_range
 	max_health = data.calculate_initial_hp()
 	current_health = max_health
 	if display_name == "":
@@ -275,7 +275,7 @@ func teleport_to_grid_pos(new_grid_pos: Vector2i) -> void:
 # --- Turn Logic ---
 func start_new_turn() -> void:
 	# Reset movement points; this function is typically overridden in subclasses
-	remaining_movement = movement_range
+	remaining_movement = data.get_current_movement_range()
 	has_attacked = false
 
 

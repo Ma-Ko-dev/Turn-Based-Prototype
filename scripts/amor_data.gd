@@ -1,7 +1,10 @@
 extends ItemData
 class_name ArmorData
 
+enum ArmorType { LIGHT, MEDIUM, HEAVY, SHIELD }
+
 @export_group("Defense Stats")
+@export var armor_type: ArmorType = ArmorType.LIGHT
 @export var ac_bonus: int = 0
 @export var max_dex_bonus: int = 10
 @export var armor_check_penalty: = 0

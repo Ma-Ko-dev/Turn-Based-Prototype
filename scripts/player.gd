@@ -170,8 +170,7 @@ func start_new_turn() -> void:
 	super.start_new_turn()
 	is_selected = true # Auto-select unit when its turn starts
 	update_selection_visual()
-	#remaining_movement = movement_range
-	#GameEvents.log_requested.emit("--- Player Turn: Movement refreshed (%s) ---" % remaining_movement)
+
 
 
 func setup_player_references(m_manager, p_layer, s_layer) -> void:

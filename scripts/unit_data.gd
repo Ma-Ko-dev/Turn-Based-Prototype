@@ -193,10 +193,16 @@ func _auto_equip_item(item: ItemData) -> bool:
 # --- Logic Getters ---
 func get_clamped_dex_modifier() -> int:
 	var dex_mod = get_modifier(dexterity)
+	var effective = get_effective_encumbrance()
+	var limit = 99
+	match effective:
+		Encumbrance.MEDIUM: limit = 3
+		Encumbrance.HEAVY: limit = 1
+		Encumbrance.OVERLOADED: limit = -5 
 	if body_armor:
 		# Return the smaller value: either actual dex or the armor's limit
-		return min(dex_mod, body_armor.max_dex_bonus)
-	return dex_mod
+		limit = min(limit, body_armor.max_dex_bonus)
+	return min(dex_mod, limit)
 func get_armor_bonus() -> int:
 	# Use armor item bonus if present, otherwise fallback to hardcoded natural/base bonus
 	var bonus = natural_armor
@@ -302,6 +308,45 @@ func get_encumbrance_level() -> Encumbrance:
 		return Encumbrance.HEAVY
 	else:
 		return Encumbrance.OVERLOADED
+
+# Returns the combined encumbrance from armor AND weight
+func get_effective_encumbrance() -> Encumbrance:
+	var weight_enc = get_encumbrance_level()
+	var armor_enc = Encumbrance.LIGHT
+	if body_armor:
+		if body_armor.armor_type == ArmorData.ArmorType.MEDIUM:
+			armor_enc = Encumbrance.MEDIUM
+		elif body_armor.armor_type == ArmorData.ArmorType.HEAVY:
+			armor_enc = Encumbrance.HEAVY
+	return max(weight_enc, armor_enc) as Encumbrance
+
+func get_current_movement_range() -> int:
+	var base_move = movement_range
+	var armor_pen = 0
+	var weight_pen = 0
+	if body_armor:
+		armor_pen = body_armor.speed_penalty
+	var load_status = get_encumbrance_level()
+	match load_status:
+		Encumbrance.MEDIUM, Encumbrance.HEAVY:
+			weight_pen = 2
+		Encumbrance.OVERLOADED:
+			return 0
+	var final_penalty = max(armor_pen, weight_pen)
+	return max(1, base_move - final_penalty)
+
+func get_effective_acp() -> int:
+	var armor_acp = 0
+	if body_armor:
+		armor_acp = abs(body_armor.armor_check_penalty)
+	if off_hand is ArmorData:
+		armor_acp += abs(off_hand.armor_check_penalty)
+	var weight_acp = 0
+	match get_encumbrance_level():
+		Encumbrance.MEDIUM: weight_acp = 3
+		Encumbrance.HEAVY: weight_acp = 6
+	return -max(armor_acp, weight_acp)
+
 
 func get_item_by_slot_type(slot_type: ItemData.EquipmentSlot) -> ItemData:
 	match slot_type:

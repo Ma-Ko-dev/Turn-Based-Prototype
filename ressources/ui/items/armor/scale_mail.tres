@@ -9,10 +9,12 @@ region = Rect2(561, 17, 16, 16)
 
 [resource]
 script = ExtResource("1_r32k8")
+armor_type = 1
 ac_bonus = 5
 max_dex_bonus = 3
 armor_check_penalty = 4
 arcane_spell_failure = 25
+speed_penalty = 2
 item_name = "Scale Mail"
 item_type = 1
 slot_type = 5

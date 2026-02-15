@@ -1,9 +1,7 @@
 [gd_resource type="Resource" script_class="UnitData" format=3 uid="uid://d137hrtr18uaa"]
 
 [ext_resource type="Script" uid="uid://bkrq17yyhro0b" path="res://scripts/unit_data.gd" id="1_to8mc"]
-[ext_resource type="Script" uid="uid://dw46ep76orpni" path="res://scripts/ResistanceEntry.gd" id="1_ywndn"]
 [ext_resource type="Texture2D" uid="uid://cvbmqdqxe1tgm" path="res://assets/colored-transparent.png" id="2_65o4i"]
-[ext_resource type="Script" uid="uid://cw0mtd68004ro" path="res://scripts/item_data.gd" id="3_jq7ni"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ckaa2"]
 atlas = ExtResource("2_65o4i")
@@ -11,20 +9,36 @@ region = Rect2(425, 34, 16, 16)
 
 [resource]
 script = ExtResource("1_to8mc")
+starting_items = null
+level = null
+current_xp = null
 xp_reward = 135
 threat_rating = 0.3
+is_player_data = null
 name = "Goblin"
 size = 3
+unit_type = null
 alignment = 7
 texture = SubResource("AtlasTexture_ckaa2")
+hp_dice_count = null
+hp_dice_sides = null
+flat_hp_bonus = null
 movement_range = 6
+sight_range = null
+resistances = null
 base_attack_bonus = 1
+base_fortitude = null
+base_reflex = null
+base_will = null
+damage_dice_count = null
 damage_dice_sides = 4
 strength = 11
 dexterity = 15
 constitution = 12
+intelligence = null
 wisdom = 9
 charisma = 6
 armor_bonus = 2
 shield_bonus = 1
+natural_armor = null
 metadata/_custom_type_script = "uid://bkrq17yyhro0b"
