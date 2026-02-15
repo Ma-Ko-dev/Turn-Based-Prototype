@@ -73,7 +73,10 @@ func _can_drop_data(_at_position: Vector2, data) -> bool:
 	# Check if 'data' is actually our ItemData resource
 	if data is Dictionary and data.has("item"):
 		var dragged_item = data["item"]
+		var origin_slot = data["origin_slot"]
 		if target_slot_type == ItemData.EquipmentSlot.NONE:
+			if stored_item and origin_slot.target_slot_type != ItemData.EquipmentSlot.NONE:
+				return stored_item.slot_type == origin_slot.target_slot_type
 			return true
 		return dragged_item.slot_type == target_slot_type
 	return false
@@ -103,12 +106,8 @@ func _drop_data(_at_position: Vector2, data) -> void:
 			else:
 				items.append(dragged_item)
 				_update_unit_equipment(unit, origin_slot.target_slot_type, null)
-			#unit.inventory_items.append(dragged_item)
-			# Clear the specific equipment slot
-			#_update_unit_equipment(unit, origin_slot.target_slot_type, null)
 		else:
 			# Moving within Backpack
-			#var items = unit.inventory_items
 			if target_index < items.size() and origin_index < items.size():
 				# Actual swap in the array
 				var temp = items[target_index]
