@@ -64,6 +64,31 @@ func update_ui(data: UnitData, current_hp: int) -> void:
 	if cmd_label: cmd_label.text = str(data.get_cmd())
 	_update_single_label("InitValue", data.get_initiative_bonus())
 	
+	var weapon_name_label = find_child("WeaponName", true, false)
+	var weapon_stats = find_child("WeaponStats", true, false)
+	var weapon = data.main_hand
+	var dmg_bonus = data.get_modifier(data.strength)
+	var bonus_str = ""
+	if dmg_bonus > 0:
+		bonus_str = "+" + str(dmg_bonus)
+	elif dmg_bonus < 0:
+		bonus_str = str(dmg_bonus)
+	if weapon and weapon is WeaponData:
+		if weapon_name_label: weapon_name_label.text = weapon.item_name
+		if weapon_stats:
+			var range_str = ""
+			if weapon.critical_range >= 20:
+				range_str = "20"
+			else:
+				range_str = str(weapon.critical_range) + "-20"
+			var crit_info = range_str + " x" + str(weapon.critical_multiplier)
+			weapon_stats.text = data.get_weapon_damage_dice() + " " + bonus_str + " / " + crit_info
+	else:
+		if weapon_name_label: weapon_name_label.text = "Unarmed"
+		if weapon_stats:
+			weapon_stats.text = data.get_weapon_damage_dice() + " " + bonus_str + " / 20 x2"
+			
+	
 
 func _update_attribute(stat_name: String, value: int, mod: int) -> void:
 	var val_label = find_child(stat_name + "Value", true, false)

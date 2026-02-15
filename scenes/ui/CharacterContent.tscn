@@ -346,7 +346,7 @@ size_flags_horizontal = 0
 
 [node name="Label" type="Label" parent="VBoxContainer/TopRow/OffenseColumn/VBoxContainer" unique_id=809708177]
 layout_mode = 2
-text = "Weapon Set"
+text = "Weapon"
 
 [node name="HSeparator" type="HSeparator" parent="VBoxContainer/TopRow/OffenseColumn/VBoxContainer" unique_id=1253435824]
 layout_mode = 2

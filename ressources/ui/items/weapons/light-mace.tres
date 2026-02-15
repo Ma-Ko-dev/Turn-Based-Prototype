@@ -1,20 +1,20 @@
 [gd_resource type="Resource" script_class="WeaponData" format=3 uid="uid://1xiismvnygsv"]
 
-[ext_resource type="Script" uid="uid://dvi1cieky0jqs" path="res://scripts/weapon_data.gd" id="1_mdad3"]
-[ext_resource type="Texture2D" uid="uid://cvbmqdqxe1tgm" path="res://assets/colored-transparent.png" id="2_xdp6o"]
+[ext_resource type="Script" uid="uid://dvi1cieky0jqs" path="res://scripts/weapon_data.gd" id="1_48k12"]
+[ext_resource type="Texture2D" uid="uid://cvbmqdqxe1tgm" path="res://assets/colored-transparent.png" id="2_7gx3h"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vuyw8"]
-atlas = ExtResource("2_xdp6o")
+atlas = ExtResource("2_7gx3h")
 region = Rect2(646, 119, 16, 16)
 
 [resource]
-script = ExtResource("1_mdad3")
+script = ExtResource("1_48k12")
 damage_type = 0
 item_name = "Mace (light)"
 item_type = 0
 slot_type = 11
 texture = SubResource("AtlasTexture_vuyw8")
 description = "Big chunk of metal. Big ouch!"
-cost = 15
+cost = 5
 weight = 4.0
 metadata/_custom_type_script = "uid://dvi1cieky0jqs"
