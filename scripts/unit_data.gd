@@ -106,6 +106,7 @@ func get_size_modifier() -> int:
 func initialize_inventory() -> void:
 	# Clear existing inventory to start fresh
 	inventory_items.clear()
+	_clear_equipment_slots()
 	for starting_item in starting_items:
 		if not starting_item: continue
 		var item = starting_item.duplicate()
@@ -117,6 +118,14 @@ func initialize_inventory() -> void:
 		if not slotted:
 			inventory_items.append(item)
 
+# Helper to reset all slots
+func _clear_equipment_slots() -> void:
+	shoulder_item = null; head_item = null; neck_item = null; cloak_item = null
+	body_armor = null; gloves_item = null; belt_item = null; boot_item = null
+	ring1_item = null; ring2_item = null; quick1_item = null; quick2_item = null
+	main_hand = null; off_hand = null; both_hand = null
+
+# Mapping logic for all slot types
 func _auto_equip_item(item: ItemData) -> bool:
 	match item.slot_type:
 		ItemData.EquipmentSlot.SHOULDER:
@@ -147,7 +156,7 @@ func _auto_equip_item(item: ItemData) -> bool:
 			if not belt_item:
 				belt_item = item
 				return true
-		ItemData.EquipmentSlot.BOOT:
+		ItemData.EquipmentSlot.BOOT:	
 			if not boot_item:
 				boot_item = item
 				return true

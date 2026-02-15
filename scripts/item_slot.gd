@@ -28,7 +28,12 @@ func set_item(item_data: ItemData) -> void:
 
 # Logic to show/hide labels and textures
 func update_slot_visuals() -> void:
+	if not is_inside_tree(): return
+	
 	if stored_item:
+		if icon == null:
+			print("CRITICAL: Icon node is null in slot ", name)
+			return
 		icon.texture = stored_item.texture
 		icon.show()
 		slot_name_label.hide()

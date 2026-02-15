@@ -49,10 +49,10 @@ func _spawn_player(marker: SpawnMarker, container: Node, level: Node2D):
 		return
 	player = marker.unit_scene.instantiate()
 	player.map_manager = map_manager
-	container.add_child(player)	
-	# If the marker has specific UnitData, apply it
 	if marker.unit_data:
 		player.data = marker.unit_data
+	container.add_child(player)	
+	# If the marker has specific UnitData, apply it
 	player.setup_player_references(
 		map_manager,
 		level.get_node("PreviewLayer"),

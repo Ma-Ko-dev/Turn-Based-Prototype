@@ -62,5 +62,7 @@ func _update_fixed_slots(unit: UnitData) -> void:
 	# Get all nodes recursively that are part of the equipment
 	for slot in equipment_area.find_children("*", "PanelContainer", true):
 		if slot.has_method("set_item") and slot.target_slot_type != ItemData.EquipmentSlot.NONE:
-			var item = unit.get_item_by_slot_type(slot.target_slot_type)
+			var type = slot.target_slot_type
+			var item = unit.get_item_by_slot_type(type)
 			slot.set_item(item)
+	

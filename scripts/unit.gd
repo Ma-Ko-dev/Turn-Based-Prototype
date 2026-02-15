@@ -64,6 +64,7 @@ func _initialize_stats() -> void:
 # initialize inventory
 func _initialize_inventory() -> void:
 	if not data: return
+	data = data.duplicate(true)
 	data.initialize_inventory()
 
 
