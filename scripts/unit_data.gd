@@ -188,7 +188,8 @@ func _auto_equip_item(item: ItemData) -> bool:
 				return true
 	
 	# No free slot found for this type
-	return false
+	return false	
+
 
 # --- Logic Getters ---
 func get_clamped_dex_modifier() -> int:
