@@ -93,14 +93,22 @@ func _drop_data(_at_position: Vector2, data) -> void:
 	
 	# This is a Backpack Slot (target_slot_type is NONE)
 	if target_slot_type == ItemData.EquipmentSlot.NONE:
+		var items = unit.inventory_items
 		# Came from Equipment
 		if origin_slot.target_slot_type != ItemData.EquipmentSlot.NONE:
-			unit.inventory_items.append(dragged_item)
+			if target_index < items.size():
+				var old_backpack_item = items[target_index]
+				items[target_index] = dragged_item
+				_update_unit_equipment(unit, origin_slot.target_slot_type, old_backpack_item)
+			else:
+				items.append(dragged_item)
+				_update_unit_equipment(unit, origin_slot.target_slot_type, null)
+			#unit.inventory_items.append(dragged_item)
 			# Clear the specific equipment slot
-			_update_unit_equipment(unit, origin_slot.target_slot_type, null)
+			#_update_unit_equipment(unit, origin_slot.target_slot_type, null)
 		else:
 			# Moving within Backpack
-			var items = unit.inventory_items
+			#var items = unit.inventory_items
 			if target_index < items.size() and origin_index < items.size():
 				# Actual swap in the array
 				var temp = items[target_index]
