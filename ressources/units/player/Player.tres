@@ -6,6 +6,7 @@
 [ext_resource type="Resource" uid="uid://c60is5xx7fejg" path="res://ressources/ui/items/armor/scale_mail.tres" id="1_tjf5t"]
 [ext_resource type="Texture2D" uid="uid://cvbmqdqxe1tgm" path="res://assets/colored-transparent.png" id="2_lkt8u"]
 [ext_resource type="Script" uid="uid://cw0mtd68004ro" path="res://scripts/item_data.gd" id="3_tjf5t"]
+[ext_resource type="Resource" uid="uid://c1k54y0fcc2ju" path="res://ressources/ui/items/armor/shields/metal_shield.tres" id="6_gbn5b"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5koo4"]
 atlas = ExtResource("2_lkt8u")
@@ -13,7 +14,7 @@ region = Rect2(476, 0, 16, 16)
 
 [resource]
 script = ExtResource("1_bmmou")
-starting_items = Array[ExtResource("3_tjf5t")]([ExtResource("1_tjf5t"), ExtResource("1_jlfo3")])
+starting_items = Array[ExtResource("3_tjf5t")]([ExtResource("1_tjf5t"), ExtResource("1_jlfo3"), ExtResource("6_gbn5b")])
 is_player_data = true
 name = "Hero"
 texture = SubResource("AtlasTexture_5koo4")

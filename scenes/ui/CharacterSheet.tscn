@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://bt83iubroltqu" path="res://ressources/ui/UI_Tab_Panel.tres" id="3_me650"]
 [ext_resource type="PackedScene" uid="uid://cydqyxh4nautx" path="res://scenes/ui/CharacterContent.tscn" id="5_me650"]
 [ext_resource type="PackedScene" uid="uid://poi7g07ysbjv" path="res://scenes/ui/ItemSlot.tscn" id="6_geqdb"]
-[ext_resource type="Script" uid="uid://bexfyqctioidl" path="res://scenes/ui/inventory_content.gd" id="6_ot1vu"]
+[ext_resource type="Script" uid="uid://bexfyqctioidl" path="res://scripts/inventory_content.gd" id="6_ot1vu"]
 
 [sub_resource type="Theme" id="Theme_lq25e"]
 Label/colors/font_color = Color(0.3372549, 0.3372549, 0.3372549, 1)
@@ -172,17 +172,17 @@ layout_mode = 2
 
 [node name="ShoulderSlot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow/LeftColumn" unique_id=1746360976 instance=ExtResource("6_geqdb")]
 layout_mode = 2
-target_slot_type = 8
+target_slot_type = 1
 
 [node name="CloakSlot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow/LeftColumn" unique_id=167335102 instance=ExtResource("6_geqdb")]
 layout_mode = 2
+target_slot_type = 4
+
+[node name="Ring1Slot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow/LeftColumn" unique_id=803712968 instance=ExtResource("6_geqdb")]
+layout_mode = 2
 target_slot_type = 9
 
-[node name="RingSlot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow/LeftColumn" unique_id=803712968 instance=ExtResource("6_geqdb")]
-layout_mode = 2
-target_slot_type = 6
-
-[node name="QuickSlot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow/LeftColumn" unique_id=412166330 instance=ExtResource("6_geqdb")]
+[node name="Quick1Slot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow/LeftColumn" unique_id=412166330 instance=ExtResource("6_geqdb")]
 layout_mode = 2
 target_slot_type = 10
 
@@ -191,36 +191,36 @@ layout_mode = 2
 
 [node name="HeadSlot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow/CenterColumn" unique_id=948757446 instance=ExtResource("6_geqdb")]
 layout_mode = 2
-target_slot_type = 5
+target_slot_type = 2
 
 [node name="BodySlot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow/CenterColumn" unique_id=162384623 instance=ExtResource("6_geqdb")]
 layout_mode = 2
-target_slot_type = 4
+target_slot_type = 5
 
 [node name="BeltSlot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow/CenterColumn" unique_id=1961173033 instance=ExtResource("6_geqdb")]
 layout_mode = 2
-target_slot_type = 11
+target_slot_type = 7
 
 [node name="BootsSlot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow/CenterColumn" unique_id=1757902253 instance=ExtResource("6_geqdb")]
 layout_mode = 2
-target_slot_type = 12
+target_slot_type = 8
 
 [node name="RightColumn" type="VBoxContainer" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow" unique_id=391991335]
 layout_mode = 2
 
 [node name="NeckSlot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow/RightColumn" unique_id=242648152 instance=ExtResource("6_geqdb")]
 layout_mode = 2
-target_slot_type = 13
+target_slot_type = 3
 
 [node name="GlovesSlot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow/RightColumn" unique_id=1969764670 instance=ExtResource("6_geqdb")]
 layout_mode = 2
-target_slot_type = 14
-
-[node name="RingSlot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow/RightColumn" unique_id=1548125971 instance=ExtResource("6_geqdb")]
-layout_mode = 2
 target_slot_type = 6
 
-[node name="QuickSlot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow/RightColumn" unique_id=2067493178 instance=ExtResource("6_geqdb")]
+[node name="Ring2Slot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow/RightColumn" unique_id=1548125971 instance=ExtResource("6_geqdb")]
+layout_mode = 2
+target_slot_type = 9
+
+[node name="Quick2Slot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/SlotTopRow/RightColumn" unique_id=2067493178 instance=ExtResource("6_geqdb")]
 layout_mode = 2
 target_slot_type = 10
 
@@ -236,11 +236,11 @@ alignment = 1
 
 [node name="MainhandSlot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/WeaponRow" unique_id=742503044 instance=ExtResource("6_geqdb")]
 layout_mode = 2
-target_slot_type = 1
+target_slot_type = 11
 
 [node name="OffhandSlot" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer/EquipmentArea/WeaponRow" unique_id=2032290293 instance=ExtResource("6_geqdb")]
 layout_mode = 2
-target_slot_type = 2
+target_slot_type = 12
 
 [node name="RightSide" type="VBoxContainer" parent="ContentWrapper/MainLayout/ContentArea/InventoryContent/HBoxContainer" unique_id=1111169994]
 layout_mode = 2

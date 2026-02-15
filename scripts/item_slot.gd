@@ -118,14 +118,35 @@ func _drop_data(_at_position: Vector2, data) -> void:
 
 # Helper to set UnitData fields dynamically
 func _update_unit_equipment(unit: UnitData, type: ItemData.EquipmentSlot, item: ItemData) -> void:
-	if type == ItemData.EquipmentSlot.MAIN_HAND: unit.main_hand = item
+	if type == ItemData.EquipmentSlot.SHOULDER: unit.shoulder_item = item
+	elif type == ItemData.EquipmentSlot.HEAD: unit.head_item = item
+	elif type == ItemData.EquipmentSlot.NECK: unit.neck_item = item
+	elif type == ItemData.EquipmentSlot.CLOAK: unit.cloak_item = item
 	elif type == ItemData.EquipmentSlot.BODY: unit.body_armor = item
-	# TODO: Add more later
+	elif type == ItemData.EquipmentSlot.GLOVES: unit.gloves_item = item
+	elif type == ItemData.EquipmentSlot.BELT: unit.belt_item = item
+	elif type == ItemData.EquipmentSlot.BOOT: unit.boot_item = item
+	elif type == ItemData.EquipmentSlot.RING: unit.ring1_item = item
+	elif type == ItemData.EquipmentSlot.QUICK: unit.quick1_item = item
+	elif type == ItemData.EquipmentSlot.MAIN_HAND: unit.main_hand = item
+	elif type == ItemData.EquipmentSlot.OFF_HAND: unit.off_hand = item
+	elif type == ItemData.EquipmentSlot.BOTH_HANDS: unit.both_hand = item
 
 
 # Helper to get UnitData fields dynamically
 func _get_unit_equipment(unit: UnitData, type: ItemData.EquipmentSlot) -> ItemData:
-	if type == ItemData.EquipmentSlot.MAIN_HAND: return unit.main_hand
+	if type == ItemData.EquipmentSlot.SHOULDER: return unit.shoulder_item
+	elif type == ItemData.EquipmentSlot.HEAD: return unit.head_item
+	elif type == ItemData.EquipmentSlot.NECK: return unit.neck_item
+	elif type == ItemData.EquipmentSlot.CLOAK: return unit.cloak_item
 	elif type == ItemData.EquipmentSlot.BODY: return unit.body_armor
-	# TODO: Add more later
+	elif type == ItemData.EquipmentSlot.GLOVES: return unit.gloves_item
+	elif type == ItemData.EquipmentSlot.BELT: return unit.belt_item
+	elif type == ItemData.EquipmentSlot.BOOT: return unit.boot_item
+	elif type == ItemData.EquipmentSlot.RING: return unit.ring1_item
+	elif type == ItemData.EquipmentSlot.QUICK: return unit.quick1_item
+	elif type == ItemData.EquipmentSlot.MAIN_HAND: return  unit.main_hand
+	elif type == ItemData.EquipmentSlot.OFF_HAND: return unit.off_hand
+	elif type == ItemData.EquipmentSlot.BOTH_HANDS: return unit.both_hand
+
 	return null

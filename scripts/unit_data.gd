@@ -9,14 +9,27 @@ enum Alignment {
 }
 enum Size { FINE, DIMINUTIVE, TINY, SMALL, MEDIUM, LARGE, HUGE, GARGANTUAN, COLOSSAL }
 enum UnitType { HUMANOID, UNDEAD, CONSTRUCT, ELEMENTAL, BEAST }
+enum Encumbrance { LIGHT, MEDIUM, HEAVY, OVERLOADED }
 var inventory_items: Array[ItemData] = []
 
 # --- Starting Equipment ---
 @export_group("Starting Equipment")
 @export var starting_items: Array[ItemData] = []
+@export var shoulder_item: ItemData
+@export var head_item: ItemData
+@export var neck_item: ItemData
+@export var cloak_item: ItemData
+@export var body_armor: ArmorData
+@export var gloves_item: ItemData
+@export var belt_item: ItemData
+@export var boot_item: ItemData
+@export var ring1_item: ItemData
+@export var ring2_item: ItemData
+@export var quick1_item: ItemData
+@export var quick2_item: ItemData
 @export var main_hand: WeaponData
 @export var off_hand: ItemData # can be a shield (armor data) or weapon (weapon data)
-@export var body_armor: ArmorData
+@export var both_hand: WeaponData
 
 # --- Progression ---
 @export_group("Progression")
@@ -169,29 +182,60 @@ func get_alignment_name() -> String:
 	return Alignment.keys()[alignment].replace("_", " ").capitalize()
 
 func get_max_weight() -> float:
-	# Smaller units carry less, larger carry more. Medium is 5
-	var multiplier = 5.0
+	var max_w = 0.0
+	if strength <= 10:
+		max_w = strength * 10
+	else:
+		# Every 5 points of STR triples the capacity (roughly)
+		max_w = 100.0 * pow(4.0, (strength - 10.0) / 10.0)
+	# Apply size multiplier
+	var multiplier = 1.0
 	match size:
-		Size.SMALL: multiplier = 3.5
-		Size.LARGE: multiplier = 10.0
-	return strength * multiplier
+		Size.SMALL: multiplier = 0.75
+		Size.LARGE: multiplier = 2.0
+	return max_w * multiplier
 
 func get_current_weight() -> float:
 	var total = 0.0
 	# Weight from equipped items
-	if main_hand: total += main_hand.weight
-	if off_hand: total += off_hand.weight
-	if body_armor: total += body_armor.weight
-	
+	for slot_type in ItemData.EquipmentSlot.values():
+		if slot_type != ItemData.EquipmentSlot.NONE:
+			var item = get_item_by_slot_type(slot_type)
+			if item:
+				total += item.weight 
+
 	for item in inventory_items:
-		total += item.weight * item.amount
+		if item:
+			total += item.weight * item.amount
 	return total
+
+func get_encumbrance_level() -> Encumbrance:
+	var current = get_current_weight()
+	var limit = get_max_weight()
+	if current <= limit / 3.0:
+		return Encumbrance.LIGHT
+	elif current <= (limit * 2.0) / 3.0:
+		return Encumbrance.MEDIUM
+	elif current <= limit:
+		return Encumbrance.HEAVY
+	else:
+		return Encumbrance.OVERLOADED
 
 func get_item_by_slot_type(slot_type: ItemData.EquipmentSlot) -> ItemData:
 	match slot_type:
-		ItemData.EquipmentSlot.MAIN_HAND: return main_hand
+		ItemData.EquipmentSlot.SHOULDER: return shoulder_item
+		ItemData.EquipmentSlot.HEAD: return head_item
+		ItemData.EquipmentSlot.NECK: return neck_item
+		ItemData.EquipmentSlot.CLOAK: return cloak_item
 		ItemData.EquipmentSlot.BODY: return body_armor
-		# TODO: Add more later
+		ItemData.EquipmentSlot.GLOVES: return gloves_item
+		ItemData.EquipmentSlot.BELT: return belt_item
+		ItemData.EquipmentSlot.BOOT: return boot_item
+		ItemData.EquipmentSlot.RING: return ring1_item
+		ItemData.EquipmentSlot.QUICK: return quick1_item
+		ItemData.EquipmentSlot.MAIN_HAND: return main_hand
+		ItemData.EquipmentSlot.OFF_HAND: return off_hand
+		ItemData.EquipmentSlot.BOTH_HANDS: return both_hand
 	return null
 
 

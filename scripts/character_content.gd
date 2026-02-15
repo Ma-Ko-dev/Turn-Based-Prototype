@@ -23,7 +23,6 @@ func update_ui(data: UnitData, current_hp: int) -> void:
 	
 	# Speed & Size
 	var speed_label = find_child("SpeedLabel", true, false)
-	# TODO: movement_range needs to be in ft not tiles
 	if speed_label: speed_label.text = "Speed: " + str(data.movement_range * 5) + " ft"
 	var size_label = find_child("SizeLabel", true, false)
 	if size_label: size_label.text = "Size: " + data.Size.keys()[data.size].capitalize()

@@ -25,7 +25,6 @@ func _on_tab_changed(tab_index: int) -> void:
 func _update_view(index: int) -> void:
 	for i in range(content_area.get_child_count()):
 		content_area.get_child(i).visible = (i == index)
-	# TODO: Trigger a refresh of the newly shown tab
 
 
 func _on_close_pressed() -> void:

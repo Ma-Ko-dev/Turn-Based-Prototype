@@ -2,7 +2,7 @@ extends Resource
 class_name ItemData
 
 enum ItemType { WEAPON, ARMOR, SHIELD, CONSUMABLE, MISC }
-enum EquipmentSlot { NONE, MAIN_HAND, OFF_HAND, BOTH_HANDS, BODY, HEAD, RING, AMULET, SHOULDER, CLOAK, QUICK, BELT, BOOT, NECK, GLOVES }
+enum EquipmentSlot { NONE, SHOULDER, HEAD, NECK, CLOAK, BODY, GLOVES, BELT, BOOT, RING, QUICK, MAIN_HAND, OFF_HAND, BOTH_HANDS }
 
 @export_group("Identity")
 @export var item_id: String = ""

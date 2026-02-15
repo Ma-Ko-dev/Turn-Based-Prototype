@@ -2,6 +2,8 @@ extends MarginContainer
 
 @onready var backpack_grid: GridContainer = $HBoxContainer/RightSide/BackpackScroll/BackpackGrid
 @onready var equipment_area: VBoxContainer = $HBoxContainer/EquipmentArea
+@onready var weight_bar: ProgressBar = $HBoxContainer/RightSide/InventoryFooter/WeightBar
+@onready var weight_label: Label = $HBoxContainer/RightSide/InventoryFooter/WeightBar/WeightLabel
 
 var slot_scene = preload("res://scenes/ui/ItemSlot.tscn")
 var active_unit_data: UnitData
@@ -25,6 +27,25 @@ func refresh_backpack_ui(unit: UnitData) -> void:
 		_add_slot_to_grid(item)
 	# ALWAYS add one extra empty slot to allow dropping new items into the backpack
 	_add_slot_to_grid(null)
+	_update_weight_display(unit)
+
+
+func _update_weight_display(unit: UnitData) -> void:
+	if not weight_bar: return
+	var current = unit.get_current_weight()
+	var limit = unit.get_max_weight()
+	weight_bar.max_value = limit
+	weight_bar.value = current
+	weight_label.text = "Weight: %d / %d lbs" % [int(current), int(limit)]
+	match unit.get_encumbrance_level():
+		UnitData.Encumbrance.LIGHT:
+			weight_bar.self_modulate = Color.GREEN
+		UnitData.Encumbrance.MEDIUM:
+			weight_bar.self_modulate = Color.YELLOW
+		UnitData.Encumbrance.HEAVY:
+			weight_bar.self_modulate = Color.ORANGE
+		UnitData.Encumbrance.OVERLOADED:
+			weight_bar.self_modulate = Color.RED
 
 
 # Helper to instantiate and setup a slot
