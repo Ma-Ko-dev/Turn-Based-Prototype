@@ -15,21 +15,21 @@ var inventory_items: Array[ItemData] = []
 # --- Starting Equipment ---
 @export_group("Starting Equipment")
 @export var starting_items: Array[ItemData] = []
-@export var shoulder_item: ItemData
-@export var head_item: ItemData
-@export var neck_item: ItemData
-@export var cloak_item: ItemData
-@export var body_armor: ArmorData
-@export var gloves_item: ItemData
-@export var belt_item: ItemData
-@export var boot_item: ItemData
-@export var ring1_item: ItemData
-@export var ring2_item: ItemData
-@export var quick1_item: ItemData
-@export var quick2_item: ItemData
-@export var main_hand: WeaponData
-@export var off_hand: ItemData # can be a shield (armor data) or weapon (weapon data)
-@export var both_hand: WeaponData
+var shoulder_item: ItemData
+var head_item: ItemData
+var neck_item: ItemData
+var cloak_item: ItemData
+var body_armor: ArmorData
+var gloves_item: ItemData
+var belt_item: ItemData
+var boot_item: ItemData
+var ring1_item: ItemData
+var ring2_item: ItemData
+var quick1_item: ItemData
+var quick2_item: ItemData
+var main_hand: WeaponData
+var off_hand: ItemData # can be a shield (armor data) or weapon (weapon data)
+var both_hand: WeaponData
 
 # --- Progression ---
 @export_group("Progression")
@@ -104,9 +104,82 @@ func get_size_modifier() -> int:
 
 # Starting equippment helper
 func initialize_inventory() -> void:
-	for item in starting_items:
-		inventory_items.append(item.duplicate())
+	# Clear existing inventory to start fresh
+	inventory_items.clear()
+	for starting_item in starting_items:
+		if not starting_item: continue
+		var item = starting_item.duplicate()
+		var slotted = false
+		# Try to equip the item if it has a valid equipment slot
+		if item.slot_type != ItemData.EquipmentSlot.NONE:
+			slotted = _auto_equip_item(item)
+		# If it couldnt be equipped (slot full or no slot), put it in the backpack
+		if not slotted:
+			inventory_items.append(item)
 
+func _auto_equip_item(item: ItemData) -> bool:
+	match item.slot_type:
+		ItemData.EquipmentSlot.SHOULDER:
+			if not shoulder_item:
+				shoulder_item = item
+				return true
+		ItemData.EquipmentSlot.HEAD:
+			if not head_item:
+				head_item = item
+				return true
+		ItemData.EquipmentSlot.NECK:
+			if not neck_item:
+				neck_item = item
+				return true
+		ItemData.EquipmentSlot.CLOAK:
+			if not cloak_item:
+				cloak_item = item
+				return true
+		ItemData.EquipmentSlot.BODY:
+			if not body_armor:
+				body_armor = item
+				return true
+		ItemData.EquipmentSlot.GLOVES:
+			if not gloves_item:
+				gloves_item = item
+				return true
+		ItemData.EquipmentSlot.BELT:
+			if not belt_item:
+				belt_item = item
+				return true
+		ItemData.EquipmentSlot.BOOT:
+			if not boot_item:
+				boot_item = item
+				return true
+		ItemData.EquipmentSlot.RING:
+			if not ring1_item:
+				ring1_item = item
+				return true
+			elif not ring2_item:
+				ring2_item = item
+				return true
+		ItemData.EquipmentSlot.QUICK:
+			if not quick1_item:
+				quick1_item = item
+				return true
+			elif not quick2_item:
+				quick2_item = item
+				return true
+		ItemData.EquipmentSlot.MAIN_HAND:
+			if not main_hand:
+				main_hand = item
+				return true
+		ItemData.EquipmentSlot.OFF_HAND:
+			if not off_hand:
+				off_hand = item
+				return true
+		ItemData.EquipmentSlot.BOTH_HANDS:
+			if not both_hand:
+				both_hand = item
+				return true
+	
+	# No free slot found for this type
+	return false
 
 # --- Logic Getters ---
 func get_clamped_dex_modifier() -> int:
