@@ -18,6 +18,8 @@ func _ready() -> void:
 	else:
 		slot_name_label.text = display_name.to_upper()
 	update_slot_visuals()
+	mouse_entered.connect(_on_mouse_entered)
+	mouse_exited.connect(_on_mouse_exited)
 
 
 # Main function to put an item into the slot
@@ -155,3 +157,11 @@ func _get_unit_equipment(unit: UnitData, type: ItemData.EquipmentSlot) -> ItemDa
 	elif type == ItemData.EquipmentSlot.BOTH_HANDS: return unit.both_hand
 
 	return null
+
+
+func _on_mouse_entered() -> void:
+	if stored_item:
+		GameEvents.item_hovered.emit(stored_item)
+
+func _on_mouse_exited() -> void:
+	GameEvents.item_hovered.emit(null)
