@@ -211,12 +211,12 @@ func get_armor_bonus() -> int:
 		bonus += body_armor.ac_bonus
 	return bonus
 func get_shield_bonus() -> int:
-	if off_hand is ArmorData: # Shields are ArmorData with slot_type OFF_HAND
+	if off_hand and off_hand is ArmorData: # Shields are ArmorData with slot_type OFF_HAND
 		return off_hand.ac_bonus
 	return 0
 func get_armor_class() -> int: return 10 + get_clamped_dex_modifier() + get_armor_bonus() + get_shield_bonus() + get_size_modifier()
 func get_touch_ac() -> int: return 10 + get_modifier(dexterity) + get_size_modifier()
-func get_flat_ac() -> int: return 10 + armor_bonus + shield_bonus + natural_armor + get_size_modifier()
+func get_flat_ac() -> int: return 10 + get_armor_bonus() + get_shield_bonus() + get_size_modifier()
 
 func get_dr_for_type(damage_type: int) -> int:
 	for res in resistances:

@@ -22,7 +22,6 @@ texture = SubResource("AtlasTexture_5koo4")
 movement_range = 6
 base_attack_bonus = 1
 base_fortitude = 2
-damage_dice_sides = 3
 strength = 18
 dexterity = 14
 constitution = 14
