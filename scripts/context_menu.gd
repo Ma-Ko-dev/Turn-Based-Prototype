@@ -10,7 +10,7 @@ func _ready() -> void:
 func open(actions: Array, pos: Vector2) -> void:
 	#Clear previous actions
 	while container.get_child_count() > 0:
-		var child = container.get_child(0)
+		var child = container.get_child(0)	
 		container.remove_child(child)
 		child.free()
 	# Create a button for each action
