@@ -8,7 +8,6 @@
 [ext_resource type="PackedScene" uid="uid://poi7g07ysbjv" path="res://scenes/ui/ItemSlot.tscn" id="6_geqdb"]
 [ext_resource type="Script" uid="uid://bexfyqctioidl" path="res://scripts/inventory_content.gd" id="6_ot1vu"]
 [ext_resource type="Script" uid="uid://7xl5kq6p5pfb" path="res://scripts/item_details.gd" id="8_52wmp"]
-[ext_resource type="PackedScene" uid="uid://bntj6mjw3106m" path="res://scenes/ui/ContextMenu.tscn" id="9_g7c81"]
 
 [sub_resource type="Theme" id="Theme_lq25e"]
 Label/colors/font_color = Color(0.3372549, 0.3372549, 0.3372549, 1)
@@ -344,9 +343,3 @@ layout_mode = 2
 
 [node name="SpellsContent" type="MarginContainer" parent="ContentWrapper/MainLayout/ContentArea" unique_id=1307399886]
 layout_mode = 2
-
-[node name="ContextMenu" parent="." unique_id=1485450798 instance=ExtResource("9_g7c81")]
-visible = false
-z_index = 10
-layout_mode = 0
-offset_right = 100.0

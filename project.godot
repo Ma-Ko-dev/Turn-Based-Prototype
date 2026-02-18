@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 TurnManager="*uid://di8s2awyxevhp"
 GameEvents="*uid://d36hb5v0frt6g"
+UiManager="*uid://dmioubbyifo28"
 
 [display]
 

@@ -168,21 +168,19 @@ func _get_unit_equipment(unit: UnitData, type: ItemData.EquipmentSlot) -> ItemDa
 
 func _gui_input(event) -> void:
 	if event is InputEventMouseButton and event.pressed:
-		# Example: Shift + Left Click opens the menu
-		if event.button_index == MOUSE_BUTTON_LEFT and Input.is_key_pressed(KEY_SHIFT):
+		if event.button_index == MOUSE_BUTTON_RIGHT:
 			if stored_item:
 				_open_context_menu()
 
 
 func _open_context_menu() -> void:
-	var menu = get_tree().get_first_node_in_group("context_menu")
-	if not menu: return
+	if not UiManager.context_menu: return
+	
 	var inventory_manager = get_tree().get_first_node_in_group("inventory_manager")
 	var unit = inventory_manager.active_unit_data
-	# Ask the item for its actions, passing 'self' so the item can call slot functions
 	var is_equipped = (target_slot_type != ItemData.EquipmentSlot.NONE)
 	var actions = stored_item.get_actions(unit, is_equipped, self)
-	menu.open(actions, get_global_mouse_position())
+	UiManager.context_menu.open(actions, get_global_mouse_position(), self)
 
 
 func _drop_item_logic(unit:UnitData) -> void:

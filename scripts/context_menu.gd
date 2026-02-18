@@ -1,13 +1,23 @@
 extends NinePatchRect
 
 @onready var container = $MarginContainer/VBoxContainer
+var _active_creator: Node = null
 
 func _ready() -> void:
 	hide()
-	mouse_exited.connect(hide)
+	UiManager.register_context_menu(self)
+	#mouse_exited.connect(hide)
+	
 
 
-func open(actions: Array, pos: Vector2) -> void:
+func open(actions: Array, pos: Vector2, creator: Node) -> void:
+	if _active_creator and is_instance_valid(_active_creator):
+		if _active_creator.visibility_changed.is_connected(hide):
+			_active_creator.visibility_changed.disconnect(hide)
+	_active_creator = creator
+	if _active_creator:
+		_active_creator.visibility_changed.connect(hide, CONNECT_ONE_SHOT)
+		
 	#Clear previous actions
 	while container.get_child_count() > 0:
 		var child = container.get_child(0)	
