@@ -6,8 +6,6 @@ var _active_creator: Node = null
 func _ready() -> void:
 	hide()
 	UiManager.register_context_menu(self)
-	#mouse_exited.connect(hide)
-	
 
 
 func open(actions: Array, pos: Vector2, creator: Node) -> void:
@@ -30,7 +28,6 @@ func open(actions: Array, pos: Vector2, creator: Node) -> void:
 		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		btn.pressed.connect(func(): _on_action_pressed(action_data["callback"]))
 		container.add_child(btn)
-	#await get_tree().process_frame
 	container.reset_size()
 	size = container.get_combined_minimum_size() + Vector2(20, 10)
 	global_position = pos

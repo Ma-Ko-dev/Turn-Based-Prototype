@@ -41,8 +41,6 @@ func display_unit(data: UnitData, current_hp: int = -1) -> void:
 
 	if current_hp >= 0:
 		last_hp = current_hp
-	
-	# : This is your existing logic
 	if character_content:
 		character_content.update_ui(data, last_hp)
 	if inventory_content:

@@ -20,22 +20,22 @@ enum EquipmentSlot { NONE, SHOULDER, HEAD, NECK, CLOAK, BODY, GLOVES, BELT, BOOT
 
 func get_actions(unit: UnitData, is_equipped: bool, slot: PanelContainer) -> Array:
 	var actions = []
-	
 	actions.append({
 		"label": "Inspect",
 		"callback": func(): print("Inspecting " + item_name)
 	})
-	
-	# If it's in the backpack, show 'Equip' (simplified for now)
 	if not is_equipped:
 		actions.append({
 			"label": "Equip",
 			"callback": func(): slot._equip_via_menu(unit)
 		})
-	
+	else:
+		actions.append({
+			"label": "Unequip",
+			"callback": func(): slot._unequip_via_menu(unit)
+		})
 	actions.append({
 		"label": "Drop",
 		"callback": func(): slot._drop_item_logic(unit)
 	})
-	
 	return actions

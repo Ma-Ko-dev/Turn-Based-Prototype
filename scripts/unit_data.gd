@@ -374,20 +374,18 @@ func drop_item(index: int) -> void:
 		data_updated.emit()
 
 func equip_item_from_backpack(item: ItemData, index: int) -> void:
-	# Core logic for equipping
 	var old_item = get_item_by_slot_type(item.slot_type)
-	# Swap: Remove new from backpack, add old back to backpack
 	inventory_items.remove_at(index)
 	if old_item:
-		inventory_items.append(old_item)
+		inventory_items.insert(index, old_item)
 	_set_item_in_slot(item.slot_type, item)
 	data_updated.emit()
 
 func unequip_slot(slot: ItemData.EquipmentSlot) -> void:
 	var item = get_item_by_slot_type(slot)
 	if item: 
-		inventory_items.append(item)
 		_set_item_in_slot(slot, null)
+		inventory_items.append(item)
 		data_updated.emit()
 
 func drop_equipped_item(slot: ItemData.EquipmentSlot) -> void:
@@ -411,6 +409,42 @@ func _set_item_in_slot(slot: ItemData.EquipmentSlot, item: ItemData) -> void:
 		ItemData.EquipmentSlot.OFF_HAND: off_hand = item
 		ItemData.EquipmentSlot.BOTH_HANDS: both_hand = item
 
+func handle_drag_drop(from_slot: ItemData.EquipmentSlot, from_idx: int, to_slot: ItemData.EquipmentSlot, to_idx: int) -> void:
+	#  Case 1: Moving/Swapping within Backpack
+	if from_slot == ItemData.EquipmentSlot.NONE and to_slot == ItemData.EquipmentSlot.NONE:
+		if from_idx < inventory_items.size():
+			var item_to_move = inventory_items[from_idx]
+			if to_idx < inventory_items.size():
+				#  Real swap (prevents item duplication/loss)
+				var temp = inventory_items[to_idx]
+				inventory_items[to_idx] = item_to_move
+				inventory_items[from_idx] = temp
+			else:
+				# Moving to an empty slot at the end
+				inventory_items.remove_at(from_idx)
+				inventory_items.append(item_to_move)
+	# Case 2: From Backpack to Equipment (Equip/Swap)
+	elif from_slot == ItemData.EquipmentSlot.NONE and to_slot != ItemData.EquipmentSlot.NONE:
+		equip_item_from_backpack(inventory_items[from_idx], from_idx)
+		return # equip_item_from_backpack already emits
+	# Case 3: From Equipment to Backpack (Unequip/Swap)
+	elif from_slot != ItemData.EquipmentSlot.NONE and to_slot == ItemData.EquipmentSlot.NONE:
+		var equipped_item = get_item_by_slot_type(from_slot)
+		if to_idx < inventory_items.size():
+			# Swapping equipped item with a backpack item
+			var backpack_item = inventory_items[to_idx]
+			if backpack_item.slot_type == from_slot:
+				# Only swap if the backpack item fits the slot
+				inventory_items[to_idx] = equipped_item
+				_set_item_in_slot(from_slot, backpack_item)
+			else:
+				# If it doesn't fit, just unequip to the end of backpack
+				unequip_slot(from_slot)
+		else:
+			#  To empty space in backpack
+			unequip_slot(from_slot)
+		return
+	data_updated.emit()
 
 
 

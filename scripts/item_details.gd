@@ -11,7 +11,7 @@ func _ready() -> void:
 	sep_header.hide()
 	sep_content.hide()
 	GameEvents.item_hovered.connect(display_item)
-	display_item(null) # English comment: Set initial empty state
+	display_item(null)
 
 
 func display_item(item: ItemData) -> void:
