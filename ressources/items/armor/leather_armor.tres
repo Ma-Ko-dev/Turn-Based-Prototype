@@ -1,14 +1,14 @@
 [gd_resource type="Resource" script_class="ArmorData" format=3 uid="uid://dyt1ifhdgcb0f"]
 
-[ext_resource type="Script" uid="uid://ctp1166oqcfse" path="res://scripts/amor_data.gd" id="1_yn4xk"]
-[ext_resource type="Texture2D" uid="uid://cvbmqdqxe1tgm" path="res://assets/colored-transparent.png" id="2_70gnn"]
+[ext_resource type="Script" uid="uid://ctp1166oqcfse" path="res://scripts/amor_data.gd" id="1_rhsku"]
+[ext_resource type="Texture2D" uid="uid://cvbmqdqxe1tgm" path="res://assets/colored-transparent.png" id="2_c7bel"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_7dpfs"]
-atlas = ExtResource("2_70gnn")
+atlas = ExtResource("2_c7bel")
 region = Rect2(561, 17, 16, 16)
 
 [resource]
-script = ExtResource("1_yn4xk")
+script = ExtResource("1_rhsku")
 ac_bonus = 2
 max_dex_bonus = 6
 arcane_spell_failure = 10

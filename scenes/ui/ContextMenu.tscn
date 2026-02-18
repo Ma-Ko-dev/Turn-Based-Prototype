@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://bntj6mjw3106m"]
+
+[ext_resource type="Texture2D" uid="uid://d0wnmm240psca" path="res://ressources/ui/UI_Sub_Menu.tres" id="1_elpcv"]
+[ext_resource type="Script" uid="uid://c024mq86kx34e" path="res://scripts/context_menu.gd" id="2_wxpii"]
+
+[node name="ContextMenu" type="NinePatchRect" unique_id=1485450798 groups=["context_menu"]]
+custom_minimum_size = Vector2(100, 20)
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("1_elpcv")
+patch_margin_left = 10
+patch_margin_top = 10
+patch_margin_right = 10
+patch_margin_bottom = 10
+script = ExtResource("2_wxpii")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=305606185]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1004249470]
+layout_mode = 2

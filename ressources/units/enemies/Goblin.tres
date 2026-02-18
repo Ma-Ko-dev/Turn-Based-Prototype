@@ -4,8 +4,8 @@
 [ext_resource type="Script" uid="uid://dw46ep76orpni" path="res://scripts/ResistanceEntry.gd" id="1_ywndn"]
 [ext_resource type="Texture2D" uid="uid://cvbmqdqxe1tgm" path="res://assets/colored-transparent.png" id="2_65o4i"]
 [ext_resource type="Script" uid="uid://cw0mtd68004ro" path="res://scripts/item_data.gd" id="3_jq7ni"]
-[ext_resource type="Resource" uid="uid://dyt1ifhdgcb0f" path="res://ressources/ui/items/armor/leather_armor.tres" id="4_jq7ni"]
-[ext_resource type="Resource" uid="uid://btuajac18i5t3" path="res://ressources/ui/items/armor/shields/buckler.tres" id="5_bfw5r"]
+[ext_resource type="Resource" uid="uid://dyt1ifhdgcb0f" path="res://ressources/items/armor/leather_armor.tres" id="4_bfw5r"]
+[ext_resource type="Resource" uid="uid://btuajac18i5t3" path="res://ressources/items/armor/shields/buckler.tres" id="5_lyilj"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ckaa2"]
 atlas = ExtResource("2_65o4i")
@@ -13,7 +13,7 @@ region = Rect2(425, 34, 16, 16)
 
 [resource]
 script = ExtResource("1_to8mc")
-starting_items = Array[ExtResource("3_jq7ni")]([ExtResource("4_jq7ni"), ExtResource("5_bfw5r")])
+starting_items = Array[ExtResource("3_jq7ni")]([ExtResource("4_bfw5r"), ExtResource("5_lyilj")])
 xp_reward = 135
 threat_rating = 0.3
 name = "Goblin"

@@ -16,3 +16,26 @@ enum EquipmentSlot { NONE, SHOULDER, HEAD, NECK, CLOAK, BODY, GLOVES, BELT, BOOT
 @export var cost: int = 0
 @export var weight: float = 1.0
 @export var amount: int = 1
+
+
+func get_actions(unit: UnitData, is_equipped: bool, slot: PanelContainer) -> Array:
+	var actions = []
+	
+	actions.append({
+		"label": "Inspect",
+		"callback": func(): print("Inspecting " + item_name)
+	})
+	
+	# If it's in the backpack, show 'Equip' (simplified for now)
+	if not is_equipped:
+		actions.append({
+			"label": "Equip",
+			"callback": func(): slot._equip_via_menu(unit)
+		})
+	
+	actions.append({
+		"label": "Drop",
+		"callback": func(): slot._drop_item_logic(unit)
+	})
+	
+	return actions

@@ -166,6 +166,44 @@ func _get_unit_equipment(unit: UnitData, type: ItemData.EquipmentSlot) -> ItemDa
 	return null
 
 
+func _gui_input(event) -> void:
+	if event is InputEventMouseButton and event.pressed:
+		# Example: Shift + Left Click opens the menu
+		if event.button_index == MOUSE_BUTTON_LEFT and Input.is_key_pressed(KEY_SHIFT):
+			if stored_item:
+				_open_context_menu()
+
+
+func _open_context_menu() -> void:
+	var menu = get_tree().get_first_node_in_group("context_menu")
+	if not menu: return
+	var inventory_manager = get_tree().get_first_node_in_group("inventory_manager")
+	var unit = inventory_manager.active_unit_data
+	# Ask the item for its actions, passing 'self' so the item can call slot functions
+	var is_equipped = (target_slot_type != ItemData.EquipmentSlot.NONE)
+	var actions = stored_item.get_actions(unit, is_equipped, self)
+	menu.open(actions, get_global_mouse_position())
+
+
+func _drop_item_logic(unit:UnitData) -> void:
+	# Case 1: Item is in Backpack
+	if target_slot_type == ItemData.EquipmentSlot.NONE:
+		var index = get_index()
+		if index < unit.inventory_items.size():
+			unit.inventory_items.remove_at(index)
+	# Case 2: Item is equipped
+	else:
+		_update_unit_equipment(unit, target_slot_type, null)
+	# Refresh UI
+	get_tree().get_first_node_in_group("character_sheet").display_unit(unit)
+
+
+func _equip_via_menu(unit: UnitData) -> void:
+	# Here we can reuse your existing logic or a simplified version
+	print("Equipping from menu...")
+	# Logic would go here (finding a free slot or swapping)
+
+
 func _on_mouse_entered() -> void:
 	if stored_item:
 		GameEvents.item_hovered.emit(stored_item)

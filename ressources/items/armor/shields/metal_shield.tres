@@ -1,14 +1,14 @@
 [gd_resource type="Resource" script_class="ArmorData" format=3 uid="uid://c1k54y0fcc2ju"]
 
-[ext_resource type="Script" uid="uid://ctp1166oqcfse" path="res://scripts/amor_data.gd" id="1_jjgr0"]
-[ext_resource type="Texture2D" uid="uid://cvbmqdqxe1tgm" path="res://assets/colored-transparent.png" id="2_p7f76"]
+[ext_resource type="Script" uid="uid://ctp1166oqcfse" path="res://scripts/amor_data.gd" id="1_g27g0"]
+[ext_resource type="Texture2D" uid="uid://cvbmqdqxe1tgm" path="res://assets/colored-transparent.png" id="2_ihalg"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mpmwj"]
-atlas = ExtResource("2_p7f76")
+atlas = ExtResource("2_ihalg")
 region = Rect2(663, 68, 16, 16)
 
 [resource]
-script = ExtResource("1_jjgr0")
+script = ExtResource("1_g27g0")
 armor_type = 3
 ac_bonus = 2
 max_dex_bonus = 0
