@@ -89,8 +89,10 @@ var both_hand: WeaponData
 
 # --- LOGIC SECTOR ---
 #region --- Logic: Math Helpfers ---
+## Returns the attribute modifier based on a score (e.g., 10 -> 0, 12 -> +1)
 func get_modifier(score: int) -> int:
 	return int(floor((score - 10) /  2.0))
+## Returns the AC and Attack modifier based on unit size.
 func get_size_modifier() -> int:
 	match size:
 		Size.FINE: return 8
@@ -104,6 +106,7 @@ func get_size_modifier() -> int:
 		_: return 0 # Medium
 #endregion
 #region --- Logic: HP & Defense ---
+## Calculates the starting HP based on hit dice and constitution.
 func calculate_initial_hp() -> int:
 	var con_mod = get_modifier(constitution)
 	var base_hp = 0
@@ -114,48 +117,67 @@ func calculate_initial_hp() -> int:
 		# Default roll for everyone else
 		base_hp = Dice.roll(hp_dice_count, hp_dice_sides, con_mod)
 	return max(1, base_hp + flat_hp_bonus)
+## Returns the maximum health points for this unit.
 func get_max_hp() -> int: return calculate_initial_hp()
+## Returns the Damage Reduction (DR) for a specific damage type.
 func get_dr_for_type(damage_type: int) -> int:
 	for res in resistances:
 		if res.type == damage_type:
 			return res.amount
 	return 0
+## Calculates the total armor bonus from natural armor and equipped gear.
 func get_armor_bonus() -> int:
 	# Use armor item bonus if present, otherwise fallback to hardcoded natural/base bonus
 	var bonus = natural_armor
 	if body_armor: 
 		bonus += body_armor.ac_bonus
 	return bonus
+## Returns the AC bonus from an equipped shield in the off-hand.
 func get_shield_bonus() -> int:
 	if off_hand and off_hand is ArmorData: # Shields are ArmorData with slot_type OFF_HAND
 		return off_hand.ac_bonus
 	return 0
+## Calculates the final Armor Class (10 + Dex + Armor + Shield + Size)
 func get_armor_class() -> int: return 10 + get_clamped_dex_modifier() + get_armor_bonus() + get_shield_bonus() + get_size_modifier()
+## Returns AC against touch attacks (ignores armor and shields)
 func get_touch_ac() -> int: return 10 + get_modifier(dexterity) + get_size_modifier()
+## Returns AC when caught flat-footed (ignores Dex bonus)
 func get_flat_ac() -> int: return 10 + get_armor_bonus() + get_shield_bonus() + get_size_modifier()
+## Calculates the Fortitude saving throw total
 func get_fort_save() -> int: return base_fortitude + get_modifier(constitution)
+## Calculates the Reflex saving throw total
 func get_reflex_save() -> int: return base_reflex + get_modifier(dexterity)
+## Calculates the Will saving throw total
 func get_will_save() -> int: return base_will + get_modifier(wisdom)
 #endregion
 #region --- Logic: Combat & Offense ---
+## Returns the initiative bonus (Dexterity + Misc bonuses)
 func get_initiative_bonus() -> int: return get_modifier(dexterity) + extra_initiative_bonus
+## Calculates the melee Attack Bonus (BAB + Str + Size)
 func get_attack_bonus() -> int: return base_attack_bonus + get_modifier(strength) + get_size_modifier()
+## Calculates the ranged Attack Bonus (BAB + Dex + Size)
 func get_ranged_bonus() -> int: return base_attack_bonus + get_modifier(dexterity) + get_size_modifier()
+## Returns the damage dice string (e.g., "1d8") based on weapon and size
 func get_weapon_damage_dice() -> String:
 	if main_hand:
 		return main_hand.damage_medium if size >= Size.MEDIUM else main_hand.damage_small
 		# Fallback to hardcoded stats if no weapon is equipped
 	return "%dd%d" % [damage_dice_count, damage_dice_sides]
+## Returns a dictionary with dice count and sides for damage calculations
 func get_damage_data() -> Dictionary:
 	var dice_string = get_weapon_damage_dice() #1d3 1d8 etc
 	var parts = dice_string.split("d")
 	return { "count": int(parts[0]), "sides": int(parts[1])}
+## Returns the reach of the unit in feet (default 5ft)
 func get_attack_reach() -> int:
 	return main_hand.reach_ft if main_hand else 5
+## Calculates the Combat Maneuver Bonus
 func get_cmb() -> int: return base_attack_bonus + get_modifier(strength) - get_size_modifier()
+## Calculates the Combat Maneuver Defense
 func get_cmd() -> int: return 10 + base_attack_bonus + get_modifier(strength) + get_modifier(dexterity) - get_size_modifier()
 #endregion
 #region --- Logic: Inventory & Weight ---
+## Calculates the maximum carrying capacity based on Strength and Size
 func get_max_weight() -> float:
 	var max_w = 0.0
 	if strength <= 10:
@@ -169,6 +191,7 @@ func get_max_weight() -> float:
 		Size.SMALL: multiplier = 0.75
 		Size.LARGE: multiplier = 2.0
 	return max_w * multiplier
+## Calculates the total weight of all carried and equipped items
 func get_current_weight() -> float:
 	var total = 0.0
 	# Weight from equipped items
@@ -182,6 +205,7 @@ func get_current_weight() -> float:
 		if item:
 			total += item.weight * item.amount
 	return total
+## Returns the encumbrance level based on current weight vs limit
 func get_encumbrance_level() -> Encumbrance:
 	var current = get_current_weight()
 	var limit = get_max_weight()
@@ -193,6 +217,7 @@ func get_encumbrance_level() -> Encumbrance:
 		return Encumbrance.HEAVY
 	else:
 		return Encumbrance.OVERLOADED
+## Returns the effective encumbrance, considering both weight and armor type
 func get_effective_encumbrance() -> Encumbrance:
 	var weight_enc = get_encumbrance_level()
 	var armor_enc = Encumbrance.LIGHT
@@ -202,6 +227,7 @@ func get_effective_encumbrance() -> Encumbrance:
 		elif body_armor.armor_type == ArmorData.ArmorType.HEAVY:
 			armor_enc = Encumbrance.HEAVY
 	return max(weight_enc, armor_enc) as Encumbrance
+## Returns the Dex modifier, limited by armor or heavy load
 func get_clamped_dex_modifier() -> int:
 	var dex_mod = get_modifier(dexterity)
 	var effective = get_effective_encumbrance()
@@ -214,6 +240,7 @@ func get_clamped_dex_modifier() -> int:
 		# Return the smaller value: either actual dex or the armor's limit
 		limit = min(limit, body_armor.max_dex_bonus)
 	return min(dex_mod, limit)
+## Calculates movement range after applying armor and weight penalties
 func get_current_movement_range() -> int:
 	var base_move = movement_range
 	var armor_pen = 0
@@ -228,6 +255,7 @@ func get_current_movement_range() -> int:
 			return 0
 	var final_penalty = max(armor_pen, weight_pen)
 	return max(1, base_move - final_penalty)
+## Calculates the total Armor Check Penalty (ACP) from gear and load
 func get_effective_acp() -> int:
 	var armor_acp = 0
 	if body_armor:
@@ -241,8 +269,8 @@ func get_effective_acp() -> int:
 	return -max(armor_acp, weight_acp)
 #endregion
 #region --- Logic: Item Management ---
+## Initializes inventory and auto-equips starting items.
 func initialize_inventory() -> void:
-	# Clear existing inventory to start fresh
 	inventory_items.clear()
 	_clear_equipment_slots()
 	for starting_item in starting_items:
@@ -255,11 +283,13 @@ func initialize_inventory() -> void:
 		# If it couldnt be equipped (slot full or no slot), put it in the backpack
 		if not slotted:
 			inventory_items.append(item)
+## Internal: Removes all items from equipment slots
 func _clear_equipment_slots() -> void:
 	shoulder_item = null; head_item = null; neck_item = null; cloak_item = null
 	body_armor = null; gloves_item = null; belt_item = null; boot_item = null
 	ring1_item = null; ring2_item = null; quick1_item = null; quick2_item = null
 	main_hand = null; off_hand = null; both_hand = null
+## Internal: Attempts to put an item into its designated equipment slot
 func _auto_equip_item(item: ItemData) -> bool:
 	match item.slot_type:
 		ItemData.EquipmentSlot.SHOULDER:
@@ -323,6 +353,7 @@ func _auto_equip_item(item: ItemData) -> bool:
 	
 	# No free slot found for this type
 	return false	
+## Helper to retrieve an item from a specific equipment slot
 func get_item_by_slot_type(slot_type: ItemData.EquipmentSlot) -> ItemData:
 	match slot_type:
 		ItemData.EquipmentSlot.SHOULDER: return shoulder_item
@@ -339,11 +370,12 @@ func get_item_by_slot_type(slot_type: ItemData.EquipmentSlot) -> ItemData:
 		ItemData.EquipmentSlot.OFF_HAND: return off_hand
 		ItemData.EquipmentSlot.BOTH_HANDS: return both_hand
 	return null
+## Removes an item from the backpack at the given index
 func drop_item(index: int) -> void:
-	# Handles removing item form backpack
 	if index < inventory_items.size():
 		inventory_items.remove_at(index)
 		data_updated.emit()
+## Equips an item from the backpack and returns the old item to the inventory
 func equip_item_from_backpack(item: ItemData, index: int) -> void:
 	var old_item = get_item_by_slot_type(item.slot_type)
 	inventory_items.remove_at(index)
@@ -351,17 +383,19 @@ func equip_item_from_backpack(item: ItemData, index: int) -> void:
 		inventory_items.insert(index, old_item)
 	_set_item_in_slot(item.slot_type, item)
 	data_updated.emit()
+## Moves an equipped item back into the backpack
 func unequip_slot(slot: ItemData.EquipmentSlot) -> void:
 	var item = get_item_by_slot_type(slot)
 	if item: 
 		_set_item_in_slot(slot, null)
 		inventory_items.append(item)
 		data_updated.emit()
+## Removes an equipped item from the unit entirely
 func drop_equipped_item(slot: ItemData.EquipmentSlot) -> void:
 	_set_item_in_slot(slot, null)
 	data_updated.emit()
+## Internal: Sets the reference for a specific equipment slot
 func _set_item_in_slot(slot: ItemData.EquipmentSlot, item: ItemData) -> void:
-	# Internal helper to set the correct variable
 	match slot:
 		ItemData.EquipmentSlot.SHOULDER: shoulder_item = item
 		ItemData.EquipmentSlot.HEAD: head_item = item
@@ -376,6 +410,7 @@ func _set_item_in_slot(slot: ItemData.EquipmentSlot, item: ItemData) -> void:
 		ItemData.EquipmentSlot.MAIN_HAND: main_hand = item
 		ItemData.EquipmentSlot.OFF_HAND: off_hand = item
 		ItemData.EquipmentSlot.BOTH_HANDS: both_hand = item
+## Handles complex logic for moving items between slots and backpack via Drag & Drop
 func handle_drag_drop(from_slot: ItemData.EquipmentSlot, from_idx: int, to_slot: ItemData.EquipmentSlot, to_idx: int) -> void:
 	#  Case 1: Moving/Swapping within Backpack
 	if from_slot == ItemData.EquipmentSlot.NONE and to_slot == ItemData.EquipmentSlot.NONE:
@@ -414,16 +449,18 @@ func handle_drag_drop(from_slot: ItemData.EquipmentSlot, from_idx: int, to_slot:
 	data_updated.emit()
 #endregion
 #region --- Logic: Progression & Misc ---
+## Adds experience points and checks for level up
 func add_xp(amount: int) -> bool:
 	current_xp += amount
 	if current_xp >= get_required_xp():
 		# level_up() later
 		return true
 	return false
+## Returns the amount of XP needed for the next level
 func get_required_xp() -> int:
 	# Maybe 1000 -> 3000 -> 6000 etc
 	return int((level * (level + 1) / 2.0) * 1000)
+## Returns the readable name of the unit's alignment
 func get_alignment_name() -> String:
-	# Returns the string name of the alignment enum instead of its index
 	return Alignment.keys()[alignment].replace("_", " ").capitalize()
 #endregion
