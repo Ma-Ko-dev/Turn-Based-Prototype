@@ -7,6 +7,7 @@ extends Control
 @onready var character_content = $ContentWrapper/MainLayout/ContentArea/CharacterContent
 @onready var inventory_content = $ContentWrapper/MainLayout/ContentArea/InventoryContent
 var last_hp: int = 0
+var _active_data: UnitData = null
 
 func _ready() -> void:
 	# Hide on gamestart
@@ -31,12 +32,23 @@ func _on_close_pressed() -> void:
 	self.hide()
 
 
-# Main function to fill the UI with data
 func display_unit(data: UnitData, current_hp: int = -1) -> void:
+	# Manage signal connections to avoid double-firing or leaks
+	if _active_data and _active_data.data_updated.is_connected(_on_unit_data_updated):
+		_active_data.data_updated.disconnect(_on_unit_data_updated)
+	_active_data = data
+	_active_data.data_updated.connect(_on_unit_data_updated)
+
 	if current_hp >= 0:
 		last_hp = current_hp
+	
+	# : This is your existing logic
 	if character_content:
 		character_content.update_ui(data, last_hp)
 	if inventory_content:
 		inventory_content.refresh_backpack_ui(data)
-	# Note: Future tabs will be added here
+
+# New helper function for the signal
+func _on_unit_data_updated() -> void:
+	if _active_data:
+		display_unit(_active_data)

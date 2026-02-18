@@ -1,6 +1,10 @@
 extends Resource
 class_name UnitData
 
+# --- Signal ---
+# Notify UI to refresh everything
+signal data_updated
+
 # --- ENUMS ---
 enum Alignment {
 	LAWFUL_GOOD, NEUTRAL_GOOD, CHAOTIC_GOOD,
@@ -10,6 +14,7 @@ enum Alignment {
 enum Size { FINE, DIMINUTIVE, TINY, SMALL, MEDIUM, LARGE, HUGE, GARGANTUAN, COLOSSAL }
 enum UnitType { HUMANOID, UNDEAD, CONSTRUCT, ELEMENTAL, BEAST }
 enum Encumbrance { LIGHT, MEDIUM, HEAVY, OVERLOADED }
+
 var inventory_items: Array[ItemData] = []
 
 # --- Starting Equipment ---
@@ -88,7 +93,6 @@ var extra_initiative_bonus: int = 0
 func get_modifier(score: int) -> int:
 	return int(floor((score - 10) /  2.0))
 
-
 func get_size_modifier() -> int:
 	match size:
 		Size.FINE: return 8
@@ -100,7 +104,6 @@ func get_size_modifier() -> int:
 		Size.GARGANTUAN: return -4
 		Size.COLOSSAL: return -8
 		_: return 0 # Medium
-
 
 # Starting equippment helper
 func initialize_inventory() -> void:
@@ -189,7 +192,6 @@ func _auto_equip_item(item: ItemData) -> bool:
 	
 	# No free slot found for this type
 	return false	
-
 
 # --- Logic Getters ---
 func get_clamped_dex_modifier() -> int:
@@ -348,7 +350,6 @@ func get_effective_acp() -> int:
 		Encumbrance.HEAVY: weight_acp = 6
 	return -max(armor_acp, weight_acp)
 
-
 func get_item_by_slot_type(slot_type: ItemData.EquipmentSlot) -> ItemData:
 	match slot_type:
 		ItemData.EquipmentSlot.SHOULDER: return shoulder_item
@@ -365,6 +366,52 @@ func get_item_by_slot_type(slot_type: ItemData.EquipmentSlot) -> ItemData:
 		ItemData.EquipmentSlot.OFF_HAND: return off_hand
 		ItemData.EquipmentSlot.BOTH_HANDS: return both_hand
 	return null
+
+func drop_item(index: int) -> void:
+	# Handles removing item form backpack
+	if index < inventory_items.size():
+		inventory_items.remove_at(index)
+		data_updated.emit()
+
+func equip_item_from_backpack(item: ItemData, index: int) -> void:
+	# Core logic for equipping
+	var old_item = get_item_by_slot_type(item.slot_type)
+	# Swap: Remove new from backpack, add old back to backpack
+	inventory_items.remove_at(index)
+	if old_item:
+		inventory_items.append(old_item)
+	_set_item_in_slot(item.slot_type, item)
+	data_updated.emit()
+
+func unequip_slot(slot: ItemData.EquipmentSlot) -> void:
+	var item = get_item_by_slot_type(slot)
+	if item: 
+		inventory_items.append(item)
+		_set_item_in_slot(slot, null)
+		data_updated.emit()
+
+func drop_equipped_item(slot: ItemData.EquipmentSlot) -> void:
+	_set_item_in_slot(slot, null)
+	data_updated.emit()
+
+func _set_item_in_slot(slot: ItemData.EquipmentSlot, item: ItemData) -> void:
+	# Internal helper to set the correct variable
+	match slot:
+		ItemData.EquipmentSlot.SHOULDER: shoulder_item = item
+		ItemData.EquipmentSlot.HEAD: head_item = item
+		ItemData.EquipmentSlot.NECK: neck_item = item
+		ItemData.EquipmentSlot.CLOAK: cloak_item = item
+		ItemData.EquipmentSlot.BODY: body_armor = item
+		ItemData.EquipmentSlot.GLOVES: gloves_item = item
+		ItemData.EquipmentSlot.BELT: belt_item = item
+		ItemData.EquipmentSlot.BOOT: boot_item = item
+		ItemData.EquipmentSlot.RING: ring1_item = item
+		ItemData.EquipmentSlot.QUICK: quick1_item = item
+		ItemData.EquipmentSlot.MAIN_HAND: main_hand = item
+		ItemData.EquipmentSlot.OFF_HAND: off_hand = item
+		ItemData.EquipmentSlot.BOTH_HANDS: both_hand = item
+
+
 
 
 func add_xp(amount: int) -> bool:

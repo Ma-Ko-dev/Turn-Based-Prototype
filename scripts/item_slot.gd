@@ -183,23 +183,16 @@ func _open_context_menu() -> void:
 	UiManager.context_menu.open(actions, get_global_mouse_position(), self)
 
 
-func _drop_item_logic(unit:UnitData) -> void:
-	# Case 1: Item is in Backpack
+func _drop_item_logic(unit: UnitData) -> void:
 	if target_slot_type == ItemData.EquipmentSlot.NONE:
-		var index = get_index()
-		if index < unit.inventory_items.size():
-			unit.inventory_items.remove_at(index)
-	# Case 2: Item is equipped
+		unit.drop_item(get_index())
 	else:
-		_update_unit_equipment(unit, target_slot_type, null)
-	# Refresh UI
-	get_tree().get_first_node_in_group("character_sheet").display_unit(unit)
+		unit.drop_equipped_item(target_slot_type)
 
 
 func _equip_via_menu(unit: UnitData) -> void:
-	# Here we can reuse your existing logic or a simplified version
-	print("Equipping from menu...")
-	# Logic would go here (finding a free slot or swapping)
+	if stored_item:
+		unit.equip_item_from_backpack(stored_item, get_index())
 
 
 func _on_mouse_entered() -> void:

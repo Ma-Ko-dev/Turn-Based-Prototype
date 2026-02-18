@@ -47,7 +47,3 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed:
 		if not get_global_rect().has_point(get_global_mouse_position()):
 			hide()
-
-
-#func _on_mouse_exited() -> void:
-	#hide()
