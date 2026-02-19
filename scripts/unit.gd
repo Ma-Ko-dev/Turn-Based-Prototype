@@ -21,23 +21,23 @@ var grid_size: float:
 		return map_manager.grid_size
 #endregion
 #region --- Variables: State (Stats & Status)
-var display_name: String = ""
-var current_health: int
-var current_initiative_score: int = 0
 var remaining_movement: int = 0:
 	set(value):
 		remaining_movement = value
 		movement_changed.emit(remaining_movement)
+var display_name: String = ""
+var current_health: int
+var current_initiative_score: int = 0
 var is_moving: bool = false
 var is_selected: bool = false
 var is_active_unit: bool = false
 var has_attacked: bool = false
 #endregion
 #region --- Variables: References ---
-var map_manager: MapManager
 var astar_grid: AStarGrid2D:
 	get:
 		return map_manager.astar_grid
+var map_manager: MapManager
 #endregion
 #region --- Variables: Computed Stats (Getters) ---
 ## Returns the maximum health points, pulled live from UnitData.
@@ -64,7 +64,6 @@ func _ready() -> void:
 		# Wait for a frame to ensure MapManager has initialized the AStar grid before occupying a cell
 		await get_tree().process_frame
 		_set_grid_occupancy(true)
-	remaining_movement = data.get_current_movement_range()
 
 ## Sets initial display values and fills health/movement to their maximums.
 func _initialize_stats() -> void:
