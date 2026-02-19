@@ -42,6 +42,7 @@ var extra_initiative_bonus: int = 0
 #endregion
 #region --- Variables: Combat Stats ---
 @export_group("Combat Stats")
+var _generated_max_hp: int = 0
 @export var base_attack_bonus: int = 0
 @export var base_fortitude: int = 0
 @export var base_reflex: int = 0
@@ -104,7 +105,10 @@ func calculate_initial_hp() -> int:
 		base_hp = Dice.roll(hp_dice_count, hp_dice_sides, con_mod)
 	return max(1, base_hp + flat_hp_bonus)
 ## Returns the maximum health points for this unit.
-func get_max_hp() -> int: return calculate_initial_hp()
+func get_max_hp() -> int: 
+	if _generated_max_hp <= 0:
+		_generated_max_hp = calculate_initial_hp()
+	return _generated_max_hp
 ## Returns the Damage Reduction (DR) for a specific damage type.
 func get_dr_for_type(damage_type: int) -> int:
 	for res in resistances:
