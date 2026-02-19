@@ -26,14 +26,8 @@ A tactical 2D turn-based prototype built with **Godot 4.6**. This project is the
 * **Architecture**: Signal-driven UI and state management for decoupled systems.
 * **Assets**: Compatible with 16x16 tilesets (optimized for Kenney's 1-Bit asset).
 
-## 📖 How to Use
-
-1. Clone the repository
-2. Open the project in Godot 4.x
-3. Press 'Run'
-4. Press `Enter/Space` in Exploration mode to cycle turns. Combat will start when an enemy spotted you.
-
 ## ⚖️ License
+
 This project uses a dual-license model:
 
 - Source code is licensed under the MIT License.
