@@ -66,7 +66,7 @@ func update_ui(data: UnitData, current_hp: int) -> void:
 	
 	var weapon_name_label = find_child("WeaponName", true, false)
 	var weapon_stats = find_child("WeaponStats", true, false)
-	var weapon = data.main_hand
+	var weapon = data.get_item_by_slot_type(ItemData.EquipmentSlot.MAIN_HAND)
 	var dmg_bonus = data.get_modifier(data.strength)
 	var bonus_str = ""
 	if dmg_bonus > 0:

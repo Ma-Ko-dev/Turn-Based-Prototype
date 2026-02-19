@@ -68,22 +68,8 @@ var extra_initiative_bonus: int = 0
 #region --- Variables: Equipment & Inventory Slots ---
 @export_group("Starting Equipment")
 @export var starting_items: Array[ItemData] = []
+var equipped_gear: Dictionary = {}
 var inventory_items: Array[ItemData] = []
-var shoulder_item: ItemData
-var head_item: ItemData
-var neck_item: ItemData
-var cloak_item: ItemData
-var body_armor: ArmorData
-var gloves_item: ItemData
-var belt_item: ItemData
-var boot_item: ItemData
-var ring1_item: ItemData
-var ring2_item: ItemData
-var quick1_item: ItemData
-var quick2_item: ItemData
-var main_hand: WeaponData
-var off_hand: ItemData # can be a shield (armor data) or weapon (weapon data)
-var both_hand: WeaponData
 #endregion
 
 
@@ -129,11 +115,13 @@ func get_dr_for_type(damage_type: int) -> int:
 func get_armor_bonus() -> int:
 	# Use armor item bonus if present, otherwise fallback to hardcoded natural/base bonus
 	var bonus = natural_armor
-	if body_armor: 
-		bonus += body_armor.ac_bonus
+	var armor = get_item_by_slot_type(ItemData.EquipmentSlot.BODY)
+	if armor and armor is ArmorData: 
+		bonus += armor.ac_bonus
 	return bonus
 ## Returns the AC bonus from an equipped shield in the off-hand.
 func get_shield_bonus() -> int:
+	var off_hand = get_item_by_slot_type(ItemData.EquipmentSlot.OFF_HAND)
 	if off_hand and off_hand is ArmorData: # Shields are ArmorData with slot_type OFF_HAND
 		return off_hand.ac_bonus
 	return 0
@@ -159,6 +147,7 @@ func get_attack_bonus() -> int: return base_attack_bonus + get_modifier(strength
 func get_ranged_bonus() -> int: return base_attack_bonus + get_modifier(dexterity) + get_size_modifier()
 ## Returns the damage dice string (e.g., "1d8") based on weapon and size
 func get_weapon_damage_dice() -> String:
+	var main_hand = get_item_by_slot_type(ItemData.EquipmentSlot.MAIN_HAND)
 	if main_hand:
 		return main_hand.damage_medium if size >= Size.MEDIUM else main_hand.damage_small
 		# Fallback to hardcoded stats if no weapon is equipped
@@ -170,6 +159,7 @@ func get_damage_data() -> Dictionary:
 	return { "count": int(parts[0]), "sides": int(parts[1])}
 ## Returns the reach of the unit in feet (default 5ft)
 func get_attack_reach() -> int:
+	var main_hand = get_item_by_slot_type(ItemData.EquipmentSlot.MAIN_HAND)
 	return main_hand.reach_ft if main_hand else 5
 ## Calculates the Combat Maneuver Bonus
 func get_cmb() -> int: return base_attack_bonus + get_modifier(strength) - get_size_modifier()
@@ -195,12 +185,10 @@ func get_max_weight() -> float:
 func get_current_weight() -> float:
 	var total = 0.0
 	# Weight from equipped items
-	for slot_type in ItemData.EquipmentSlot.values():
-		if slot_type != ItemData.EquipmentSlot.NONE:
-			var item = get_item_by_slot_type(slot_type)
-			if item:
-				total += item.weight 
-
+	for item in equipped_gear.values():
+		if item:
+			total += item.weight
+	# Weight from backpack
 	for item in inventory_items:
 		if item:
 			total += item.weight * item.amount
@@ -221,6 +209,7 @@ func get_encumbrance_level() -> Encumbrance:
 func get_effective_encumbrance() -> Encumbrance:
 	var weight_enc = get_encumbrance_level()
 	var armor_enc = Encumbrance.LIGHT
+	var body_armor = get_item_by_slot_type(ItemData.EquipmentSlot.BODY)
 	if body_armor:
 		if body_armor.armor_type == ArmorData.ArmorType.MEDIUM:
 			armor_enc = Encumbrance.MEDIUM
@@ -232,11 +221,12 @@ func get_clamped_dex_modifier() -> int:
 	var dex_mod = get_modifier(dexterity)
 	var effective = get_effective_encumbrance()
 	var limit = 99
+	var body_armor = get_item_by_slot_type(ItemData.EquipmentSlot.BODY)
 	match effective:
 		Encumbrance.MEDIUM: limit = 3
 		Encumbrance.HEAVY: limit = 1
 		Encumbrance.OVERLOADED: limit = -5 
-	if body_armor:
+	if body_armor and body_armor is ArmorData:
 		# Return the smaller value: either actual dex or the armor's limit
 		limit = min(limit, body_armor.max_dex_bonus)
 	return min(dex_mod, limit)
@@ -245,6 +235,7 @@ func get_current_movement_range() -> int:
 	var base_move = movement_range
 	var armor_pen = 0
 	var weight_pen = 0
+	var body_armor = get_item_by_slot_type(ItemData.EquipmentSlot.BODY)
 	if body_armor:
 		armor_pen = body_armor.speed_penalty
 	var load_status = get_encumbrance_level()
@@ -258,6 +249,8 @@ func get_current_movement_range() -> int:
 ## Calculates the total Armor Check Penalty (ACP) from gear and load
 func get_effective_acp() -> int:
 	var armor_acp = 0
+	var body_armor = get_item_by_slot_type(ItemData.EquipmentSlot.BODY)
+	var off_hand = get_item_by_slot_type(ItemData.EquipmentSlot.OFF_HAND)
 	if body_armor:
 		armor_acp = abs(body_armor.armor_check_penalty)
 	if off_hand is ArmorData:
@@ -271,105 +264,37 @@ func get_effective_acp() -> int:
 #region --- Logic: Item Management ---
 ## Initializes inventory and auto-equips starting items.
 func initialize_inventory() -> void:
+	_setup_gear_slots()
 	inventory_items.clear()
-	_clear_equipment_slots()
 	for starting_item in starting_items:
 		if not starting_item: continue
 		var item = starting_item.duplicate()
 		var slotted = false
 		# Try to equip the item if it has a valid equipment slot
 		if item.slot_type != ItemData.EquipmentSlot.NONE:
-			slotted = _auto_equip_item(item)
+			slotted = _auto_equip_item(item, false)
 		# If it couldnt be equipped (slot full or no slot), put it in the backpack
 		if not slotted:
 			inventory_items.append(item)
+	data_updated.emit()
 ## Internal: Removes all items from equipment slots
 func _clear_equipment_slots() -> void:
-	shoulder_item = null; head_item = null; neck_item = null; cloak_item = null
-	body_armor = null; gloves_item = null; belt_item = null; boot_item = null
-	ring1_item = null; ring2_item = null; quick1_item = null; quick2_item = null
-	main_hand = null; off_hand = null; both_hand = null
+	_setup_gear_slots()
 ## Internal: Attempts to put an item into its designated equipment slot
-func _auto_equip_item(item: ItemData) -> bool:
-	match item.slot_type:
-		ItemData.EquipmentSlot.SHOULDER:
-			if not shoulder_item:
-				shoulder_item = item
-				return true
-		ItemData.EquipmentSlot.HEAD:
-			if not head_item:
-				head_item = item
-				return true
-		ItemData.EquipmentSlot.NECK:
-			if not neck_item:
-				neck_item = item
-				return true
-		ItemData.EquipmentSlot.CLOAK:
-			if not cloak_item:
-				cloak_item = item
-				return true
-		ItemData.EquipmentSlot.BODY:
-			if not body_armor:
-				body_armor = item
-				return true
-		ItemData.EquipmentSlot.GLOVES:
-			if not gloves_item:
-				gloves_item = item
-				return true
-		ItemData.EquipmentSlot.BELT:
-			if not belt_item:
-				belt_item = item
-				return true
-		ItemData.EquipmentSlot.BOOT:	
-			if not boot_item:
-				boot_item = item
-				return true
-		ItemData.EquipmentSlot.RING:
-			if not ring1_item:
-				ring1_item = item
-				return true
-			elif not ring2_item:
-				ring2_item = item
-				return true
-		ItemData.EquipmentSlot.QUICK:
-			if not quick1_item:
-				quick1_item = item
-				return true
-			elif not quick2_item:
-				quick2_item = item
-				return true
-		ItemData.EquipmentSlot.MAIN_HAND:
-			if not main_hand:
-				main_hand = item
-				return true
-		ItemData.EquipmentSlot.OFF_HAND:
-			if not off_hand:
-				off_hand = item
-				return true
-		ItemData.EquipmentSlot.BOTH_HANDS:
-			if not both_hand:
-				both_hand = item
-				return true
-	
-	# No free slot found for this type
-	return false	
-## Helper to retrieve an item from a specific equipment slot
+func _auto_equip_item(item: ItemData, emit: bool = true) -> bool:
+	if item.slot_type == ItemData.EquipmentSlot.NONE:
+		return false
+	if item.slot_type == ItemData.EquipmentSlot.RING:
+		if get_item_by_slot_type(ItemData.EquipmentSlot.RING) == null:
+			_set_item_in_slot(ItemData.EquipmentSlot.RING, item, emit)
+			return true
+		return false
+	if get_item_by_slot_type(item.slot_type) == null:
+		_set_item_in_slot(item.slot_type, item)
+		return true
+	return false
 func get_item_by_slot_type(slot_type: ItemData.EquipmentSlot) -> ItemData:
-	match slot_type:
-		ItemData.EquipmentSlot.SHOULDER: return shoulder_item
-		ItemData.EquipmentSlot.HEAD: return head_item
-		ItemData.EquipmentSlot.NECK: return neck_item
-		ItemData.EquipmentSlot.CLOAK: return cloak_item
-		ItemData.EquipmentSlot.BODY: return body_armor
-		ItemData.EquipmentSlot.GLOVES: return gloves_item
-		ItemData.EquipmentSlot.BELT: return belt_item
-		ItemData.EquipmentSlot.BOOT: return boot_item
-		ItemData.EquipmentSlot.RING: return ring1_item
-		ItemData.EquipmentSlot.QUICK: return quick1_item
-		ItemData.EquipmentSlot.MAIN_HAND: return main_hand
-		ItemData.EquipmentSlot.OFF_HAND: return off_hand
-		ItemData.EquipmentSlot.BOTH_HANDS: return both_hand
-	return null
+	return equipped_gear.get(slot_type, null)
 ## Removes an item from the backpack at the given index
 func drop_item(index: int) -> void:
 	if index < inventory_items.size():
@@ -395,21 +320,11 @@ func drop_equipped_item(slot: ItemData.EquipmentSlot) -> void:
 	_set_item_in_slot(slot, null)
 	data_updated.emit()
 ## Internal: Sets the reference for a specific equipment slot
-func _set_item_in_slot(slot: ItemData.EquipmentSlot, item: ItemData) -> void:
-	match slot:
-		ItemData.EquipmentSlot.SHOULDER: shoulder_item = item
-		ItemData.EquipmentSlot.HEAD: head_item = item
-		ItemData.EquipmentSlot.NECK: neck_item = item
-		ItemData.EquipmentSlot.CLOAK: cloak_item = item
-		ItemData.EquipmentSlot.BODY: body_armor = item
-		ItemData.EquipmentSlot.GLOVES: gloves_item = item
-		ItemData.EquipmentSlot.BELT: belt_item = item
-		ItemData.EquipmentSlot.BOOT: boot_item = item
-		ItemData.EquipmentSlot.RING: ring1_item = item
-		ItemData.EquipmentSlot.QUICK: quick1_item = item
-		ItemData.EquipmentSlot.MAIN_HAND: main_hand = item
-		ItemData.EquipmentSlot.OFF_HAND: off_hand = item
-		ItemData.EquipmentSlot.BOTH_HANDS: both_hand = item
+func _set_item_in_slot(slot: ItemData.EquipmentSlot, item: ItemData, emit: bool = true) -> void:
+	if equipped_gear.has(slot):
+		equipped_gear[slot] = item
+		if emit:
+			data_updated.emit()
 ## Handles complex logic for moving items between slots and backpack via Drag & Drop
 func handle_drag_drop(from_slot: ItemData.EquipmentSlot, from_idx: int, to_slot: ItemData.EquipmentSlot, to_idx: int) -> void:
 	#  Case 1: Moving/Swapping within Backpack
@@ -447,6 +362,11 @@ func handle_drag_drop(from_slot: ItemData.EquipmentSlot, from_idx: int, to_slot:
 			unequip_slot(from_slot)
 		return
 	data_updated.emit()
+func _setup_gear_slots() -> void:
+	equipped_gear.clear()
+	for slot in ItemData.EquipmentSlot.values():
+		if slot != ItemData.EquipmentSlot.NONE:
+			equipped_gear[slot] = null
 #endregion
 #region --- Logic: Progression & Misc ---
 ## Adds experience points and checks for level up

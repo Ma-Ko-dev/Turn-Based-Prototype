@@ -13,13 +13,12 @@ region = Rect2(425, 34, 16, 16)
 
 [resource]
 script = ExtResource("1_to8mc")
-starting_items = Array[ExtResource("3_jq7ni")]([ExtResource("4_bfw5r"), ExtResource("5_lyilj")])
-xp_reward = 135
-threat_rating = 0.3
 name = "Goblin"
 size = 3
 alignment = 7
 texture = SubResource("AtlasTexture_ckaa2")
+xp_reward = 135
+threat_rating = 0.3
 movement_range = 6
 base_attack_bonus = 1
 damage_dice_sides = 4
@@ -28,4 +27,5 @@ dexterity = 15
 constitution = 12
 wisdom = 9
 charisma = 6
+starting_items = Array[ExtResource("3_jq7ni")]([ExtResource("4_bfw5r"), ExtResource("5_lyilj")])
 metadata/_custom_type_script = "uid://bkrq17yyhro0b"

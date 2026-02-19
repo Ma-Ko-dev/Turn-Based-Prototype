@@ -15,10 +15,9 @@ region = Rect2(476, 0, 16, 16)
 
 [resource]
 script = ExtResource("1_bmmou")
-starting_items = Array[ExtResource("3_tjf5t")]([ExtResource("4_qpowf"), ExtResource("5_ls32s"), ExtResource("6_8lasl"), ExtResource("7_asbkt"), ExtResource("4_qpowf"), ExtResource("4_qpowf"), ExtResource("4_qpowf")])
-is_player_data = true
 name = "Hero"
 texture = SubResource("AtlasTexture_5koo4")
+is_player_data = true
 movement_range = 6
 base_attack_bonus = 1
 base_fortitude = 2
@@ -27,4 +26,5 @@ dexterity = 14
 constitution = 14
 wisdom = 12
 charisma = 8
+starting_items = Array[ExtResource("3_tjf5t")]([ExtResource("4_qpowf"), ExtResource("5_ls32s"), ExtResource("6_8lasl"), ExtResource("7_asbkt"), ExtResource("4_qpowf"), ExtResource("4_qpowf"), ExtResource("4_qpowf")])
 metadata/_custom_type_script = "uid://bkrq17yyhro0b"
