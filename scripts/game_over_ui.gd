@@ -15,6 +15,5 @@ func _on_game_over() -> void:
 
 
 func _on_restart_button_pressed() -> void:
-	TurnManager.is_game_over = false
-	TurnManager.round_count = 1
+	TurnManager.reset_manager()
 	get_tree().reload_current_scene()

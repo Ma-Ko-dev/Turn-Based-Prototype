@@ -17,6 +17,7 @@ func _ready() -> void:
 		_setup_game()
 	else:
 		printerr("GameRoot: Essential scenes (level or player) are missing!")
+	GameEvents.log_requested.emit("--- Exploration Round 1 Started ---")
 
 
 # --- Main Setup Flow ---

@@ -19,7 +19,7 @@ var _exploration_round_backup: int = 1
 # --- Lifecycle ---
 func _ready() -> void:
 	await get_tree().process_frame
-	GameEvents.log_requested.emit("--- Exploration Round 1 Started ---")
+	#GameEvents.log_requested.emit("--- Exploration Round 1 Started ---")
 
 
 # --- Exploration Logic ---
@@ -159,3 +159,12 @@ func _trigger_game_over():
 	GameEvents.log_requested.emit("The hero has fallen. Time for a new character sheet...")
 	GameEvents.game_over.emit()
 	end_combat()
+
+
+func reset_manager() -> void:
+	is_game_over = false
+	round_count = 1
+	current_state = State.EXPLORATION
+	combat_queue.clear()
+	active_unit_index = 0
+	#GameEvents.log_requested.emit("--- Exploration Round 1 Started ---")
