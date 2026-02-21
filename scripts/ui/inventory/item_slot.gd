@@ -20,6 +20,7 @@ func _ready() -> void:
 	update_slot_visuals()
 	mouse_entered.connect(func(): if stored_item: GameEvents.item_hovered.emit(stored_item))
 	mouse_exited.connect(func(): GameEvents.item_hovered.emit(null))
+	update_slot_visuals()
 
 
 # Main function to put an item into the slot

@@ -7,6 +7,11 @@
 [ext_resource type="Resource" uid="uid://d137hrtr18uaa" path="res://ressources/units/enemies/Goblin.tres" id="3_xokhc"]
 [ext_resource type="Script" uid="uid://ddb326dqa48d8" path="res://scripts/world/spawn_marker.gd" id="4_xokhc"]
 [ext_resource type="Resource" uid="uid://302xlx3u0lsh" path="res://ressources/units/enemies/Zombie.tres" id="5_hhyrm"]
+[ext_resource type="PackedScene" uid="uid://m8b2l88yumn5" path="res://scenes/LootChest.tscn" id="8_dwcxj"]
+[ext_resource type="Script" uid="uid://cw0mtd68004ro" path="res://scripts/resources/item_data.gd" id="9_5dpfh"]
+[ext_resource type="Resource" uid="uid://b8w061npmut1x" path="res://ressources/items/consumables/potion_healing_light.tres" id="10_vlkw4"]
+[ext_resource type="Resource" uid="uid://dyt1ifhdgcb0f" path="res://ressources/items/armor/leather_armor.tres" id="11_xpxa0"]
+[ext_resource type="Resource" uid="uid://btuajac18i5t3" path="res://ressources/items/armor/shields/buckler.tres" id="12_shv8k"]
 
 [node name="BaseLevel" unique_id=1330468739 instance=ExtResource("1_rmf85")]
 
@@ -40,3 +45,9 @@ position = Vector2(552, 232)
 script = ExtResource("4_xokhc")
 unit_scene = ExtResource("2_wee7o")
 unit_data = ExtResource("5_hhyrm")
+
+[node name="Loot" type="Node2D" parent="." index="8" unique_id=697450860]
+
+[node name="LootChest" parent="Loot" index="0" unique_id=1013013136 instance=ExtResource("8_dwcxj")]
+position = Vector2(616, 464)
+loot = Array[ExtResource("9_5dpfh")]([ExtResource("10_vlkw4"), ExtResource("10_vlkw4"), ExtResource("11_xpxa0"), ExtResource("12_shv8k")])
