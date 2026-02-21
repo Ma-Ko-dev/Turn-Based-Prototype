@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cydqyxh4nautx"]
 
 [ext_resource type="Texture2D" uid="uid://cvbmqdqxe1tgm" path="res://assets/colored-transparent.png" id="1_k0x8o"]
-[ext_resource type="Script" uid="uid://epxve7dyrhvx" path="res://scripts/character_content.gd" id="1_wrhci"]
+[ext_resource type="Script" uid="uid://epxve7dyrhvx" path="res://scripts/ui/character/character_content.gd" id="1_wrhci"]
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_me650"]
 thickness = 3

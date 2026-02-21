@@ -1,20 +1,21 @@
 [gd_resource type="Resource" script_class="UnitData" format=3 uid="uid://deqdcl244gojl"]
 
-[ext_resource type="Script" uid="uid://bkrq17yyhro0b" path="res://scripts/unit_data.gd" id="1_bmmou"]
-[ext_resource type="Script" uid="uid://dw46ep76orpni" path="res://scripts/ResistanceEntry.gd" id="1_kvhx0"]
+[ext_resource type="Script" uid="uid://dw46ep76orpni" path="res://scripts/resources/ResistanceEntry.gd" id="1_ls32s"]
+[ext_resource type="Script" uid="uid://bkrq17yyhro0b" path="res://scripts/resources/unit_data.gd" id="2_8lasl"]
 [ext_resource type="Texture2D" uid="uid://cvbmqdqxe1tgm" path="res://assets/colored-transparent.png" id="2_lkt8u"]
-[ext_resource type="Script" uid="uid://cw0mtd68004ro" path="res://scripts/item_data.gd" id="3_tjf5t"]
+[ext_resource type="Script" uid="uid://cw0mtd68004ro" path="res://scripts/resources/item_data.gd" id="3_asbkt"]
 [ext_resource type="Resource" uid="uid://c60is5xx7fejg" path="res://ressources/items/armor/scale_mail.tres" id="4_qpowf"]
 [ext_resource type="Resource" uid="uid://djuhbhlu5hf0o" path="res://ressources/items/weapons/longsword.tres" id="5_ls32s"]
 [ext_resource type="Resource" uid="uid://c1k54y0fcc2ju" path="res://ressources/items/armor/shields/metal_shield.tres" id="6_8lasl"]
 [ext_resource type="Resource" uid="uid://1xiismvnygsv" path="res://ressources/items/weapons/light-mace.tres" id="7_asbkt"]
+[ext_resource type="Resource" uid="uid://b8w061npmut1x" path="res://ressources/items/consumables/potion_healing_light.tres" id="8_ls32s"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5koo4"]
 atlas = ExtResource("2_lkt8u")
 region = Rect2(476, 0, 16, 16)
 
 [resource]
-script = ExtResource("1_bmmou")
+script = ExtResource("2_8lasl")
 name = "Hero"
 texture = SubResource("AtlasTexture_5koo4")
 is_player_data = true
@@ -26,5 +27,5 @@ dexterity = 14
 constitution = 14
 wisdom = 12
 charisma = 8
-starting_items = Array[ExtResource("3_tjf5t")]([ExtResource("4_qpowf"), ExtResource("5_ls32s"), ExtResource("6_8lasl"), ExtResource("7_asbkt"), ExtResource("4_qpowf"), ExtResource("4_qpowf"), ExtResource("4_qpowf")])
+starting_items = Array[ExtResource("3_asbkt")]([ExtResource("4_qpowf"), ExtResource("5_ls32s"), ExtResource("6_8lasl"), ExtResource("7_asbkt"), ExtResource("4_qpowf"), ExtResource("4_qpowf"), ExtResource("4_qpowf"), ExtResource("8_ls32s")])
 metadata/_custom_type_script = "uid://bkrq17yyhro0b"

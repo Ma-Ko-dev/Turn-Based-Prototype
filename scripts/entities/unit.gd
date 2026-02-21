@@ -159,6 +159,11 @@ func _apply_damage(target: Unit, is_crit: bool) -> void:
 	if is_crit: damage *= crit_mult
 	target.take_damage(max(1, damage), is_crit, dmg_type)
 
+func heal(amount: int) -> void:
+	current_health = clampi(current_health + amount, 0, max_health)
+	hp_changed.emit()
+	GameEvents.log_requested.emit("%s healed for %d HP." % [display_name, amount])
+
 ## Handles cleanup, XP distribution, and removal from combat or the scene.
 func _die() -> void:
 	GameEvents.log_requested.emit("!!! %s has been defeated !!!" % display_name)

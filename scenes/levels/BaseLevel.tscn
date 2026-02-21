@@ -1,7 +1,7 @@
 [gd_scene format=4 uid="uid://cxfi6slnvx185"]
 
 [ext_resource type="TileSet" uid="uid://nfp0efavgx5g" path="res://ressources/main_tileset.tres" id="1_xxmur"]
-[ext_resource type="Script" uid="uid://ddb326dqa48d8" path="res://scripts/spawn_marker.gd" id="2_0plv3"]
+[ext_resource type="Script" uid="uid://ddb326dqa48d8" path="res://scripts/world/spawn_marker.gd" id="2_0plv3"]
 
 [node name="BaseLevel" type="Node2D" unique_id=1330468739]
 

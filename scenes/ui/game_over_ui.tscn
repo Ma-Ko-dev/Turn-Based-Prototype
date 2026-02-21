@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bwnc7uu1h1y4k"]
 
-[ext_resource type="Script" uid="uid://djqppb8eq0j4l" path="res://scripts/game_over_ui.gd" id="1_i5oy2"]
+[ext_resource type="Script" uid="uid://djqppb8eq0j4l" path="res://scripts/ui/screens/game_over_ui.gd" id="1_i5oy2"]
 [ext_resource type="Texture2D" uid="uid://rtirr7jnkl1e" path="res://assets/ui/tilemap_large_thin.png" id="2_u4odh"]
 
 [node name="GameOverUI" type="Control" unique_id=1796853700]

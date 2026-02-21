@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://desyp0hxe7xot" path="res://scenes/units/Enemy.tscn" id="2_wee7o"]
 [ext_resource type="Resource" uid="uid://deqdcl244gojl" path="res://ressources/units/player/Player.tres" id="3_dwcxj"]
 [ext_resource type="Resource" uid="uid://d137hrtr18uaa" path="res://ressources/units/enemies/Goblin.tres" id="3_xokhc"]
-[ext_resource type="Script" uid="uid://ddb326dqa48d8" path="res://scripts/spawn_marker.gd" id="4_xokhc"]
+[ext_resource type="Script" uid="uid://ddb326dqa48d8" path="res://scripts/world/spawn_marker.gd" id="4_xokhc"]
 [ext_resource type="Resource" uid="uid://302xlx3u0lsh" path="res://ressources/units/enemies/Zombie.tres" id="5_hhyrm"]
 
 [node name="BaseLevel" unique_id=1330468739 instance=ExtResource("1_rmf85")]

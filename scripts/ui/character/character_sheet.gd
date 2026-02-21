@@ -49,4 +49,9 @@ func display_unit(data: UnitData, current_hp: int = -1) -> void:
 # New helper function for the signal
 func _on_unit_data_updated() -> void:
 	if _active_data:
-		display_unit(_active_data)
+		var players = get_tree().get_nodes_in_group("players")
+		var hp_to_show = last_hp # Fallback
+		if not players.is_empty():
+			hp_to_show = players[0].current_health
+			last_hp = hp_to_show 
+		display_unit(_active_data, hp_to_show)

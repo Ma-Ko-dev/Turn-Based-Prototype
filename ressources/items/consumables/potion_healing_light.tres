@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ConsumableData" format=3 uid="uid://b8w061npmut1x"]
+
+[ext_resource type="Resource" uid="uid://c4amch1birgrm" path="res://ressources/effects/heal_light.tres" id="1_bohfd"]
+[ext_resource type="Script" uid="uid://ckhecj1f74sb" path="res://scripts/resources/consumable_data.gd" id="2_bohfd"]
+[ext_resource type="Texture2D" uid="uid://cvbmqdqxe1tgm" path="res://assets/colored-transparent.png" id="3_vvrbp"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wq63i"]
+atlas = ExtResource("3_vvrbp")
+region = Rect2(561, 221, 16, 16)
+
+[resource]
+script = ExtResource("2_bohfd")
+effect = ExtResource("1_bohfd")
+item_name = "Lesser healing potion"
+item_type = 3
+slot_type = 10
+texture = SubResource("AtlasTexture_wq63i")
+description = "A potion that heals you for 1d8 points."
+metadata/_custom_type_script = "uid://ckhecj1f74sb"

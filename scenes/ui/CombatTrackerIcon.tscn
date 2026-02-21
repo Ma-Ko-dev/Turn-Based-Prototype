@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dunnflwlnd847"]
 
-[ext_resource type="Script" uid="uid://c3bu706g8oyuw" path="res://scripts/combat_tracker_icon.gd" id="1_thgay"]
+[ext_resource type="Script" uid="uid://c3bu706g8oyuw" path="res://scripts/ui/character/combat_tracker_icon.gd" id="1_thgay"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3itj8"]
 bg_color = Color(0.12591082, 0.12591085, 0.12591076, 1)

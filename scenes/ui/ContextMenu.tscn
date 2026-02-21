@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bntj6mjw3106m"]
 
 [ext_resource type="Texture2D" uid="uid://d0wnmm240psca" path="res://ressources/ui/UI_Sub_Menu.tres" id="1_elpcv"]
-[ext_resource type="Script" uid="uid://c024mq86kx34e" path="res://scripts/context_menu.gd" id="2_wxpii"]
+[ext_resource type="Script" uid="uid://c024mq86kx34e" path="res://scripts/ui/inventory/context_menu.gd" id="2_wxpii"]
 
 [node name="ContextMenu" type="NinePatchRect" unique_id=1485450798 groups=["context_menu"]]
 custom_minimum_size = Vector2(100, 20)

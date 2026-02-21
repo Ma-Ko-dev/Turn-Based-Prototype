@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://cxg7ue3k504c6"]
 
-[ext_resource type="Script" uid="uid://dfk5weuf11l2b" path="res://scripts/game_root.gd" id="1_ylec3"]
+[ext_resource type="Script" uid="uid://dfk5weuf11l2b" path="res://scripts/core/game_root.gd" id="1_ylec3"]
 [ext_resource type="PackedScene" uid="uid://chygwhunclgm0" path="res://scenes/levels/Level_01.tscn" id="2_ylec3"]
-[ext_resource type="Script" uid="uid://cdxs5yvh3c3nc" path="res://scripts/game_ui.gd" id="5_a1rh6"]
-[ext_resource type="Script" uid="uid://ckdelfqek4cv" path="res://scripts/map_manager.gd" id="6_a1rh6"]
+[ext_resource type="Script" uid="uid://cdxs5yvh3c3nc" path="res://scripts/ui/game_ui.gd" id="5_a1rh6"]
+[ext_resource type="Script" uid="uid://ckdelfqek4cv" path="res://scripts/core/map_manager.gd" id="6_a1rh6"]
 [ext_resource type="PackedScene" uid="uid://dunnflwlnd847" path="res://scenes/ui/CombatTrackerIcon.tscn" id="6_j7aru"]
 [ext_resource type="PackedScene" uid="uid://ojd7oenehk2a" path="res://scenes/ui/LogWindow.tscn" id="6_ylec3"]
 [ext_resource type="PackedScene" uid="uid://ddqo1ljrqf6lb" path="res://scenes/ui/CombatTracker.tscn" id="7_6v30a"]

@@ -92,8 +92,6 @@ func end_combat() -> void:
 
 func _start_active_unit_turn() -> void:
 	# Security check: skip dead objects that might still be in queue
-	#while active_unit_index < combat_queue.size() and not is_instance_valid(combat_queue[active_unit_index]):
-		#combat_queue.remove_at(active_unit_index)
 	combat_queue = combat_queue.filter(func(u): return is_instance_valid(u))
 	if combat_queue.is_empty():
 		end_combat()
@@ -103,7 +101,6 @@ func _start_active_unit_turn() -> void:
 	var current_unit = combat_queue[active_unit_index]
 	# Ensure only the active unit has the 'is_active_unit' flag
 	for unit in combat_queue:
-		#if is_instance_valid(unit):
 		unit.is_active_unit = (unit == current_unit)
 	# Notify UI which unit is currently taking its turn
 	active_unit_changed.emit(current_unit)

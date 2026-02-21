@@ -371,6 +371,27 @@ func _setup_gear_slots() -> void:
 	for slot in ItemData.EquipmentSlot.values():
 		if slot != ItemData.EquipmentSlot.NONE:
 			equipped_gear[slot] = null
+## Removes an item from the inventory OR equipment. Decrements amount or removes entry.
+func remove_item_from_inventory(item: ItemData) -> void:
+	var index = inventory_items.find(item)
+	if index != -1:
+		inventory_items[index].amount -= 1
+		if inventory_items[index].amount <= 0:
+			inventory_items.remove_at(index)
+		_finalize_item_removal()
+		return
+	for slot in equipped_gear.keys():
+		if equipped_gear[slot] == item:
+			equipped_gear[slot].amount -= 1
+			if equipped_gear[slot].amount <= 0:
+				equipped_gear[slot] = null
+			_finalize_item_removal()
+			return
+	push_warning("Attempted to remove non-existent item: " + item.item_name)
+
+## Internal helper to refresh all relevant UI parts
+func _finalize_item_removal() -> void:
+	data_updated.emit()
 #endregion
 #region --- Logic: Progression & Misc ---
 ## Adds experience points and checks for level up
