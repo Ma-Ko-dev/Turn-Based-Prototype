@@ -145,10 +145,17 @@ func _check_combat_end_conditions() -> void:
 	if enemies.is_empty():
 		end_combat()
 
+## Check to see if a player turned. (For future use. Because like Poison, traps, etc.)
+func check_player_survival() -> void:
+	var players = get_tree().get_nodes_in_group("players")
+	if players.is_empty():
+		_trigger_game_over()
+
 
 func _trigger_game_over():
+	if is_game_over: return
 	is_game_over = true
 	GameEvents.log_requested.emit("--- GAME OVER ---")
 	GameEvents.log_requested.emit("The hero has fallen. Time for a new character sheet...")
-	# Later: Show a UI Screen. For now, we stop the game.
+	GameEvents.game_over.emit()
 	end_combat()

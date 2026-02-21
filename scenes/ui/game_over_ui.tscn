@@ -1,0 +1,70 @@
+[gd_scene format=3 uid="uid://bwnc7uu1h1y4k"]
+
+[ext_resource type="Script" uid="uid://djqppb8eq0j4l" path="res://scripts/game_over_ui.gd" id="1_i5oy2"]
+[ext_resource type="Texture2D" uid="uid://rtirr7jnkl1e" path="res://assets/ui/tilemap_large_thin.png" id="2_u4odh"]
+
+[node name="GameOverUI" type="Control" unique_id=1796853700]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_i5oy2")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1480327473]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.101960786, 0.10980392, 0.13333334, 0.7058824)
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=93807937]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="NinePatchRect" type="NinePatchRect" parent="CenterContainer" unique_id=745901545]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+texture = ExtResource("2_u4odh")
+region_rect = Rect2(165, 33, 32, 32)
+patch_margin_left = 10
+patch_margin_top = 10
+patch_margin_right = 10
+patch_margin_bottom = 10
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/NinePatchRect" unique_id=359879590]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/NinePatchRect/MarginContainer" unique_id=2008470644]
+layout_mode = 2
+theme_override_constants/separation = 5
+alignment = 1
+
+[node name="GameOverLabel" type="Label" parent="CenterContainer/NinePatchRect/MarginContainer/VBoxContainer" unique_id=1129826272]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0, 1)
+text = "You are Dead"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/NinePatchRect/MarginContainer/VBoxContainer" unique_id=981713688]
+layout_mode = 2
+
+[node name="RestartButton" type="Button" parent="CenterContainer/NinePatchRect/MarginContainer/VBoxContainer" unique_id=1308181940]
+layout_mode = 2
+text = "Restart"

@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://ddqo1ljrqf6lb" path="res://scenes/ui/CombatTracker.tscn" id="7_6v30a"]
 [ext_resource type="PackedScene" uid="uid://b4wyp6ivrmc2g" path="res://scenes/ui/CharacterSheet.tscn" id="8_1brn0"]
 [ext_resource type="PackedScene" uid="uid://bntj6mjw3106m" path="res://scenes/ui/ContextMenu.tscn" id="9_6v30a"]
+[ext_resource type="PackedScene" uid="uid://bwnc7uu1h1y4k" path="res://scenes/ui/game_over_ui.tscn" id="10_1brn0"]
 
 [node name="GameRoot" type="Node2D" unique_id=1645537557]
 script = ExtResource("1_ylec3")
@@ -26,5 +27,10 @@ tracker_icon_scene = ExtResource("6_j7aru")
 [node name="CombatTracker" parent="UI" unique_id=1991035731 instance=ExtResource("7_6v30a")]
 
 [node name="CharacterSheet" parent="UI" unique_id=202426208 instance=ExtResource("8_1brn0")]
+visible = false
 
 [node name="ContextMenu" parent="UI" unique_id=1485450798 instance=ExtResource("9_6v30a")]
+visible = false
+
+[node name="GameOverUI" parent="UI" unique_id=1796853700 instance=ExtResource("10_1brn0")]
+visible = false
