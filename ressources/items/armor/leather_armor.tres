@@ -12,6 +12,7 @@ script = ExtResource("1_rhsku")
 ac_bonus = 2
 max_dex_bonus = 6
 arcane_spell_failure = 10
+item_id = "armor_light_leather"
 item_name = "Leather Armor"
 item_type = 1
 slot_type = 5

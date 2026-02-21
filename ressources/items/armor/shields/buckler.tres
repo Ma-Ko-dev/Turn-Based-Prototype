@@ -14,6 +14,7 @@ ac_bonus = 1
 max_dex_bonus = 0
 armor_check_penalty = 1
 arcane_spell_failure = 5
+item_id = "armor_shield_buckler"
 item_name = "Buckler"
 item_type = 2
 slot_type = 12

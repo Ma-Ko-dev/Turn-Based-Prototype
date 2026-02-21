@@ -11,6 +11,7 @@ region = Rect2(561, 221, 16, 16)
 [resource]
 script = ExtResource("2_bohfd")
 effect = ExtResource("1_bohfd")
+item_id = "potion_heal_light"
 item_name = "Lesser healing potion"
 item_type = 3
 slot_type = 10

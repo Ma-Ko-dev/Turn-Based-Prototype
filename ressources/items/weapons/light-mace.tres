@@ -10,6 +10,7 @@ region = Rect2(646, 119, 16, 16)
 [resource]
 script = ExtResource("1_bomy1")
 damage_type = 0
+item_id = "weapon_mace_light"
 item_name = "Mace (light)"
 item_type = 0
 slot_type = 11

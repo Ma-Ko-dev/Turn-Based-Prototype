@@ -15,6 +15,7 @@ max_dex_bonus = 3
 armor_check_penalty = 4
 arcane_spell_failure = 25
 speed_penalty = 2
+item_id = "amor_medium_scale_mail"
 item_name = "Scale Mail"
 item_type = 1
 slot_type = 5

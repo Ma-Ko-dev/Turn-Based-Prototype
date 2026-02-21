@@ -12,6 +12,7 @@ script = ExtResource("1_sl485")
 damage_small = "1d6"
 damage_medium = "1d8"
 critical_range = 19
+item_id = "weapon_longsword"
 item_name = "Longsword"
 item_type = 0
 slot_type = 11

@@ -331,38 +331,49 @@ func _set_item_in_slot(slot: ItemData.EquipmentSlot, item: ItemData, emit: bool 
 			data_updated.emit()
 ## Handles complex logic for moving items between slots and backpack via Drag & Drop
 func handle_drag_drop(from_slot: ItemData.EquipmentSlot, from_idx: int, to_slot: ItemData.EquipmentSlot, to_idx: int) -> void:
-	#  Case 1: Moving/Swapping within Backpack
+	# Case 1: Moving within Backpack
 	if from_slot == ItemData.EquipmentSlot.NONE and to_slot == ItemData.EquipmentSlot.NONE:
-		if from_idx < inventory_items.size():
-			var item_to_move = inventory_items[from_idx]
-			if to_idx < inventory_items.size():
-				#  Real swap (prevents item duplication/loss)
-				var temp = inventory_items[to_idx]
-				inventory_items[to_idx] = item_to_move
-				inventory_items[from_idx] = temp
-			else:
-				# Moving to an empty slot at the end
+		if from_idx < inventory_items.size() and to_idx < inventory_items.size():
+			var item_from = inventory_items[from_idx]
+			var item_to = inventory_items[to_idx]
+			var can_stack = item_from.item_id == item_to.item_id and item_from.item_id != "" and item_from != item_to
+			var is_stackable_type = item_from.item_type == ItemData.ItemType.CONSUMABLE or item_from.item_type == ItemData.ItemType.MISC
+			if can_stack and is_stackable_type:
+				item_to.amount += item_from.amount
 				inventory_items.remove_at(from_idx)
-				inventory_items.append(item_to_move)
-	# Case 2: From Backpack to Equipment (Equip/Swap)
-	elif from_slot == ItemData.EquipmentSlot.NONE and to_slot != ItemData.EquipmentSlot.NONE:
-		equip_item_from_backpack(inventory_items[from_idx], from_idx)
-		return # equip_item_from_backpack already emits
-	# Case 3: From Equipment to Backpack (Unequip/Swap)
-	elif from_slot != ItemData.EquipmentSlot.NONE and to_slot == ItemData.EquipmentSlot.NONE:
-		var equipped_item = get_item_by_slot_type(from_slot)
-		if to_idx < inventory_items.size():
-			# Swapping equipped item with a backpack item
-			var backpack_item = inventory_items[to_idx]
-			if backpack_item.slot_type == from_slot:
-				# Only swap if the backpack item fits the slot
-				inventory_items[to_idx] = equipped_item
-				_set_item_in_slot(from_slot, backpack_item)
 			else:
-				# If it doesn't fit, just unequip to the end of backpack
+				inventory_items[to_idx] = item_from
+				inventory_items[from_idx] = item_to
+		elif from_idx < inventory_items.size():
+			var item_to_move = inventory_items[from_idx]
+			inventory_items.remove_at(from_idx)
+			inventory_items.append(item_to_move)
+	# Case 2: From Backpack to Equipment (Equip/Stack)
+	elif from_slot == ItemData.EquipmentSlot.NONE and to_slot != ItemData.EquipmentSlot.NONE:
+		var item_from = inventory_items[from_idx]
+		var item_equipped = get_item_by_slot_type(to_slot)
+		var is_stackable_type = item_from.item_type == ItemData.ItemType.CONSUMABLE or item_from.item_type == ItemData.ItemType.MISC
+		if item_equipped and item_equipped.item_id == item_from.item_id and item_from.item_id != "" and is_stackable_type:
+			item_equipped.amount += item_from.amount
+			inventory_items.remove_at(from_idx)
+		else:
+			equip_item_from_backpack(item_from, from_idx)
+			return
+	# Case 3: From Equipment to Backpack (Unequip/Stack)
+	elif from_slot != ItemData.EquipmentSlot.NONE and to_slot == ItemData.EquipmentSlot.NONE:
+		var item_equipped = get_item_by_slot_type(from_slot)
+		var is_stackable_type = item_equipped.item_type == ItemData.ItemType.CONSUMABLE or item_equipped.item_type == ItemData.ItemType.MISC
+		if to_idx < inventory_items.size():
+			var item_in_bag = inventory_items[to_idx]
+			if item_in_bag.item_id == item_equipped.item_id and item_equipped.item_id != "" and is_stackable_type:
+				item_in_bag.amount += item_equipped.amount
+				_set_item_in_slot(from_slot, null)
+			elif item_in_bag.slot_type == from_slot:
+				inventory_items[to_idx] = item_equipped
+				_set_item_in_slot(from_slot, item_in_bag)
+			else:
 				unequip_slot(from_slot)
 		else:
-			#  To empty space in backpack
 			unequip_slot(from_slot)
 		return
 	data_updated.emit()
@@ -391,6 +402,20 @@ func remove_item_from_inventory(item: ItemData) -> void:
 
 ## Internal helper to refresh all relevant UI parts
 func _finalize_item_removal() -> void:
+	data_updated.emit()
+
+func add_item_to_inventory(new_item: ItemData) -> void:
+	# Only stack items that are consumables or misc
+	var can_stack = (new_item.item_type == ItemData.ItemType.CONSUMABLE or new_item.item_type == ItemData.ItemType.MISC)
+	if can_stack:
+		for item in inventory_items:
+			# Check if we already have this type of item
+			if item.item_id == new_item.item_id and item.item_id != "":
+				item.amount += new_item.amount
+				data_updated.emit()
+				return
+	# If not stackable or not found, add as new entry
+	inventory_items.append(new_item)
 	data_updated.emit()
 #endregion
 #region --- Logic: Progression & Misc ---
