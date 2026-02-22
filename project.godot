@@ -36,6 +36,8 @@ enabled=PackedStringArray("res://addons/Todo_Manager/plugin.cfg")
 
 players=""
 enemies=""
+map_manager=""
+interactables=""
 
 [gui]
 

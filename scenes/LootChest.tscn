@@ -8,8 +8,9 @@ atlas = ExtResource("2_ka4ok")
 region = Rect2(799, 85, 16, 16)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pswa0"]
+size = Vector2(32, 26)
 
-[node name="LootChest" type="StaticBody2D" unique_id=1013013136]
+[node name="LootChest" type="StaticBody2D" unique_id=1013013136 groups=["interactables"]]
 input_pickable = true
 script = ExtResource("1_84ham")
 
@@ -18,4 +19,5 @@ scale = Vector2(3, 3)
 texture = SubResource("AtlasTexture_5ub5l")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1449532326]
+position = Vector2(0, 3)
 shape = SubResource("RectangleShape2D_pswa0")

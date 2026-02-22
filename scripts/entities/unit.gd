@@ -265,6 +265,10 @@ func is_adjacent_to(other_unit: Unit) -> bool:
 	# In a grid, if both X and Y differences are <= 1, they are adjacent
 	return diff.x <= 1 and diff.y <= 1
 
+func is_adjacent_to_cell(target_cell: Vector2i) -> bool:
+	var diff = (target_cell - grid_pos).abs()
+	return diff.x <= 1 and diff.y <= 1 and diff != Vector2i.ZERO
+
 ## Instantly moves the unit to a new grid cell and updates occupancy.
 func teleport_to_grid_pos(new_grid_pos: Vector2i) -> void:
 	_set_grid_occupancy(false)

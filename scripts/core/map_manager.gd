@@ -152,3 +152,10 @@ func get_unit_at_cell(cell: Vector2i) -> Unit:
 		if unit.grid_pos == cell:
 			return unit as Unit
 	return null
+
+
+func set_cell_occupied(coords: Vector2i, occupied: bool) -> void:
+	if astar_grid.region.has_point(coords):
+		astar_grid.set_point_solid(coords, occupied)
+		# English comment: Important! Update is usually needed for AStarGrid2D
+		astar_grid.update()

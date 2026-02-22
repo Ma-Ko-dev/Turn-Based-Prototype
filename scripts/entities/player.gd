@@ -77,8 +77,16 @@ func _handle_interaction(cell: Vector2i) -> void:
 			attack_target(target_unit)
 		else:
 			GameEvents.log_requested.emit("Target is too far away!")
-	else:
-		_handle_movement(cell)
+		return
+	for interactable in get_tree().get_nodes_in_group("interactables"):
+		var obj_coords = map_manager.get_grid_coords(interactable.global_position)
+		if obj_coords == cell:
+			if is_adjacent_to_cell(cell):
+				interactable.open_context_menu(self)
+			else:
+				GameEvents.log_requested.emit("Too far to open that!")
+			return
+	_handle_movement(cell)
 
 
 func _handle_movement(cell: Vector2i) -> void:

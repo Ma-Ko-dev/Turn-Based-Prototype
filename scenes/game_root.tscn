@@ -16,7 +16,7 @@
 script = ExtResource("1_ylec3")
 start_level = ExtResource("2_ylec3")
 
-[node name="MapManager" type="Node" parent="." unique_id=1552409391]
+[node name="MapManager" type="Node" parent="." unique_id=1552409391 groups=["map_manager"]]
 script = ExtResource("6_a1rh6")
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=1437100580]

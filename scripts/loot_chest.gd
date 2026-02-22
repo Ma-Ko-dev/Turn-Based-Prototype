@@ -2,13 +2,29 @@ extends StaticBody2D
 
 @export var loot: Array[ItemData] = []
 var is_empty: bool = false
+var _current_interactor: Node = null
 
-func _input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) -> void:
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
-		open_context_menu()
 
-func open_context_menu() -> void:
+func _ready() -> void:
+	await get_tree().process_frame
+	var map_manager = get_tree().get_first_node_in_group("map_manager")
+	if map_manager and map_manager.ground_layer:
+		var coords = map_manager.get_grid_coords(global_position)
+		var local_center = map_manager.ground_layer.map_to_local(coords)
+		if get_parent() == map_manager.ground_layer:
+			position = local_center
+		else:
+			global_position = map_manager.ground_layer.to_global(local_center)
+		if map_manager.has_method("set_cell_occupied"):
+			map_manager.set_cell_occupied(coords, true)
+		else:
+			map_manager.astar_grid.set_point_solid(coords, true)
+			map_manager.astar_grid.update()
+
+
+func open_context_menu(unit: Unit) -> void:
 	if is_empty: return
+	_current_interactor = unit
 	var actions = [
 		{
 			"label": "Open Chest",
@@ -18,7 +34,10 @@ func open_context_menu() -> void:
 	UiManager.context_menu.open(actions, get_global_mouse_position(), self)
 
 func _show_loot_window() -> void:
-	var player = get_tree().get_first_node_in_group("players")
-	if not player: return
+	if not is_instance_valid(_current_interactor):
+		return
 	var screen_pos = get_viewport().get_mouse_position()
-	UiManager.loot_window.open(loot, player.data, screen_pos)
+	if _current_interactor.get("data") is UnitData:
+		UiManager.loot_window.open(loot, _current_interactor.data, screen_pos)
+	else:
+		print("Error: The interactor has no UnitData in 'data'!")
