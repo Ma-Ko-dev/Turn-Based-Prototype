@@ -1,7 +1,8 @@
 extends Control
 
 @onready var grid: GridContainer = $MarginContainer/VBoxContainer/ScrollContainer/GridContainer
-@onready var loot_all_button: Button = $MarginContainer/VBoxContainer/Button
+@onready var loot_all_button: Button = $MarginContainer/VBoxContainer/LootAllButton
+@onready var close_button: Button = $MarginContainer/VBoxContainer/CloseButton
 
 var current_chest_items: Array[ItemData] = []
 var current_target_unit: UnitData = null
@@ -9,6 +10,7 @@ var current_target_unit: UnitData = null
 func _ready() -> void:
 	UiManager.register_loot_window(self)
 	loot_all_button.pressed.connect(_on_loot_all_pressed)
+	close_button.pressed.connect(hide)
 	hide()
 
 ## Fills the window with items and shows it at a specific screen position
