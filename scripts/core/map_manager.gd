@@ -47,6 +47,25 @@ func _setup_astar() -> void:
 	astar_grid.update()
 
 
+func update_astar_grid() -> void:
+	if not astar_grid or not ground_layer: return
+	# Get the current area used by the ground layer
+	var rect = ground_layer.get_used_rect()
+	astar_grid.region = rect
+	# Update the AStar region in case the map size changed
+	astar_grid.update()
+	# Re-calculate every single cell
+	for x in range(rect.position.x, rect.end.x):
+		for y in range(rect.position.y, rect.end.y):
+			var coords = Vector2i(x,y)
+			# Reset solid state before re-calculating
+			astar_grid.set_point_solid(coords, false)
+			# Use existing logic for costs and obstacles
+			_calculate_cell_properties(coords)
+	astar_grid.update()
+	print("MapManager: AStar Grid updated for new layout.")
+
+
 func _calculate_cell_properties(coords: Vector2i) -> void:
 	var final_cost = 1.0
 	

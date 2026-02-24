@@ -1,0 +1,62 @@
+[gd_scene format=4 uid="uid://bipeve06kfq3b"]
+
+[ext_resource type="TileSet" uid="uid://nfp0efavgx5g" path="res://ressources/main_tileset.tres" id="1_gl5tb"]
+[ext_resource type="Script" uid="uid://bodf30opb5n1h" path="res://scripts/map_generator.gd" id="1_sh026"]
+[ext_resource type="Script" uid="uid://ddb326dqa48d8" path="res://scripts/world/spawn_marker.gd" id="2_sh026"]
+[ext_resource type="PackedScene" uid="uid://cqdd83pfe3aqt" path="res://scenes/units/Player.tscn" id="4_8gekp"]
+[ext_resource type="Resource" uid="uid://deqdcl244gojl" path="res://ressources/units/player/Player.tres" id="5_0e32r"]
+[ext_resource type="PackedScene" uid="uid://desyp0hxe7xot" path="res://scenes/units/Enemy.tscn" id="6_5cj7k"]
+[ext_resource type="Resource" uid="uid://d137hrtr18uaa" path="res://ressources/units/enemies/Goblin.tres" id="7_lm74m"]
+
+[node name="BaseLevel" type="Node2D" unique_id=1330468739]
+script = ExtResource("1_sh026")
+
+[node name="GroundLayer" type="TileMapLayer" parent="." unique_id=163704109]
+modulate = Color(0.3882353, 0.16470589, 0.16470589, 1)
+scale = Vector2(4, 4)
+tile_map_data = PackedByteArray("AAAAAAAAAAAIAAUAAAABAAAAAAAIAAUAAAACAAAAAAAIAAUAAAADAAAAAAAIAAUAAAAEAAAAAAAIAAUAAAAFAAAAAAAIAAUAAAAFAAEAAAAIAAUAAAAEAAEAAAAIAAUAAAAEAAIAAAAIAAUAAAADAAIAAAAIAAUAAAADAAMAAAAIAAUAAAACAAMAAAAIAAUAAAACAAQAAAAIAAUAAAABAAQAAAAIAAUAAAABAAUAAAAIAAUAAAAAAAUAAAAIAAUAAAAAAAQAAAAIAAUAAAAAAAMAAAAIAAUAAAAAAAIAAAAIAAUAAAAAAAEAAAAIAAUAAAABAAEAAAAIAAUAAAABAAIAAAAIAAUAAAABAAMAAAAIAAUAAAACAAIAAAAIAAUAAAACAAEAAAAIAAUAAAADAAEAAAAIAAUAAAADAAQAAAAIAAUAAAADAAUAAAAIAAUAAAAEAAUAAAAIAAUAAAAFAAUAAAAIAAUAAAAFAAQAAAAIAAUAAAAFAAMAAAAIAAUAAAAFAAIAAAAIAAUAAAAEAAMAAAAIAAUAAAAEAAQAAAAIAAUAAAACAAUAAAAIAAUAAAA=")
+tile_set = ExtResource("1_gl5tb")
+
+[node name="ObstacleLayer" type="TileMapLayer" parent="." unique_id=1290924975]
+z_index = 1
+scale = Vector2(4, 4)
+tile_map_data = PackedByteArray("AAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAQAAAAAAAAAAAACAAIAAAAFAAIAAAADAAAAAAAFAAEAAAABAAEAAAAFAAEAAAAEAAUAAAADAAIAAAACAAUAAAAAAAAAAAACAAQAAAAAAAAAAAACAAMAAAAAAAAAAAADAAMAAAAAAAAAAAADAAQAAAAAAAAAAAADAAUAAAAAAAAAAAAFAAUAAAAAAAAAAAAFAAQAAAAGAAIAAAAFAAMAAAAAAAAAAAAFAAIAAAAAAAAAAAAFAAEAAAAAAAAAAAAFAAAAAAAAAAAAAAADAAIAAAAAAAAAAAAEAAIAAAAAAAAAAAAEAAQAAAAAAAAAAAABAAIAAAAAAAAAAAABAAAAAAAAAAAAAAAEAAMAAAAAAAAAAAAAAAEAAAAAAAAAAAA=")
+tile_set = ExtResource("1_gl5tb")
+
+[node name="DecorationLayer" type="TileMapLayer" parent="." unique_id=24987741]
+z_index = 2
+scale = Vector2(4, 4)
+tile_map_data = PackedByteArray("AAACAAAAAAAFAAAAAAADAAEAAAAGAAAAAAAEAAAAAAAHAAAAAAAEAAEAAAAFAAAAAAACAAEAAAAHAAAAAAAAAAQAAAABAAAAAAABAAQAAAADAAAAAAACAAMAAAAEAAAAAAABAAMAAAACAAAAAAAAAAUAAAACAAAAAAA=")
+tile_set = ExtResource("1_gl5tb")
+
+[node name="HighlightLayer" type="TileMapLayer" parent="." unique_id=112148607]
+z_index = 2
+scale = Vector2(4, 4)
+tile_set = ExtResource("1_gl5tb")
+
+[node name="SelectionLayer" type="TileMapLayer" parent="." unique_id=629812095]
+z_index = 2
+scale = Vector2(4, 4)
+tile_set = ExtResource("1_gl5tb")
+
+[node name="PreviewLayer" type="TileMapLayer" parent="." unique_id=162484290]
+z_index = 3
+scale = Vector2(4, 4)
+tile_set = ExtResource("1_gl5tb")
+
+[node name="Units" type="Node2D" parent="." unique_id=204789523]
+
+[node name="Markers" type="Node2D" parent="." unique_id=577359482]
+
+[node name="PlayerSpawn" type="Marker2D" parent="Markers" unique_id=329869282]
+position = Vector2(32, 32)
+script = ExtResource("2_sh026")
+is_player_spawn = true
+unit_scene = ExtResource("4_8gekp")
+unit_data = ExtResource("5_0e32r")
+
+[node name="EnemySpawn" type="Marker2D" parent="Markers" unique_id=1634180193]
+position = Vector2(224, 224)
+script = ExtResource("2_sh026")
+unit_scene = ExtResource("6_5cj7k")
+unit_data = ExtResource("7_lm74m")
