@@ -1,9 +1,11 @@
-![GitHub last commit](https://img.shields.io/github/last-commit/Ma-Ko-dev/Turn-Based-Prototype?style=flat-square)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/Ma-Ko-dev/Turn-Based-Prototype?style=flat-square&cacheSeconds=300)
+![GitHub last commit](https://img.shields.io/github/last-commit/Ma-Ko-dev/Turn-Based-Prototype?style=flat-square&cacheSeconds=300)
 ![GitHub issues](https://img.shields.io/github/issues/Ma-Ko-dev/Turn-Based-Prototype?style=flat-square)
 ![GitHub stars](https://img.shields.io/github/stars/Ma-Ko-dev/Turn-Based-Prototype?style=flat-square)
-![License](https://img.shields.io/github/license/Ma-Ko-dev/Turn-Based-Prototype?style=flat-square)
+![License: MIT + OGL](https://img.shields.io/badge/License-MIT%20%2B%20OGL-lightgrey?style=flat-square)
 ![Godot](https://img.shields.io/badge/Godot-4.6-blue?logo=godot-engine&logoColor=white&style=flat-square)
 ![Language](https://img.shields.io/badge/Language-GDScript-478cbf?style=flat-square)
+![Status](https://img.shields.io/badge/Status-Prototype-yellow?style=flat-square)
 
 
 # Turn-Based-Prototype
