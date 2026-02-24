@@ -12,6 +12,7 @@
 [ext_resource type="Resource" uid="uid://b8w061npmut1x" path="res://ressources/items/consumables/potion_healing_light.tres" id="10_vlkw4"]
 [ext_resource type="Resource" uid="uid://dyt1ifhdgcb0f" path="res://ressources/items/armor/leather_armor.tres" id="11_xpxa0"]
 [ext_resource type="Resource" uid="uid://btuajac18i5t3" path="res://ressources/items/armor/shields/buckler.tres" id="12_shv8k"]
+[ext_resource type="Resource" uid="uid://1xiismvnygsv" path="res://ressources/items/weapons/light-mace.tres" id="13_shv8k"]
 
 [node name="BaseLevel" unique_id=1330468739 instance=ExtResource("1_rmf85")]
 
@@ -48,6 +49,10 @@ unit_data = ExtResource("5_hhyrm")
 
 [node name="Loot" type="Node2D" parent="." index="8" unique_id=697450860]
 
-[node name="LootChest" parent="Loot" index="0" unique_id=1013013136 instance=ExtResource("8_dwcxj")]
-position = Vector2(616, 464)
+[node name="LootChest1" parent="Loot" index="0" unique_id=1013013136 instance=ExtResource("8_dwcxj")]
+position = Vector2(352, 608)
 loot = Array[ExtResource("9_5dpfh")]([ExtResource("10_vlkw4"), ExtResource("10_vlkw4"), ExtResource("11_xpxa0"), ExtResource("12_shv8k")])
+
+[node name="LootChest" parent="Loot" index="1" unique_id=1518519074 instance=ExtResource("8_dwcxj")]
+position = Vector2(1312, 736)
+loot = Array[ExtResource("9_5dpfh")]([ExtResource("13_shv8k")])

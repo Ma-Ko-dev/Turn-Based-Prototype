@@ -11,6 +11,7 @@ region = Rect2(799, 85, 16, 16)
 size = Vector2(32, 26)
 
 [node name="LootChest" type="StaticBody2D" unique_id=1013013136 groups=["interactables"]]
+z_index = 15
 input_pickable = true
 script = ExtResource("1_84ham")
 

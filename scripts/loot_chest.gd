@@ -21,7 +21,6 @@ func _ready() -> void:
 			map_manager.astar_grid.set_point_solid(coords, true)
 			map_manager.astar_grid.update()
 
-
 func open_context_menu(unit: Unit) -> void:
 	if is_empty: return
 	_current_interactor = unit
@@ -31,13 +30,35 @@ func open_context_menu(unit: Unit) -> void:
 			"callback": func(): _show_loot_window()
 		}
 	]
-	UiManager.context_menu.open(actions, get_global_mouse_position(), self)
+	var mouse_pos = get_viewport().get_mouse_position()
+	UiManager.context_menu.open(actions, mouse_pos, self)
 
 func _show_loot_window() -> void:
 	if not is_instance_valid(_current_interactor):
 		return
 	var screen_pos = get_viewport().get_mouse_position()
 	if _current_interactor.get("data") is UnitData:
-		UiManager.loot_window.open(loot, _current_interactor.data, screen_pos)
+		UiManager.loot_window.open(loot, _current_interactor.data, screen_pos, self)
 	else:
 		print("Error: The interactor has no UnitData in 'data'!")
+
+func remove_chest() -> void:
+	var map_manager = get_tree().get_first_node_in_group("map_manager")
+	if map_manager:
+		var coords = map_manager.get_grid_coords(global_position)
+		if map_manager.has_method("set_cell_occupied"):
+			map_manager.set_cell_occupied(coords, false)
+		else:
+			map_manager.astar_grid.set_point_solid(coords, false)
+			map_manager.astar_grid.update()
+	queue_free()
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

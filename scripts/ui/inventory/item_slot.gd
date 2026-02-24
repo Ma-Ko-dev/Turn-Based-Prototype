@@ -73,14 +73,38 @@ func _drop_data(_at_position: Vector2, data) -> void:
 
 # --- ACTIONS ---
 func _gui_input(event) -> void:
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
-		if stored_item: _open_context_menu()
+	if event is InputEventMouseButton and event.pressed:
+		if not stored_item: return
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			if UiManager.loot_window.visible and get_parent().owner == UiManager.loot_window:
+				_loot_this_item_instantly()
+		elif event.button_index == MOUSE_BUTTON_RIGHT:
+			_open_custom_context_menu()
+	#if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
+		#if stored_item: _open_context_menu()
+
+func _loot_this_item_instantly() -> void:
+	var unit = UiManager.loot_window.current_target_unit
+	if unit and stored_item:
+		unit.add_item_to_inventory(stored_item)
+		UiManager.loot_window.remove_single_item(stored_item, self)
 
 func _open_context_menu() -> void:
 	var inventory_manager = get_tree().get_first_node_in_group("inventory_manager")
 	var unit = inventory_manager.active_unit_data
 	var actions = stored_item.get_actions(unit, target_slot_type != ItemData.EquipmentSlot.NONE, self)
 	UiManager.context_menu.open(actions, get_global_mouse_position(), self)
+
+func _open_custom_context_menu() -> void:
+	if UiManager.loot_window.visible and self.get_parent().owner == UiManager.loot_window:
+		var actions = [
+			{"label": "inspect", "callback": func(): print("Item: ", stored_item.item_name)},
+			{"label": "Loot", "callback": func(): _loot_this_item_instantly()}
+		]
+		var mouse_pos = get_viewport().get_mouse_position()
+		UiManager.context_menu.open(actions, mouse_pos, self)
+	else:
+		_open_context_menu()
 
 func _drop_item_logic(unit: UnitData) -> void:
 	if target_slot_type == ItemData.EquipmentSlot.NONE:
