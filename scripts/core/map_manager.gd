@@ -146,8 +146,6 @@ func get_map_bounds_pixels() -> Rect2:
 
 
 func get_unit_at_cell(cell: Vector2i) -> Unit:
-	#var groups_to_check = ["players", "enemies"]
-	#for group_name in groups_to_check:
 	for unit in get_tree().get_nodes_in_group("players") + get_tree().get_nodes_in_group("enemies"):
 		if unit.grid_pos == cell:
 			return unit as Unit
@@ -157,5 +155,4 @@ func get_unit_at_cell(cell: Vector2i) -> Unit:
 func set_cell_occupied(coords: Vector2i, occupied: bool) -> void:
 	if astar_grid.region.has_point(coords):
 		astar_grid.set_point_solid(coords, occupied)
-		# English comment: Important! Update is usually needed for AStarGrid2D
 		astar_grid.update()
