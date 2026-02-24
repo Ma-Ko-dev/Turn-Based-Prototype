@@ -16,3 +16,4 @@ addons/
 .mono/
 data_*/
 mono_crash.*.json
+bin/
