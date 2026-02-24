@@ -7,7 +7,7 @@
 [ext_resource type="Resource" uid="uid://d137hrtr18uaa" path="res://ressources/units/enemies/Goblin.tres" id="3_xokhc"]
 [ext_resource type="Script" uid="uid://ddb326dqa48d8" path="res://scripts/world/spawn_marker.gd" id="4_xokhc"]
 [ext_resource type="Resource" uid="uid://302xlx3u0lsh" path="res://ressources/units/enemies/Zombie.tres" id="5_hhyrm"]
-[ext_resource type="PackedScene" uid="uid://m8b2l88yumn5" path="res://scenes/LootChest.tscn" id="8_dwcxj"]
+[ext_resource type="PackedScene" uid="uid://m8b2l88yumn5" path="res://scenes/interactables/LootChest.tscn" id="8_dwcxj"]
 [ext_resource type="Script" uid="uid://cw0mtd68004ro" path="res://scripts/resources/item_data.gd" id="9_5dpfh"]
 [ext_resource type="Resource" uid="uid://b8w061npmut1x" path="res://ressources/items/consumables/potion_healing_light.tres" id="10_vlkw4"]
 [ext_resource type="Resource" uid="uid://dyt1ifhdgcb0f" path="res://ressources/items/armor/leather_armor.tres" id="11_xpxa0"]
