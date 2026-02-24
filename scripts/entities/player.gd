@@ -28,6 +28,15 @@ func _setup_camera() -> void:
 	camera.make_current()
 
 
+func update_camera_limits() -> void:
+	if camera and map_manager:
+		var bounds = map_manager.get_map_bounds_pixels()
+		camera.limit_left = bounds.position.x
+		camera.limit_top = bounds.position.y
+		camera.limit_right = bounds.end.x
+		camera.limit_bottom = bounds.end.y
+		camera.reset_smoothing()
+
 # --- Signal Handlers ---
 func _on_active_unit_changed(unit: Unit) -> void:
 	if unit == self:

@@ -27,6 +27,9 @@ func generate_full_map() -> void:
 	var map_manager = get_tree().get_first_node_in_group("map_manager")
 	if map_manager and map_manager.has_method("update_astar_grid"):
 		map_manager.update_astar_grid()
+	var player = get_tree().get_first_node_in_group("players")
+	if player and player.has_method("update_camera_limits"):
+		player.update_camera_limits()
 
 
 func _generate_organic_paths() -> void:
