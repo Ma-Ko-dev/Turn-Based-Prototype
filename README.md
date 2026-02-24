@@ -1,5 +1,5 @@
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/Ma-Ko-dev/Turn-Based-Prototype?style=flat-square)
-![GitHub last commit](https://img.shields.io/github/last-commit/Ma-Ko-dev/Turn-Based-Prototype?style=flat-square)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/Ma-Ko-dev/Turn-Based-Prototype?style=flat-square&cacheSeconds=300)
+![GitHub last commit](https://img.shields.io/github/last-commit/Ma-Ko-dev/Turn-Based-Prototype?style=flat-square&cacheSeconds=300)
 ![GitHub issues](https://img.shields.io/github/issues/Ma-Ko-dev/Turn-Based-Prototype?style=flat-square)
 ![GitHub stars](https://img.shields.io/github/stars/Ma-Ko-dev/Turn-Based-Prototype?style=flat-square)
 ![License: MIT + OGL](https://img.shields.io/badge/License-MIT%20%2B%20OGL-lightgrey?style=flat-square)
