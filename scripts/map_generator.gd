@@ -146,6 +146,9 @@ func _is_area_clear_for_poi(pos: Vector2i, size: Vector2i, pad: int) -> bool:
 				return false
 			if decoration_layer.get_cell_source_id(check_pos) != -1:
 				return false
+			for zone in _poi_zones:
+				if zone.has_point(check_pos):
+					return false
 	return true
 	
 func _clear_area_for_poi(pos: Vector2i, size: Vector2i) -> void:
