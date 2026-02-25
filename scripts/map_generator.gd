@@ -8,12 +8,12 @@ extends Node2D
 @export_range(0.0, 1.0) var base_density: float = 0.05 # Base chance for a new cluster
 @export_range(0.0, 1.0) var cluster_strength: float = 0.6 # Bonus chance if neighbor is a tree
 @export_group("Tile Settings")
-@export var tile_ground: Vector2i = Vector2i(8,5)
+@export var tile_ground: Vector2i = Vector2i(0,0)
 @export var tiles_path: Array[Vector2i] = [Vector2i(1,0), Vector2i(2,0), Vector2i(3,0), Vector2i(4,0)]
 @export var tiles_obstacles: Array[Vector2i] = [
 	Vector2i(5,0), Vector2i(6,0), Vector2i(7,0),
 	Vector2i(0,1), Vector2i(1,1), Vector2i(2,1), Vector2i(3,1), Vector2i(4,1), Vector2i(5,1),
-	Vector2i(0,2), Vector2i(1,2), Vector2i(2,2), Vector2i(3,2), Vector2i(4,2), 
+	Vector2i(0,2), Vector2i(1,2), Vector2i(2,2), Vector2i(3,2), Vector2i(4,2), Vector2i(5,2), Vector2i(6,2), 
 ]
 @export_tool_button("Generate Map") var map_gen_button = generate_full_map
 
@@ -23,8 +23,8 @@ extends Node2D
 @onready var obstacle_layer: TileMapLayer = $ObstacleLayer
 
 
-#func _ready() -> void:
-	#generate_full_map()
+func _ready() -> void:
+	generate_full_map()
 
 func generate_full_map() -> void:
 	_clear_layers()
@@ -41,6 +41,7 @@ func _clear_layers() -> void:
 func _fill_ground() -> void:
 	for x in range(map_width):
 		for y in range(map_height):
+			# make sure to use the alternative 1 of the tile_ground
 			ground_layer.set_cell(Vector2i(x, y), 0, tile_ground)
 
 func _sync_systems() -> void:
