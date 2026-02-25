@@ -4,6 +4,9 @@ extends Node2D
 @export_group("Map Dimensions")
 @export var map_width: int = 50
 @export var map_height: int = 50
+@export_group("Object Density")
+@export_range(0.0, 1.0) var base_density: float = 0.05 # Base chance for a new cluster
+@export_range(0.0, 1.0) var cluster_strength: float = 0.6 # Bonus chance if neighbor is a tree
 @export_group("Tile Settings")
 @export var tile_ground: Vector2i = Vector2i(8,5)
 @export var tiles_path: Array[Vector2i] = [Vector2i(1,0), Vector2i(2,0), Vector2i(3,0), Vector2i(4,0)]
@@ -79,6 +82,32 @@ func _populate_objects() -> void:
 		for y in range(map_height):
 			var coords = Vector2i(x, y)
 			if decoration_layer.get_cell_source_id(coords) != -1: continue # keep paths clear
-			var roll = randf()
-			if roll < 0.15: # 15% trees/hard terrain
+			var chance = base_density
+			# Check if left or top neighbor is already a tree
+			var has_neighbor = false
+			if obstacle_layer.get_cell_source_id(coords + Vector2i.LEFT) != -1: has_neighbor = true
+			if obstacle_layer.get_cell_source_id(coords + Vector2i.UP) != -1: has_neighbor = true
+			# If neighbor exists, drastically increase chance
+			if has_neighbor:
+				chance += cluster_strength
+			if randf() < chance:
 				obstacle_layer.set_cell(coords, 0, tiles_obstacles.pick_random())
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
