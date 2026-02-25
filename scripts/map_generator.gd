@@ -10,6 +10,7 @@ extends Node2D
 @export_group("POI Settings")
 @export var poi_count: int = 3
 @export var poi_padding: int = 2
+var _poi_zones: Array[Rect2i] = []
 @export_group("Tile Settings")
 @export var tile_ground: Vector2i = Vector2i(0,0)
 @export var tiles_path: Array[Vector2i] = [Vector2i(1,0), Vector2i(2,0), Vector2i(3,0), Vector2i(4,0)]
@@ -30,6 +31,7 @@ func _ready() -> void:
 	generate_full_map()
 
 func generate_full_map() -> void:
+	_poi_zones.clear()
 	_clear_layers()
 	_fill_ground()
 	_generate_organic_paths()
@@ -87,6 +89,12 @@ func _populate_objects() -> void:
 		for y in range(map_height):
 			var coords = Vector2i(x, y)
 			if decoration_layer.get_cell_source_id(coords) != -1: continue # keep paths clear
+			var is_in_poi_zone = false
+			for zone in _poi_zones:
+				if zone.has_point(coords):
+					is_in_poi_zone = true
+					break
+			if is_in_poi_zone: continue
 			# IMPORTANT: Keep POIs clear!
 			# If there's already something in the obstacle_layer, dont overwrite it.
 			if obstacle_layer.get_cell_source_id(coords) != -1: continue
@@ -118,14 +126,16 @@ func _place_all_unique_pois() -> void:
 func _attempt_pattern_placement(pattern_idx: int) -> void:
 	var pattern = obstacle_layer.tile_set.get_pattern(pattern_idx)
 	var p_size = pattern.get_size()
-	var padding = 1 # distance to path TODO: Put this in an export
 	for attempt in range(100):
-		var x = randi_range(padding + 1, map_width - p_size.x - padding - 1)
-		var y = randi_range(padding + 1, map_height - p_size.y - padding - 1)
+		var x = randi_range(poi_padding + 1, map_width - p_size.x - poi_padding - 1)
+		var y = randi_range(poi_padding + 1, map_height - p_size.y - poi_padding - 1)
 		var pos = Vector2i(x, y)
-		if _is_area_clear_for_poi(pos, p_size, padding):
+		if _is_area_clear_for_poi(pos, p_size, poi_padding):
 			_clear_area_for_poi(pos, p_size)
 			obstacle_layer.set_pattern(pos, pattern)
+			# Register the zone including an extra buffer tile
+			var zone = Rect2i(pos.x - 1, pos.y - 1, p_size.x + 2, p_size.y + 2)
+			_poi_zones.append(zone)
 			return
 	
 func _is_area_clear_for_poi(pos: Vector2i, size: Vector2i, pad: int) -> bool:
