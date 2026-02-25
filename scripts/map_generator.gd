@@ -7,6 +7,9 @@ extends Node2D
 @export_group("Object Density")
 @export_range(0.0, 1.0) var base_density: float = 0.05 # Base chance for a new cluster
 @export_range(0.0, 1.0) var cluster_strength: float = 0.6 # Bonus chance if neighbor is a tree
+@export_group("POI Settings")
+@export var poi_count: int = 3
+@export var poi_padding: int = 2
 @export_group("Tile Settings")
 @export var tile_ground: Vector2i = Vector2i(0,0)
 @export var tiles_path: Array[Vector2i] = [Vector2i(1,0), Vector2i(2,0), Vector2i(3,0), Vector2i(4,0)]
@@ -15,7 +18,7 @@ extends Node2D
 	Vector2i(0,1), Vector2i(1,1), Vector2i(2,1), Vector2i(3,1), Vector2i(4,1), Vector2i(5,1),
 	Vector2i(0,2), Vector2i(1,2), Vector2i(2,2), Vector2i(3,2), Vector2i(4,2), Vector2i(5,2), Vector2i(6,2), 
 ]
-@export_tool_button("Generate Map") var map_gen_button = generate_full_map
+@export_tool_button("Generate Map") var map_gen_button = func(): generate_full_map()
 
 
 @onready var ground_layer: TileMapLayer = $GroundLayer
@@ -30,6 +33,7 @@ func generate_full_map() -> void:
 	_clear_layers()
 	_fill_ground()
 	_generate_organic_paths()
+	_place_all_unique_pois()
 	_populate_objects()
 	_sync_systems()
 
@@ -83,6 +87,9 @@ func _populate_objects() -> void:
 		for y in range(map_height):
 			var coords = Vector2i(x, y)
 			if decoration_layer.get_cell_source_id(coords) != -1: continue # keep paths clear
+			# IMPORTANT: Keep POIs clear!
+			# If there's already something in the obstacle_layer, dont overwrite it.
+			if obstacle_layer.get_cell_source_id(coords) != -1: continue
 			var chance = base_density
 			# Check if left or top neighbor is already a tree
 			var has_neighbor = false
@@ -94,21 +101,45 @@ func _populate_objects() -> void:
 			if randf() < chance:
 				obstacle_layer.set_cell(coords, 0, tiles_obstacles.pick_random())
 			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
+func _place_all_unique_pois() -> void:
+	var tileset = obstacle_layer.tile_set
+	var count = tileset.get_patterns_count()
+	if count == 0:
+		push_warning("MapGenerator: No patterns found in TileSet!")
+	# Create and shuffle indices to ensure each POI is unique
+	var indices = []
+	for i in range(count):
+		indices.append(i)
+	indices.shuffle()
+	var to_place = clampi(poi_count, 0, count)
+	for i in range(to_place):
+		_attempt_pattern_placement(indices[i])
+	
+func _attempt_pattern_placement(pattern_idx: int) -> void:
+	var pattern = obstacle_layer.tile_set.get_pattern(pattern_idx)
+	var p_size = pattern.get_size()
+	var padding = 1 # distance to path TODO: Put this in an export
+	for attempt in range(100):
+		var x = randi_range(padding + 1, map_width - p_size.x - padding - 1)
+		var y = randi_range(padding + 1, map_height - p_size.y - padding - 1)
+		var pos = Vector2i(x, y)
+		if _is_area_clear_for_poi(pos, p_size, padding):
+			_clear_area_for_poi(pos, p_size)
+			obstacle_layer.set_pattern(pos, pattern)
+			return
+	
+func _is_area_clear_for_poi(pos: Vector2i, size: Vector2i, pad: int) -> bool:
+	for x in range(pos.x - pad, pos.x + size.x + pad):
+		for y in range(pos.y - pad, pos.y + size.y + pad):
+			var check_pos = Vector2i(x,y)
+			if check_pos.x < 0 or check_pos.x >= map_width or check_pos.y < 0 or check_pos.y >= map_height:
+				return false
+			if decoration_layer.get_cell_source_id(check_pos) != -1:
+				return false
+	return true
+	
+func _clear_area_for_poi(pos: Vector2i, size: Vector2i) -> void:
+	for x in range(pos.x, pos.x + size.x):
+		for y in range(pos.y, pos.y + size.y):
+			obstacle_layer.erase_cell(Vector2i(x,y))
 			
