@@ -156,6 +156,7 @@ func _create_path_connection(start: Vector2i, end: Vector2i) -> void:
 	var steps = 0
 	var max_steps = map_width * map_height 
 	var last_was_horizontal = true
+	_place_path_or_bridge(curr, last_was_horizontal)
 	while curr != end and steps < max_steps:
 		steps += 1
 		var is_horizontal = last_was_horizontal
