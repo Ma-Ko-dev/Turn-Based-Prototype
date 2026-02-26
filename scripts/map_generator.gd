@@ -76,18 +76,44 @@ func _generate_river() -> void:
 	# Random start on the left edge
 	var curr = Vector2i(0, randi_range(10, map_height - 10))
 	var dir = Vector2i.RIGHT
-	for i in range(map_width):
+	var steps = 0
+	var segment_counter = 0
+	var turn_cooldown = 0
+	while curr.x < map_width and steps < 1000:
+		steps += 1
 		var next_dir = dir
-		# % chance to change direction 
-		if randf() < 0.2:
-			var choices = [Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]
-			next_dir = choices.pick_random()
-		# Keep river away from edges
-		if curr.y < 5: next_dir = Vector2i.DOWN
-		if curr.y > map_height - 5: next_dir = Vector2i.UP
+		if turn_cooldown > 0:
+			turn_cooldown -= 1
+		
+		if dir == Vector2i.RIGHT:
+			if turn_cooldown == 0 and segment_counter >= 3 and randf() < 0.15:
+				var possible_turns = []
+				if curr.y > 10: possible_turns.append(Vector2i.UP)
+				if curr.y < map_height - 10: possible_turns.append(Vector2i.DOWN)
+				if possible_turns.size() > 0:
+					next_dir = possible_turns.pick_random()
+		else:
+			if segment_counter >= 4 and randf() < 0.3:
+				next_dir = Vector2i.RIGHT
+				turn_cooldown = 10
+		
+		if curr.y < 4 and next_dir == Vector2i.UP:
+			next_dir = Vector2i.RIGHT
+			turn_cooldown = 10
+		elif curr.y > map_height - 4 and next_dir == Vector2i.DOWN: 
+			next_dir = Vector2i.RIGHT
+			turn_cooldown = 10
+		
+		#if (dir == Vector2i.UP and next_dir == Vector2i.DOWN) or (dir == Vector2i.DOWN and next_dir == Vector2i.UP):
+			#next_dir = Vector2i.RIGHT
 		_place_river_tile_smart(curr, dir, next_dir)
+		if next_dir != dir:
+			segment_counter = 0
+		else:
+			segment_counter += 1
 		curr += next_dir
 		dir = next_dir
+		if curr.x >= map_width: break
 
 func _place_river_tile_smart(pos: Vector2i, from_dir: Vector2i, to_dir: Vector2i) -> void:
 	var atlas = tile_river_straight
@@ -97,21 +123,29 @@ func _place_river_tile_smart(pos: Vector2i, from_dir: Vector2i, to_dir: Vector2i
 	var transpose = TileSetAtlasSource.TRANSFORM_TRANSPOSE
 	if from_dir == to_dir:
 		atlas = tile_river_straight
-		# If moving vertically, we need to rotate the straight tile
-		if from_dir.y != 0:
+		if from_dir.x != 0:
 			alternative = transpose | flip_h
 	else:
 		atlas = tile_river_curve
-		# Determine which curve rotation we need based on directions
-		# This is a simplified mapping for common turns
-		if (from_dir == Vector2i.RIGHT and to_dir == Vector2i.DOWN) or (from_dir == Vector2i.UP and to_dir == Vector2i.LEFT):
-			alternative = 0
-		elif (from_dir == Vector2i.RIGHT and to_dir == Vector2i.UP) or (from_dir == Vector2i.DOWN and to_dir == Vector2i.LEFT):
-			alternative = flip_v
-		elif (from_dir == Vector2i.LEFT and to_dir == Vector2i.DOWN) or (from_dir == Vector2i.UP and to_dir == Vector2i.RIGHT):
-			alternative = flip_h
-		else:
-			alternative = flip_h | flip_v
+		if from_dir == Vector2i.RIGHT:
+			alternative = 0 if to_dir == Vector2i.DOWN else flip_v | transpose
+		elif from_dir == Vector2i.LEFT:
+			alternative = flip_h if to_dir == Vector2i.DOWN else flip_h | flip_v | transpose
+		elif from_dir == Vector2i.DOWN:
+			alternative = 0 if to_dir == Vector2i.RIGHT else flip_h | flip_v | transpose
+		elif from_dir == Vector2i.UP:
+			alternative = flip_v | transpose if to_dir == Vector2i.RIGHT else flip_h
+			alternative = flip_h | flip_v if to_dir == Vector2i.LEFT else flip_v | transpose
+		## Determine which curve rotation we need based on directions
+		## This is a simplified mapping for common turns
+		#if (from_dir == Vector2i.RIGHT and to_dir == Vector2i.DOWN) or (from_dir == Vector2i.UP and to_dir == Vector2i.LEFT):
+			#alternative = flip_h | flip_v
+		#elif (from_dir == Vector2i.RIGHT and to_dir == Vector2i.UP) or (from_dir == Vector2i.DOWN and to_dir == Vector2i.LEFT):
+			#alternative = flip_h
+		#elif (from_dir == Vector2i.LEFT and to_dir == Vector2i.DOWN) or (from_dir == Vector2i.UP and to_dir == Vector2i.RIGHT):
+			#alternative = flip_v
+		#else:
+			#alternative = 0
 	obstacle_layer.set_cell(pos, 0, atlas, alternative)
 
 func _create_path_connection(start: Vector2i, end: Vector2i) -> void:
@@ -135,17 +169,18 @@ func _create_path_connection(start: Vector2i, end: Vector2i) -> void:
 			is_horizontal = false
 		#decoration_layer.set_cell(curr, 0, tiles_path.pick_random())
 		_place_path_or_bridge(curr, is_horizontal)
-		if curr.y + 1 < map_height:
+		#if curr.y + 1 < map_height:
 			#decoration_layer.set_cell(curr + Vector2i.DOWN, 0, tiles_path.pick_random())
-			_place_path_or_bridge(curr + Vector2i.DOWN, is_horizontal)
+			#_place_path_or_bridge(curr + Vector2i.DOWN, is_horizontal)
 
 func _place_path_or_bridge(pos: Vector2i, moving_horizontal: bool) -> void:
 	# Check if the ground layer has any river tile at this pos
 	# Check the source_id to see if it's part of the tileset (assuming ID 0)
-	var ground_tile = ground_layer.get_cell_atlas_coords(pos)
+	var ground_tile = obstacle_layer.get_cell_atlas_coords(pos)
 	if ground_tile == tile_river_straight or ground_tile == tile_river_curve:
 		# Place bridge in decoration layer (on top of water)
 		var bridge = tile_bridge_h if moving_horizontal else tile_bridge_v
+		# TODO rotate v bridge tile
 		decoration_layer.set_cell(pos, 0, bridge)
 	else:
 		decoration_layer.set_cell(pos, 0, tiles_path.pick_random())
@@ -176,6 +211,7 @@ func _populate_objects() -> void:
 				obstacle_layer.set_cell(coords, 0, tiles_obstacles.pick_random())
 			
 func _place_all_unique_pois() -> void:
+	# TODO Make sure POIs dont get placed over river
 	var tileset = obstacle_layer.tile_set
 	var count = tileset.get_patterns_count()
 	if count == 0:
