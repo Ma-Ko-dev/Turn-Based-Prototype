@@ -47,6 +47,8 @@ func generate_full_map() -> void:
 		# just to be sure
 		is_river_generated = false
 	_generate_organic_paths()
+	if is_river_generated and not _has_bridge():
+		_force_bridge_connection()
 	_place_all_unique_pois()
 	_populate_objects()
 	_sync_systems()
@@ -194,6 +196,47 @@ func _place_path_or_bridge(pos: Vector2i, moving_horizontal: bool) -> void:
 		decoration_layer.set_cell(pos, 0, bridge, alternative)
 	else:
 		decoration_layer.set_cell(pos, 0, tiles_path.pick_random())
+
+func _force_bridge_connection() -> void:
+	# Find all vertical river tiles (straight) in the middle area
+	var candidates: Array[Vector2i] = []
+	for x in range(10, map_width - 10):
+		for y in range(10, map_height - 10):
+			var pos = Vector2i(x,y)
+			# Better to place a bridge on a straight vertical river
+			if obstacle_layer.get_cell_atlas_coords(pos) == tile_river_straight:
+				candidates.append(pos)
+	if candidates.is_empty(): return
+	var bridge_pos = candidates.pick_random()
+	# Get the rotation/flip flags of the river tile
+	var river_alt = obstacle_layer.get_cell_alternative_tile(bridge_pos)
+	# If TRANSFORM_TRANSPOSE is set, the river flows horizontal.
+	# If not, it flows vertical.
+	var river_is_horizontal = (river_alt & TileSetAtlasSource.TRANSFORM_TRANSPOSE) != 0
+	if river_is_horizontal:
+		# River flows Left-Right -> Bridge must be Vertical
+		var alt = TileSetAtlasSource.TRANSFORM_TRANSPOSE | TileSetAtlasSource.TRANSFORM_FLIP_H
+		decoration_layer.set_cell(bridge_pos, 0, tile_bridge_v, alt)
+		decoration_layer.set_cell(bridge_pos + Vector2i.UP, 0, tiles_path.pick_random())
+		decoration_layer.set_cell(bridge_pos + Vector2i.DOWN, 0, tiles_path.pick_random())
+	else:
+		# River flows Up-Down -> Bridge must be Horizontal
+		decoration_layer.set_cell(bridge_pos, 0, tile_bridge_h, 0)
+		decoration_layer.set_cell(bridge_pos + Vector2i.LEFT, 0, tiles_path.pick_random())
+		decoration_layer.set_cell(bridge_pos + Vector2i.RIGHT, 0, tiles_path.pick_random())
+
+
+
+
+func _has_bridge() -> bool:
+	# Iterate through decoration layer to find any bridge tile
+	for x in range(map_width):
+		for y in range(map_height):
+			var coords = Vector2i(x,y)
+			var atlas = decoration_layer.get_cell_atlas_coords(coords)
+			if atlas == tile_bridge_h or atlas == tile_bridge_v:
+				return true
+	return false
 
 func _populate_objects() -> void:
 	for x in range(map_width):
