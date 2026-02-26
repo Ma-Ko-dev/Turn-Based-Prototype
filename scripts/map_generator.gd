@@ -20,10 +20,14 @@ var _poi_zones: Array[Rect2i] = []
 	Vector2i(0,2), Vector2i(1,2), Vector2i(2,2), Vector2i(3,2), Vector2i(4,2), Vector2i(5,2), Vector2i(6,2), 
 ]
 @export_group("River Settings")
-@export var tile_river_straight: Vector2i = Vector2i(8,4)
-@export var tile_river_curve: Vector2i = Vector2i(9,4)
+@export var tile_river_straight_big: Vector2i = Vector2i(8,4)
+@export var tile_river_curve_big: Vector2i = Vector2i(9,4)
+@export var tile_river_straight_small: Vector2i = Vector2i(12,5)
+@export var tile_river_curve_small: Vector2i = Vector2i(13,5)
 @export var tile_bridge_h: Vector2i = Vector2i(6,5)
 @export var tile_bridge_v: Vector2i = Vector2i(7,5)
+var _current_river_straight: Vector2i
+var _current_river_curve: Vector2i
 var is_river_generated = false
 @export_tool_button("Generate Map") var map_gen_button = func(): generate_full_map()
 
@@ -82,6 +86,13 @@ func _generate_organic_paths() -> void:
 		_create_path_connection(v_start, v_end)
 
 func _generate_river() -> void:
+	# Choose river style
+	if randf() < 0.5:
+		_current_river_straight = tile_river_straight_big
+		_current_river_curve = tile_river_curve_big
+	else:
+		_current_river_straight = tile_river_straight_small
+		_current_river_curve = tile_river_curve_small
 	# Random start on the left edge
 	var curr = Vector2i(0, randi_range(10, map_height - 10))
 	var dir = Vector2i.RIGHT
@@ -120,17 +131,17 @@ func _generate_river() -> void:
 		if curr.x >= map_width: break
 
 func _place_river_tile_smart(pos: Vector2i, from_dir: Vector2i, to_dir: Vector2i) -> void:
-	var atlas = tile_river_straight
+	var atlas = _current_river_straight
 	var alternative = 0
 	var flip_h = TileSetAtlasSource.TRANSFORM_FLIP_H
 	var flip_v = TileSetAtlasSource.TRANSFORM_FLIP_V
 	var transpose = TileSetAtlasSource.TRANSFORM_TRANSPOSE
 	if from_dir == to_dir:
-		atlas = tile_river_straight
+		atlas = _current_river_straight
 		if from_dir.x != 0:
 			alternative = transpose | flip_h
 	else:
-		atlas = tile_river_curve
+		atlas = _current_river_curve
 		# from_dir is the movement that BROUGHT us here
 		# to_dir is the movement we take LEAVING here
 		# To fit the tile, we need the OPPOSITE of from_dir (where the water enters)
@@ -182,13 +193,15 @@ func _create_path_connection(start: Vector2i, end: Vector2i) -> void:
 
 func _is_river_at(pos: Vector2i) -> bool:
 	var tile = obstacle_layer.get_cell_atlas_coords(pos)
-	return tile == tile_river_straight or tile == tile_river_curve
+	return tile == tile_river_straight_big or tile == tile_river_curve_big or \
+		   tile == tile_river_straight_small or tile == tile_river_curve_small
 
 func _place_path_or_bridge(pos: Vector2i, moving_horizontal: bool) -> void:
 	# Check if the ground layer has any river tile at this pos
 	# Check the source_id to see if it's part of the tileset (assuming ID 0)
 	var ground_tile = obstacle_layer.get_cell_atlas_coords(pos)
-	if ground_tile == tile_river_straight or ground_tile == tile_river_curve:
+	#if ground_tile == tile_river_straight or ground_tile == tile_river_curve:
+	if _is_river_at(pos):
 		var bridge = tile_bridge_h
 		var alternative = 0
 		if not moving_horizontal:
@@ -205,7 +218,7 @@ func _force_bridge_connection() -> void:
 		for y in range(10, map_height - 10):
 			var pos = Vector2i(x,y)
 			# Better to place a bridge on a straight vertical river
-			if obstacle_layer.get_cell_atlas_coords(pos) == tile_river_straight:
+			if obstacle_layer.get_cell_atlas_coords(pos) == tile_river_straight_big or obstacle_layer.get_cell_atlas_coords(pos) == tile_river_straight_small:
 				candidates.append(pos)
 	if candidates.is_empty(): return
 	var bridge_pos = candidates.pick_random()
@@ -305,7 +318,8 @@ func _is_area_clear_for_poi(pos: Vector2i, size: Vector2i, pad: int) -> bool:
 				if zone.has_point(check_pos):
 					return false
 			var atlas_coords = obstacle_layer.get_cell_atlas_coords(check_pos)
-			if atlas_coords == tile_river_straight or atlas_coords == tile_river_curve:
+			if atlas_coords == tile_river_straight_big or atlas_coords == tile_river_curve_big or \
+			atlas_coords == tile_river_straight_small or atlas_coords == tile_river_curve_small:
 				return false
 	return true
 	
