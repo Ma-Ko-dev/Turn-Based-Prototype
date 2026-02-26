@@ -81,9 +81,10 @@ func _generate_organic_paths() -> void:
 	var h_end = Vector2i(map_width - 1, randi_range(5, map_height - 5))
 	_create_path_connection(h_start, h_end)
 	if not is_river_generated:
-		var v_start = Vector2i(randi_range(5, map_width - 5), 0)
-		var v_end = Vector2i(randi_range(5, map_width - 5), map_height - 1)
-		_create_path_connection(v_start, v_end)
+		if randf() < 0.5: # have a chance to generate a second road when river is not present
+			var v_start = Vector2i(randi_range(5, map_width - 5), 0)
+			var v_end = Vector2i(randi_range(5, map_width - 5), map_height - 1)
+			_create_path_connection(v_start, v_end)
 
 func _generate_river() -> void:
 	# Choose river style
