@@ -176,10 +176,12 @@ func _place_path_or_bridge(pos: Vector2i, moving_horizontal: bool) -> void:
 	# Check the source_id to see if it's part of the tileset (assuming ID 0)
 	var ground_tile = obstacle_layer.get_cell_atlas_coords(pos)
 	if ground_tile == tile_river_straight or ground_tile == tile_river_curve:
-		# Place bridge in decoration layer (on top of water)
-		var bridge = tile_bridge_h if moving_horizontal else tile_bridge_v
-		# TODO rotate v bridge tile
-		decoration_layer.set_cell(pos, 0, bridge)
+		var bridge = tile_bridge_h
+		var alternative = 0
+		if not moving_horizontal:
+			bridge = tile_bridge_v
+			alternative = TileSetAtlasSource.TRANSFORM_TRANSPOSE | TileSetAtlasSource.TRANSFORM_FLIP_H
+		decoration_layer.set_cell(pos, 0, bridge, alternative)
 	else:
 		decoration_layer.set_cell(pos, 0, tiles_path.pick_random())
 
@@ -209,7 +211,6 @@ func _populate_objects() -> void:
 				obstacle_layer.set_cell(coords, 0, tiles_obstacles.pick_random())
 			
 func _place_all_unique_pois() -> void:
-	# TODO Make sure POIs dont get placed over river
 	var tileset = obstacle_layer.tile_set
 	var count = tileset.get_patterns_count()
 	if count == 0:
