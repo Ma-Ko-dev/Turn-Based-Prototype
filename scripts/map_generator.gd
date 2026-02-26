@@ -131,7 +131,7 @@ func _generate_river() -> void:
 		if curr.x >= map_width: break
 
 func _place_river_tile_smart(pos: Vector2i, from_dir: Vector2i, to_dir: Vector2i) -> void:
-	var atlas = _current_river_straight
+	var atlas: Vector2i
 	var alternative = 0
 	var flip_h = TileSetAtlasSource.TRANSFORM_FLIP_H
 	var flip_v = TileSetAtlasSource.TRANSFORM_FLIP_V
@@ -199,8 +199,6 @@ func _is_river_at(pos: Vector2i) -> bool:
 func _place_path_or_bridge(pos: Vector2i, moving_horizontal: bool) -> void:
 	# Check if the ground layer has any river tile at this pos
 	# Check the source_id to see if it's part of the tileset (assuming ID 0)
-	var ground_tile = obstacle_layer.get_cell_atlas_coords(pos)
-	#if ground_tile == tile_river_straight or ground_tile == tile_river_curve:
 	if _is_river_at(pos):
 		var bridge = tile_bridge_h
 		var alternative = 0
@@ -238,9 +236,6 @@ func _force_bridge_connection() -> void:
 		decoration_layer.set_cell(bridge_pos, 0, tile_bridge_h, 0)
 		decoration_layer.set_cell(bridge_pos + Vector2i.LEFT, 0, tiles_path.pick_random())
 		decoration_layer.set_cell(bridge_pos + Vector2i.RIGHT, 0, tiles_path.pick_random())
-
-
-
 
 func _has_bridge() -> bool:
 	# Iterate through decoration layer to find any bridge tile
