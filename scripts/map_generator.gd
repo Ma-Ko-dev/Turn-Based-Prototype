@@ -127,25 +127,21 @@ func _place_river_tile_smart(pos: Vector2i, from_dir: Vector2i, to_dir: Vector2i
 			alternative = transpose | flip_h
 	else:
 		atlas = tile_river_curve
-		if from_dir == Vector2i.RIGHT:
-			alternative = 0 if to_dir == Vector2i.DOWN else flip_v | transpose
-		elif from_dir == Vector2i.LEFT:
-			alternative = flip_h if to_dir == Vector2i.DOWN else flip_h | flip_v | transpose
-		elif from_dir == Vector2i.DOWN:
-			alternative = 0 if to_dir == Vector2i.RIGHT else flip_h | flip_v | transpose
-		elif from_dir == Vector2i.UP:
-			alternative = flip_v | transpose if to_dir == Vector2i.RIGHT else flip_h
-			alternative = flip_h | flip_v if to_dir == Vector2i.LEFT else flip_v | transpose
-		## Determine which curve rotation we need based on directions
-		## This is a simplified mapping for common turns
-		#if (from_dir == Vector2i.RIGHT and to_dir == Vector2i.DOWN) or (from_dir == Vector2i.UP and to_dir == Vector2i.LEFT):
-			#alternative = flip_h | flip_v
-		#elif (from_dir == Vector2i.RIGHT and to_dir == Vector2i.UP) or (from_dir == Vector2i.DOWN and to_dir == Vector2i.LEFT):
-			#alternative = flip_h
-		#elif (from_dir == Vector2i.LEFT and to_dir == Vector2i.DOWN) or (from_dir == Vector2i.UP and to_dir == Vector2i.RIGHT):
-			#alternative = flip_v
-		#else:
-			#alternative = 0
+		# from_dir is the movement that BROUGHT us here
+		# to_dir is the movement we take LEAVING here
+		# To fit the tile, we need the OPPOSITE of from_dir (where the water enters)
+		var entry = -from_dir 
+		var exit = to_dir
+		# Now we check which two sides of the tile are connected
+		if (entry == Vector2i.DOWN and exit == Vector2i.RIGHT) or (entry == Vector2i.RIGHT and exit == Vector2i.DOWN):
+			alternative = 0 # Your base Right-Curve
+		elif (entry == Vector2i.DOWN and exit == Vector2i.LEFT) or (entry == Vector2i.LEFT and exit == Vector2i.DOWN):
+			alternative = flip_h
+		elif (entry == Vector2i.UP and exit == Vector2i.RIGHT) or (entry == Vector2i.RIGHT and exit == Vector2i.UP):
+			alternative = flip_v
+		elif (entry == Vector2i.UP and exit == Vector2i.LEFT) or (entry == Vector2i.LEFT and exit == Vector2i.UP):
+			alternative = flip_h | flip_v
+	# FML this took way too long T_T
 	obstacle_layer.set_cell(pos, 0, atlas, alternative)
 
 func _create_path_connection(start: Vector2i, end: Vector2i) -> void:
