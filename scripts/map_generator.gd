@@ -24,6 +24,7 @@ var _poi_zones: Array[Rect2i] = []
 @export var tile_river_curve: Vector2i = Vector2i(9,4)
 @export var tile_bridge_h: Vector2i = Vector2i(6,5)
 @export var tile_bridge_v: Vector2i = Vector2i(7,5)
+var is_river_generated = false
 @export_tool_button("Generate Map") var map_gen_button = func(): generate_full_map()
 
 
@@ -39,7 +40,12 @@ func generate_full_map() -> void:
 	_poi_zones.clear()
 	_clear_layers()
 	_fill_ground()
-	_generate_river()
+	if randf() < 0.5:
+		_generate_river()
+		is_river_generated = true
+	else:
+		# just to be sure
+		is_river_generated = false
 	_generate_organic_paths()
 	_place_all_unique_pois()
 	_populate_objects()
@@ -68,9 +74,10 @@ func _generate_organic_paths() -> void:
 	var h_start = Vector2i(0, randi_range(5, map_height - 5))
 	var h_end = Vector2i(map_width - 1, randi_range(5, map_height - 5))
 	_create_path_connection(h_start, h_end)
-	var v_start = Vector2i(randi_range(5, map_width - 5), 0)
-	var v_end = Vector2i(randi_range(5, map_width - 5), map_height - 1)
-	_create_path_connection(v_start, v_end)
+	if not is_river_generated:
+		var v_start = Vector2i(randi_range(5, map_width - 5), 0)
+		var v_end = Vector2i(randi_range(5, map_width - 5), map_height - 1)
+		_create_path_connection(v_start, v_end)
 
 func _generate_river() -> void:
 	# Random start on the left edge
@@ -84,7 +91,6 @@ func _generate_river() -> void:
 		var next_dir = dir
 		if turn_cooldown > 0:
 			turn_cooldown -= 1
-		
 		if dir == Vector2i.RIGHT:
 			if turn_cooldown == 0 and segment_counter >= 3 and randf() < 0.15:
 				var possible_turns = []
@@ -96,16 +102,12 @@ func _generate_river() -> void:
 			if segment_counter >= 4 and randf() < 0.3:
 				next_dir = Vector2i.RIGHT
 				turn_cooldown = 10
-		
 		if curr.y < 4 and next_dir == Vector2i.UP:
 			next_dir = Vector2i.RIGHT
 			turn_cooldown = 10
 		elif curr.y > map_height - 4 and next_dir == Vector2i.DOWN: 
 			next_dir = Vector2i.RIGHT
 			turn_cooldown = 10
-		
-		#if (dir == Vector2i.UP and next_dir == Vector2i.DOWN) or (dir == Vector2i.DOWN and next_dir == Vector2i.UP):
-			#next_dir = Vector2i.RIGHT
 		_place_river_tile_smart(curr, dir, next_dir)
 		if next_dir != dir:
 			segment_counter = 0
@@ -247,6 +249,9 @@ func _is_area_clear_for_poi(pos: Vector2i, size: Vector2i, pad: int) -> bool:
 			for zone in _poi_zones:
 				if zone.has_point(check_pos):
 					return false
+			var atlas_coords = obstacle_layer.get_cell_atlas_coords(check_pos)
+			if atlas_coords == tile_river_straight or atlas_coords == tile_river_curve:
+				return false
 	return true
 	
 func _clear_area_for_poi(pos: Vector2i, size: Vector2i) -> void:
