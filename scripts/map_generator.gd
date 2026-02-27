@@ -19,6 +19,9 @@ var _poi_zones: Array[Rect2i] = []
 	Vector2i(0,1), Vector2i(1,1), Vector2i(2,1), Vector2i(3,1), Vector2i(4,1), Vector2i(5,1),
 	Vector2i(0,2), Vector2i(1,2), Vector2i(2,2), Vector2i(3,2), Vector2i(4,2), Vector2i(5,2), Vector2i(6,2), 
 ]
+@export var tiles_trees: Array[Vector2i] = [Vector2i(0,1), Vector2i(1,1), Vector2i(2,1), Vector2i(3,1), Vector2i(4,1), Vector2i(5,1), Vector2i(3,2), Vector2i(4,2)]
+@export var tiles_rocks: Array[Vector2i] = [Vector2i(5,2), Vector2i(6,2), Vector2i(18,6), Vector2i(19,6), Vector2i(29,6)]
+@export var tiles_greenery: Array[Vector2i] = [Vector2i(5,0), Vector2i(6,0), Vector2i(7,0), Vector2i(0,2), Vector2i(21,2), Vector2i(13,6), Vector2i(14,6), Vector2i(15,6)]
 @export_group("River Settings")
 @export var tile_river_straight_big: Vector2i = Vector2i(8,4)
 @export var tile_river_curve_big: Vector2i = Vector2i(9,4)
@@ -54,7 +57,7 @@ func generate_full_map() -> void:
 	if is_river_generated and not _has_bridge():
 		_force_bridge_connection()
 	_place_all_unique_pois()
-	_populate_objects()
+	_populate_objects_v2()
 	_sync_systems()
 
 func _clear_layers() -> void:
@@ -272,7 +275,43 @@ func _populate_objects() -> void:
 				chance += cluster_strength
 			if randf() < chance:
 				obstacle_layer.set_cell(coords, 0, tiles_obstacles.pick_random())
-			
+
+func _populate_objects_v2() -> void:
+	var noise = FastNoiseLite.new()
+	noise.seed = randi()
+	noise.frequency = 0.08 # Higher = smaller, more frequent clusters
+	for x in range(map_width):
+		for y in range(map_height):
+			var pos = Vector2i(x, y)
+			# TODO:Put this in a func later
+			var is_in_poi_zone = false
+			for zone in _poi_zones:
+				if zone.has_point(pos):
+					is_in_poi_zone = true
+					break
+			# Skip paths, POIs and River
+			if decoration_layer.get_cell_source_id(pos) != -1: continue
+			if obstacle_layer.get_cell_source_id(pos) != -1: continue
+			if is_in_poi_zone: continue
+			var val = noise.get_noise_2dv(Vector2(x,y)) # Returns -1.0 to 1.0
+			if val > 0.4:
+				# forest zone
+				if randf() < 0.7:
+					obstacle_layer.set_cell(pos, 0, tiles_trees.pick_random())
+				else:
+					obstacle_layer.set_cell(pos, 0, tiles_greenery.pick_random())
+			elif val > 0.1:
+				# Transition Zone / Meadows
+				if randf() < 0.3:
+					decoration_layer.set_cell(pos, 0, tiles_greenery.pick_random())
+				else:
+					decoration_layer.set_cell(pos, 0, tiles_rocks.pick_random())
+			else:
+				if randf() < 0.05:
+					decoration_layer.set_cell(pos, 0, tiles_greenery.pick_random())
+				elif randf() < 0.01:
+					decoration_layer.set_cell(pos, 0, tiles_rocks.pick_random())
+
 func _place_all_unique_pois() -> void:
 	var tileset = obstacle_layer.tile_set
 	var count = tileset.get_patterns_count()
