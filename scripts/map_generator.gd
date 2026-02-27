@@ -20,8 +20,8 @@ var _poi_zones: Array[Rect2i] = []
 	Vector2i(0,2), Vector2i(1,2), Vector2i(2,2), Vector2i(3,2), Vector2i(4,2), Vector2i(5,2), Vector2i(6,2), 
 ]
 @export var tiles_trees: Array[Vector2i] = [Vector2i(0,1), Vector2i(1,1), Vector2i(2,1), Vector2i(3,1), Vector2i(4,1), Vector2i(5,1), Vector2i(3,2), Vector2i(4,2)]
-@export var tiles_rocks: Array[Vector2i] = [Vector2i(5,2), Vector2i(6,2), Vector2i(18,6), Vector2i(19,6), Vector2i(29,6)]
-@export var tiles_greenery: Array[Vector2i] = [Vector2i(5,0), Vector2i(6,0), Vector2i(7,0), Vector2i(0,2), Vector2i(21,2), Vector2i(13,6), Vector2i(14,6), Vector2i(15,6)]
+@export var tiles_rocks: Array[Vector2i] = [Vector2i(5,2), Vector2i(6,2)] #, Vector2i(18,6), Vector2i(19,6), Vector2i(20,6)
+@export var tiles_greenery: Array[Vector2i] = [Vector2i(5,0), Vector2i(6,0), Vector2i(7,0), Vector2i(0,2), Vector2i(21,2)] # Vector2i(13,6), Vector2i(14,6), Vector2i(15,6)
 @export_group("River Settings")
 @export var tile_river_straight_big: Vector2i = Vector2i(8,4)
 @export var tile_river_curve_big: Vector2i = Vector2i(9,4)
@@ -294,22 +294,25 @@ func _populate_objects_v2() -> void:
 			if obstacle_layer.get_cell_source_id(pos) != -1: continue
 			if is_in_poi_zone: continue
 			var val = noise.get_noise_2dv(Vector2(x,y)) # Returns -1.0 to 1.0
-			if val > 0.4:
+			if val > 0.45:
 				# forest zone
-				if randf() < 0.7:
+				if randf() < 0.8:
 					obstacle_layer.set_cell(pos, 0, tiles_trees.pick_random())
 				else:
 					obstacle_layer.set_cell(pos, 0, tiles_greenery.pick_random())
-			elif val > 0.1:
+			elif val > 0.25:
 				# Transition Zone / Meadows
-				if randf() < 0.3:
-					decoration_layer.set_cell(pos, 0, tiles_greenery.pick_random())
+				var chance = randf()
+				if chance < 0.4:
+					decoration_layer.set_cell(pos, 0, tiles_trees.pick_random())
+				elif chance < 0.7:
+					obstacle_layer.set_cell(pos, 0, tiles_rocks.pick_random())
 				else:
-					decoration_layer.set_cell(pos, 0, tiles_rocks.pick_random())
-			else:
-				if randf() < 0.05:
 					decoration_layer.set_cell(pos, 0, tiles_greenery.pick_random())
-				elif randf() < 0.01:
+			else:
+				if randf() < 0.15:
+					decoration_layer.set_cell(pos, 0, tiles_greenery.pick_random())
+				elif randf() < 0.02:
 					decoration_layer.set_cell(pos, 0, tiles_rocks.pick_random())
 
 func _place_all_unique_pois() -> void:
