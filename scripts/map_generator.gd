@@ -42,6 +42,7 @@ var _poi_zones: Array[Rect2i] = []
 var _current_river_straight: Vector2i
 var _current_river_curve: Vector2i
 var is_river_generated = false
+var _river_shore_cells: Dictionary = {}
 
 @export_tool_button("Generate Map") var map_gen_button = func(): generate_full_map()
 
@@ -118,6 +119,7 @@ func _generate_organic_paths() -> void:
 			_create_path_connection(v_start, v_end)
 
 func _generate_river() -> void:
+	_river_shore_cells.clear()
 	# Choose river style
 	if rng.randf() < 0.5:
 		_current_river_straight = tile_river_straight_big
@@ -154,6 +156,7 @@ func _generate_river() -> void:
 			next_dir = Vector2i.RIGHT
 			turn_cooldown = 10
 		_place_river_tile_smart(curr, dir, next_dir)
+		_mark_river_shore(curr)
 		if next_dir != dir:
 			segment_counter = 0
 		else:
@@ -161,6 +164,16 @@ func _generate_river() -> void:
 		curr += next_dir
 		dir = next_dir
 		if curr.x >= map_width: break
+
+# Marks cells around a river tile as shore
+func _mark_river_shore(pos: Vector2i) -> void:
+	for dx in range(-2, 3):
+		for dy in range(-2, 3):
+			var shore_pos = pos + Vector2i(dx, dy)
+			var dist = abs(dx) + abs(dy)
+			if dist <= 3:
+				if not _river_shore_cells.has(shore_pos) or _river_shore_cells[shore_pos] > dist:
+					_river_shore_cells[shore_pos] = dist
 
 func _place_river_tile_smart(pos: Vector2i, from_dir: Vector2i, to_dir: Vector2i) -> void:
 	var atlas: Vector2i
@@ -346,10 +359,9 @@ func _populate_objects_v2() -> void:
 func _populate_objects_v3() -> void:
 	var noise = FastNoiseLite.new()
 	noise.seed = rng.randi()
-	# English comment: Slightly higher frequency for smaller maps to get more "features"
+	# Slightly higher frequency for smaller maps to get more "features"
 	noise.frequency = 0.07 
 	noise.noise_type = FastNoiseLite.TYPE_PERLIN
-	
 	var is_pine_map = rng.randf() < 0.5
 	var core_trees = pine_double if is_pine_map else deciduous_double
 	var edge_trees = pine_single if is_pine_map else deciduous_single
@@ -358,37 +370,42 @@ func _populate_objects_v3() -> void:
 		for y in range(map_height):
 			var pos = Vector2i(x, y)
 			if _is_occupied_or_path(pos): continue
-			
+			# River Gras Logic
+			if _river_shore_cells.has(pos): 
+				var dist = _river_shore_cells[pos]
+				var chance = 0.0
+				if dist <= 1: chance = 0.8
+				elif dist <= 2: chance = 0.4
+				else: chance = 0.1
+				if rng.randf() < chance:
+					var shrub_chance = 0.1 if dist <= 1 else 0.25
+					if rng.randf() < shrub_chance:
+						_place_veg(decoration_layer, pos, tiles_shrubs, false)
+					else:
+						_place_veg(decoration_layer, pos, tiles_grass_patches, true)
+					continue
+			# Forest generation
 			var val = noise.get_noise_2dv(Vector2(x,y))
-			
-			# English comment: Raised thresholds to create more open space on small maps
+			# Raised thresholds to create more open space on small maps
 			if val > 0.45: # Was 0.35 -> Fewer core trees
-				obstacle_layer.set_cell(pos, 0, _pick_seeded(core_trees))
-				
+				_place_veg(obstacle_layer, pos, core_trees, false)
 			elif val > 0.25: # Was 0.15 -> Narrower forest edge
-				obstacle_layer.set_cell(pos, 0, _pick_seeded(edge_trees))
+				_place_veg(obstacle_layer, pos, edge_trees, false)
 			elif val > 0.05:
 				if rng.randf() < 0.3:
-					var alt = _get_random_flip(false)
-					decoration_layer.set_cell(pos, 0, _pick_seeded(tiles_shrubs), alt)
+					_place_veg(decoration_layer, pos, tiles_shrubs, false)
 				else:
-					var alt = _get_random_flip(true)
-					decoration_layer.set_cell(pos, 0, _pick_seeded(tiles_grass_patches), alt)
+					_place_veg(decoration_layer, pos, tiles_grass_patches, true)
 			elif val < -0.4:
 				if rng.randf() < 0.9:
-					var alt = _get_random_flip(true)
-					decoration_layer.set_cell(pos, 0, _pick_seeded(tiles_grass_patches), alt)
+					_place_veg(decoration_layer, pos, tiles_grass_patches, true)
 				else:
 					if rng.randf() < 0.1:
-						var alt = _get_random_flip(false)
-						decoration_layer.set_cell(pos, 0, _pick_seeded(tiles_shrubs), alt)
-			# English comment: 3. THE REST (Open Meadow)
-			else:
-				# English comment: Only very few stray grass blades to keep it clean
+						_place_veg(decoration_layer, pos, tiles_shrubs, false)
+			else: # THE REST (Open Meadow)
+				# Only very few stray grass blades to keep it clean
 				if rng.randf() < 0.005:
-					var alt = 0
-					if rng.randi() % 2 == 0:
-						alt = TileSetAtlasSource.TRANSFORM_FLIP_H
+					var alt = TileSetAtlasSource.TRANSFORM_FLIP_H if rng.randi() % 2 == 0 else 0
 					obstacle_layer.set_cell(pos, 0, _pick_seeded(tiles_rocks), alt)
 
 # Helper to keep the loop clean
@@ -409,6 +426,12 @@ func _get_random_flip(allow_vertical: bool = true) -> int:
 	if flip_v: alt |= TileSetAtlasSource.TRANSFORM_FLIP_V
 	if transpose: alt |= TileSetAtlasSource.TRANSFORM_TRANSPOSE
 	return alt
+
+# Centralized helper for placing vegetation with random flips
+func _place_veg(layer: TileMapLayer, pos: Vector2i, list: Array[Vector2i], allow_v_flip: bool = true) -> void:
+	var coords = _pick_seeded(list)
+	var alt = _get_random_flip(allow_v_flip)
+	layer.set_cell(pos, 0, coords, alt)
 
 func _place_all_unique_pois() -> void:
 	var tileset = obstacle_layer.tile_set
