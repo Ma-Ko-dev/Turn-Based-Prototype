@@ -4,6 +4,9 @@ extends Node2D
 @export_group("Map Dimensions")
 @export var map_width: int = 50
 @export var map_height: int = 50
+@export_group("Seed Settings")
+@export var manual_seed: int = 0
+var current_seed: int = 0
 @export_group("Object Density")
 @export_range(0.0, 1.0) var base_density: float = 0.05 # Base chance for a new cluster
 @export_range(0.0, 1.0) var cluster_strength: float = 0.6 # Bonus chance if neighbor is a tree
@@ -57,15 +60,15 @@ func _ready() -> void:
 	generate_full_map()
 
 func _get_rng():
-	if Engine.is_editor_hint():
-		# Fallback for editor mode since Autoloads don't run here
-		var fallback_rng = RandomNumberGenerator.new()
-		#fallback_rng.randomize()
-		fallback_rng.seed = -1273971340661010247
-		print("Generating Map with Seed: ", fallback_rng.seed)
-		return fallback_rng
-	return GameRNG.map_rng
-
+	var new_rng = RandomNumberGenerator.new()
+	if manual_seed != 0:
+		new_rng.seed = manual_seed
+	else:
+		# If no manual seed, use a random one
+		new_rng.randomize()
+	current_seed = new_rng.seed
+	print("Map Generation Seed: ", current_seed)
+	return new_rng
 func generate_full_map() -> void:
 	rng = _get_rng() # Always refresh the RNG instance/seed first
 	_poi_zones.clear()
