@@ -7,7 +7,7 @@ static func roll(amount: int, sides: int, modifier: int = 0) -> int:
 	var individual_rolls: Array = []
 	
 	for i in range(amount):
-		var r = randi_range(1, sides)
+		var r = GameRNG.game_rng.randi_range(1, sides)
 		individual_rolls.append(r)
 		total_rolls += r
 	

@@ -11,6 +11,16 @@ extends Node2D
 @export var poi_count: int = 3
 @export var poi_padding: int = 2
 var _poi_zones: Array[Rect2i] = []
+@export_group("Vegetation - Deciduous (Laub)")
+@export var deciduous_double: Array[Vector2i] = [Vector2i(3,1)]
+@export var deciduous_single: Array[Vector2i] = [Vector2i(2,1), Vector2i(4,1), Vector2i(5,1), Vector2i(4,2)]
+@export_group("Vegetation - Pine (Nadel)")
+@export var pine_double: Array[Vector2i] = [Vector2i(3,2)]
+@export var pine_single: Array[Vector2i] = [Vector2i(0,1), Vector2i(1,1)]
+@export_group("Vegetation - Details")
+@export var tiles_shrubs: Array[Vector2i] = [Vector2i(0,2)]     # Small bushes/transition
+@export var tiles_rocks: Array[Vector2i] = [Vector2i(5,2), Vector2i(6,2), Vector2i(18,6), Vector2i(19,6), Vector2i(20,6)] # Blockers like stumps/rocks
+@export var tiles_grass_patches: Array[Vector2i] = [Vector2i(5,0), Vector2i(6,0), Vector2i(7,0)] # For bundled grass
 @export_group("Tile Settings")
 @export var tile_ground: Vector2i = Vector2i(0,0)
 @export var tiles_path: Array[Vector2i] = [Vector2i(1,0), Vector2i(2,0), Vector2i(3,0), Vector2i(4,0)]
@@ -20,7 +30,7 @@ var _poi_zones: Array[Rect2i] = []
 	Vector2i(0,2), Vector2i(1,2), Vector2i(2,2), Vector2i(3,2), Vector2i(4,2), Vector2i(5,2), Vector2i(6,2), 
 ]
 @export var tiles_trees: Array[Vector2i] = [Vector2i(0,1), Vector2i(1,1), Vector2i(2,1), Vector2i(3,1), Vector2i(4,1), Vector2i(5,1), Vector2i(3,2), Vector2i(4,2)]
-@export var tiles_rocks: Array[Vector2i] = [Vector2i(5,2), Vector2i(6,2)] #, Vector2i(18,6), Vector2i(19,6), Vector2i(20,6)
+#@export var tiles_rocks: Array[Vector2i] = [Vector2i(5,2), Vector2i(6,2)] #, Vector2i(18,6), Vector2i(19,6), Vector2i(20,6)
 @export var tiles_greenery: Array[Vector2i] = [Vector2i(5,0), Vector2i(6,0), Vector2i(7,0), Vector2i(0,2), Vector2i(21,2)] # Vector2i(13,6), Vector2i(14,6), Vector2i(15,6)
 @export_group("River Settings")
 @export var tile_river_straight_big: Vector2i = Vector2i(8,4)
@@ -32,22 +42,32 @@ var _poi_zones: Array[Rect2i] = []
 var _current_river_straight: Vector2i
 var _current_river_curve: Vector2i
 var is_river_generated = false
+
 @export_tool_button("Generate Map") var map_gen_button = func(): generate_full_map()
 
 
 @onready var ground_layer: TileMapLayer = $GroundLayer
 @onready var decoration_layer: TileMapLayer = $DecorationLayer
 @onready var obstacle_layer: TileMapLayer = $ObstacleLayer
+@onready var rng = _get_rng()
 
 
 func _ready() -> void:
 	generate_full_map()
 
+func _get_rng():
+	if Engine.is_editor_hint():
+		# Fallback for editor mode since Autoloads don't run here
+		var fallback_rng = RandomNumberGenerator.new()
+		fallback_rng.randomize()
+		return fallback_rng
+	return GameRNG.map_rng
+
 func generate_full_map() -> void:
 	_poi_zones.clear()
 	_clear_layers()
 	_fill_ground()
-	if randf() < 0.5:
+	if rng.randf() < 0.5:
 		_generate_river()
 		is_river_generated = true
 	else:
@@ -57,8 +77,14 @@ func generate_full_map() -> void:
 	if is_river_generated and not _has_bridge():
 		_force_bridge_connection()
 	_place_all_unique_pois()
-	_populate_objects_v2()
+	#_populate_objects()
+	#_populate_objects_v2()
+	_populate_objects_v3()
 	_sync_systems()
+
+func _pick_seeded(list: Array):
+	if list.is_empty(): return null
+	return list[rng.randi() % list.size()]
 
 func _clear_layers() -> void:
 	ground_layer.clear()
@@ -80,25 +106,25 @@ func _sync_systems() -> void:
 		player.update_camera_limits()
 
 func _generate_organic_paths() -> void:
-	var h_start = Vector2i(0, randi_range(5, map_height - 5))
-	var h_end = Vector2i(map_width - 1, randi_range(5, map_height - 5))
+	var h_start = Vector2i(0, rng.randi_range(5, map_height - 5))
+	var h_end = Vector2i(map_width - 1, rng.randi_range(5, map_height - 5))
 	_create_path_connection(h_start, h_end)
 	if not is_river_generated:
-		if randf() < 0.5: # have a chance to generate a second road when river is not present
-			var v_start = Vector2i(randi_range(5, map_width - 5), 0)
-			var v_end = Vector2i(randi_range(5, map_width - 5), map_height - 1)
+		if rng.randf() < 0.5: # have a chance to generate a second road when river is not present
+			var v_start = Vector2i(rng.randi_range(5, map_width - 5), 0)
+			var v_end = Vector2i(rng.randi_range(5, map_width - 5), map_height - 1)
 			_create_path_connection(v_start, v_end)
 
 func _generate_river() -> void:
 	# Choose river style
-	if randf() < 0.5:
+	if rng.randf() < 0.5:
 		_current_river_straight = tile_river_straight_big
 		_current_river_curve = tile_river_curve_big
 	else:
 		_current_river_straight = tile_river_straight_small
 		_current_river_curve = tile_river_curve_small
 	# Random start on the left edge
-	var curr = Vector2i(0, randi_range(10, map_height - 10))
+	var curr = Vector2i(0, rng.randi_range(10, map_height - 10))
 	var dir = Vector2i.RIGHT
 	var steps = 0
 	var segment_counter = 0
@@ -109,14 +135,14 @@ func _generate_river() -> void:
 		if turn_cooldown > 0:
 			turn_cooldown -= 1
 		if dir == Vector2i.RIGHT:
-			if turn_cooldown == 0 and segment_counter >= 3 and randf() < 0.15:
+			if turn_cooldown == 0 and segment_counter >= 3 and rng.randf() < 0.15:
 				var possible_turns = []
 				if curr.y > 10: possible_turns.append(Vector2i.UP)
 				if curr.y < map_height - 10: possible_turns.append(Vector2i.DOWN)
 				if possible_turns.size() > 0:
-					next_dir = possible_turns.pick_random()
+					next_dir = _pick_seeded(possible_turns)
 		else:
-			if segment_counter >= 4 and randf() < 0.3:
+			if segment_counter >= 4 and rng.randf() < 0.3:
 				next_dir = Vector2i.RIGHT
 				turn_cooldown = 10
 		if curr.y < 4 and next_dir == Vector2i.UP:
@@ -181,7 +207,7 @@ func _create_path_connection(start: Vector2i, end: Vector2i) -> void:
 			else:
 				curr.y += (1 if end.y > curr.y else -1)
 		else:
-			if randf() < 0.5 and curr.x != end.x:
+			if rng.randf() < 0.5 and curr.x != end.x:
 				var next_x = curr.x + (1 if end.x > curr.x else -1)
 				curr.x = next_x
 				is_horizontal = true
@@ -211,7 +237,7 @@ func _place_path_or_bridge(pos: Vector2i, moving_horizontal: bool) -> void:
 			alternative = TileSetAtlasSource.TRANSFORM_TRANSPOSE | TileSetAtlasSource.TRANSFORM_FLIP_H
 		decoration_layer.set_cell(pos, 0, bridge, alternative)
 	else:
-		decoration_layer.set_cell(pos, 0, tiles_path.pick_random())
+		decoration_layer.set_cell(pos, 0, _pick_seeded(tiles_path))
 
 func _force_bridge_connection() -> void:
 	# Find all vertical river tiles (straight) in the middle area
@@ -223,7 +249,7 @@ func _force_bridge_connection() -> void:
 			if obstacle_layer.get_cell_atlas_coords(pos) == tile_river_straight_big or obstacle_layer.get_cell_atlas_coords(pos) == tile_river_straight_small:
 				candidates.append(pos)
 	if candidates.is_empty(): return
-	var bridge_pos = candidates.pick_random()
+	var bridge_pos = _pick_seeded(candidates)
 	# Get the rotation/flip flags of the river tile
 	var river_alt = obstacle_layer.get_cell_alternative_tile(bridge_pos)
 	# If TRANSFORM_TRANSPOSE is set, the river flows horizontal.
@@ -233,13 +259,13 @@ func _force_bridge_connection() -> void:
 		# River flows Left-Right -> Bridge must be Vertical
 		var alt = TileSetAtlasSource.TRANSFORM_TRANSPOSE | TileSetAtlasSource.TRANSFORM_FLIP_H
 		decoration_layer.set_cell(bridge_pos, 0, tile_bridge_v, alt)
-		decoration_layer.set_cell(bridge_pos + Vector2i.UP, 0, tiles_path.pick_random())
-		decoration_layer.set_cell(bridge_pos + Vector2i.DOWN, 0, tiles_path.pick_random())
+		decoration_layer.set_cell(bridge_pos + Vector2i.UP, 0, _pick_seeded(tiles_path))
+		decoration_layer.set_cell(bridge_pos + Vector2i.DOWN, 0, _pick_seeded(tiles_path))
 	else:
 		# River flows Up-Down -> Bridge must be Horizontal
 		decoration_layer.set_cell(bridge_pos, 0, tile_bridge_h, 0)
-		decoration_layer.set_cell(bridge_pos + Vector2i.LEFT, 0, tiles_path.pick_random())
-		decoration_layer.set_cell(bridge_pos + Vector2i.RIGHT, 0, tiles_path.pick_random())
+		decoration_layer.set_cell(bridge_pos + Vector2i.LEFT, 0, _pick_seeded(tiles_path))
+		decoration_layer.set_cell(bridge_pos + Vector2i.RIGHT, 0, _pick_seeded(tiles_path))
 
 func _has_bridge() -> bool:
 	# Iterate through decoration layer to find any bridge tile
@@ -315,6 +341,56 @@ func _populate_objects_v2() -> void:
 				elif randf() < 0.02:
 					decoration_layer.set_cell(pos, 0, tiles_rocks.pick_random())
 
+func _populate_objects_v3() -> void:
+	var noise = FastNoiseLite.new()
+	noise.seed = rng.seed 
+	noise.frequency = 0.08
+	# Choose Biome for this map
+	var is_pine_map = rng.randf() < 0.5
+	var core_trees = pine_double if is_pine_map else deciduous_double
+	var edge_trees = pine_single if is_pine_map else deciduous_single
+	for x in range(map_width):
+		for y in range(map_height):
+			var pos = Vector2i(x, y)
+			# Standard skip checks
+			if _is_occupied_or_path(pos): continue
+			# Get noise value (normalized to 0.0 - 1.0 for easier math)
+			var val = (noise.get_noise_2dv(Vector2(x,y)) + 1.0) / 2.0
+			# Density Gradient
+			if val > 0.65:
+				# Dense core
+				if rng.randf() < 0.8:
+					obstacle_layer.set_cell(pos, 0, _pick_seeded(core_trees))
+				else:
+					obstacle_layer.set_cell(pos, 0, _pick_seeded(edge_trees))
+			elif val > 0.45:
+				# Forest Edge
+				if rng.randf() < 0.6:
+					obstacle_layer.set_cell(pos, 0, _pick_seeded(edge_trees))
+				else:
+					obstacle_layer.set_cell(pos, 0, _pick_seeded(tiles_shrubs))
+			elif val > 0.30:
+				# Transition to Meadow
+				if rng.randf() < 0.4:
+					obstacle_layer.set_cell(pos, 0, _pick_seeded(tiles_shrubs))
+				else:
+					obstacle_layer.set_cell(pos, 0, _pick_seeded(tiles_grass_patches))
+			elif val > 0.15:
+				# Open Meadow with bundled grass
+				if rng.randf() < 0.2:
+					obstacle_layer.set_cell(pos, 0, _pick_seeded(tiles_grass_patches))
+			# Rare Blockers (Rocks/Stumps) scattered everywhere
+			if obstacle_layer.get_cell_source_id(pos) == -1 and rng.randf() < 0.01:
+				obstacle_layer.set_cell(pos, 0, _pick_seeded(tiles_rocks))
+
+# Helper to keep the loop clean
+func _is_occupied_or_path(pos: Vector2i) -> bool:
+	if decoration_layer.get_cell_source_id(pos) != -1: return true
+	if obstacle_layer.get_cell_source_id(pos) != -1: return true
+	for zone in _poi_zones:
+		if zone.has_point(pos): return true
+	return false
+
 func _place_all_unique_pois() -> void:
 	var tileset = obstacle_layer.tile_set
 	var count = tileset.get_patterns_count()
@@ -324,7 +400,7 @@ func _place_all_unique_pois() -> void:
 	var indices = []
 	for i in range(count):
 		indices.append(i)
-	indices.shuffle()
+	indices.rng.shuffle()
 	var to_place = clampi(poi_count, 0, count)
 	for i in range(to_place):
 		_attempt_pattern_placement(indices[i])
@@ -333,8 +409,8 @@ func _attempt_pattern_placement(pattern_idx: int) -> void:
 	var pattern = obstacle_layer.tile_set.get_pattern(pattern_idx)
 	var p_size = pattern.get_size()
 	for attempt in range(100):
-		var x = randi_range(poi_padding + 1, map_width - p_size.x - poi_padding - 1)
-		var y = randi_range(poi_padding + 1, map_height - p_size.y - poi_padding - 1)
+		var x = rng.randi_range(poi_padding + 1, map_width - p_size.x - poi_padding - 1)
+		var y = rng.randi_range(poi_padding + 1, map_height - p_size.y - poi_padding - 1)
 		var pos = Vector2i(x, y)
 		if _is_area_clear_for_poi(pos, p_size, poi_padding):
 			_clear_area_for_poi(pos, p_size)

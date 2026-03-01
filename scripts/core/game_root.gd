@@ -11,7 +11,8 @@ var _spawn_counts: Dictionary = {}
 
 # --- Lifecycle ---
 func _ready() -> void:
-	randomize()
+	# TODO: Make sure to add an option to enter a seed later
+	GameRNG.setup_new_game()
 	# Validate that essential scenes are assigned before starting
 	if start_level:
 		_setup_game()
