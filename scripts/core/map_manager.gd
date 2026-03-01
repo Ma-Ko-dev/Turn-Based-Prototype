@@ -68,31 +68,34 @@ func update_astar_grid() -> void:
 
 func _calculate_cell_properties(coords: Vector2i) -> void:
 	var final_cost = 1.0
-	
-	# Ground layer cost
-	var ground_data = ground_layer.get_cell_tile_data(coords)
-	if ground_data:
-		var g_cost = ground_data.get_custom_data("movement_cost")
-		if g_cost > 0: final_cost = g_cost
-		# If g_cost is 0 (because someone forgot to set the cost) take 1.0
-		#final_cost = g_cost if g_cost > 0 else 1.0
-	
-	# Deco layer cost
+	# Check if there's a bridge
 	var deco_data = deco_layer.get_cell_tile_data(coords)
+	var is_bridge = false
 	if deco_data:
+		if deco_data.get_custom_data("is_bridge") == true:
+			is_bridge = true
 		var d_cost = deco_data.get_custom_data("movement_cost")
 		if d_cost > 0: final_cost = d_cost
-	
+		
 	# Obstacle layer
 	var obs_data = obstacle_layer.get_cell_tile_data(coords)
 	if obs_data:
 		var obs_cost = obs_data.get_custom_data("movement_cost")
-		if obs_cost >= 99:
+		# Only block if it's an obstacle AND NOT a bridge
+		if obs_cost >= 99 and not is_bridge:
 			astar_grid.set_point_solid(coords, true)
 			return
-		elif obs_cost > 0:
+		elif obs_cost > 0 and not is_bridge:
 			final_cost = obs_cost
+	
+	# Ground layer cost
+	var ground_data = ground_layer.get_cell_tile_data(coords)
+	if ground_data and final_cost == 1.0:
+		var g_cost = ground_data.get_custom_data("movement_cost")
+		if g_cost > 0: final_cost = g_cost
 	astar_grid.set_point_weight_scale(coords, final_cost)
+	if is_bridge:
+		astar_grid.set_point_solid(coords, false)
 
 
 # --- Vision & Line of Sight ---
