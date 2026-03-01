@@ -358,12 +358,14 @@ func _populate_objects_v2() -> void:
 					decoration_layer.set_cell(pos, 0, tiles_rocks.pick_random())
 
 func _populate_objects_v3() -> void:
+	var forest_rng = RandomNumberGenerator.new()
+	forest_rng.seed = rng.seed + 100 # Offset
 	var noise = FastNoiseLite.new()
-	noise.seed = rng.randi()
+	noise.seed = forest_rng.randi()
 	# Slightly higher frequency for smaller maps to get more "features"
 	noise.frequency = 0.07 
 	noise.noise_type = FastNoiseLite.TYPE_PERLIN
-	var is_pine_map = rng.randf() < 0.5
+	var is_pine_map = forest_rng.randf() < 0.5
 	var core_trees = pine_double if is_pine_map else deciduous_double
 	var edge_trees = pine_single if is_pine_map else deciduous_single
 	
@@ -378,9 +380,9 @@ func _populate_objects_v3() -> void:
 				if dist <= 1: chance = 0.8
 				elif dist <= 2: chance = 0.4
 				else: chance = 0.1
-				if rng.randf() < chance:
+				if forest_rng.randf() < chance:
 					var shrub_chance = 0.1 if dist <= 1 else 0.25
-					if rng.randf() < shrub_chance:
+					if forest_rng.randf() < shrub_chance:
 						_place_veg(decoration_layer, pos, tiles_shrubs, false)
 					else:
 						_place_veg(decoration_layer, pos, tiles_grass_patches, true)
@@ -393,7 +395,7 @@ func _populate_objects_v3() -> void:
 			elif val > 0.25: # Was 0.15 -> Narrower forest edge
 				_place_veg(obstacle_layer, pos, edge_trees, false)
 			elif val > 0.05:
-				if rng.randf() < 0.3:
+				if forest_rng.randf() < 0.3:
 					_place_veg(decoration_layer, pos, tiles_shrubs, false)
 				else:
 					_place_veg(decoration_layer, pos, tiles_grass_patches, true)
@@ -401,11 +403,11 @@ func _populate_objects_v3() -> void:
 				if rng.randf() < 0.9:
 					_place_veg(decoration_layer, pos, tiles_grass_patches, true)
 				else:
-					if rng.randf() < 0.1:
+					if forest_rng.randf() < 0.1:
 						_place_veg(decoration_layer, pos, tiles_shrubs, false)
 			else: # THE REST (Open Meadow)
 				# Only very few stray grass blades to keep it clean
-				if rng.randf() < 0.005:
+				if forest_rng.randf() < 0.005:
 					var alt = TileSetAtlasSource.TRANSFORM_FLIP_H if rng.randi() % 2 == 0 else 0
 					obstacle_layer.set_cell(pos, 0, _pick_seeded(tiles_rocks), alt)
 
