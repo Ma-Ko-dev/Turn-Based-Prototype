@@ -71,6 +71,7 @@ func generate_full_map() -> void:
 		_force_bridge_connection()
 	_place_all_unique_pois()
 	_populate_objects()
+	_setup_player_spawn()
 	_sync_systems()
 
 func _get_rng() -> RandomNumberGenerator:
@@ -444,4 +445,38 @@ func _get_random_flip(allow_vertical: bool = true) -> int:
 	if flip_v: alt |= TileSetAtlasSource.TRANSFORM_FLIP_V
 	if transpose: alt |= TileSetAtlasSource.TRANSFORM_TRANSPOSE
 	return alt
+#endregion
+#region --- Spawn Logic ---
+func _setup_player_spawn() -> void:
+	# Look specifically in the 'Markers' node
+	var markers_node = get_node_or_null("Markers")
+	if not markers_node:
+		push_warning("MapGen: 'Markers' node not found!")
+		return
+	var player_marker: SpawnMarker = null
+	for child in markers_node.get_children():
+		if child is SpawnMarker and child.is_player_spawn:
+			player_marker = child
+			break
+	if not player_marker:
+		push_warning("MapGen: No Player SpawnMarker found inside 'Markers'!")
+		return
+	# Find all valid path tiles (excluding bridges)
+	var path_candidates: Array[Vector2i] = []
+	for x in range(map_width):
+		for y in range(map_height):
+			var pos = Vector2i(x, y)
+			var atlas = decoration_layer.get_cell_atlas_coords(pos)
+			if tiles_path.has(atlas):
+				path_candidates.append(pos)
+	if path_candidates.is_empty():
+		push_error("MapGen: No paths found for player spawn!")
+		return
+	# Pick a random path and move the marker
+	var spawn_grid_pos = _pick_seeded(path_candidates)
+	# Important: map_to_local is relative to the TileMapLayer's position
+	# We set the marker's GLOBAL position to avoid parent offset issues
+	var world_pos = decoration_layer.to_global(decoration_layer.map_to_local(spawn_grid_pos))
+	player_marker.global_position = world_pos
+	print("MapGen: Player moved to path at ", spawn_grid_pos)
 #endregion
