@@ -49,7 +49,7 @@ var is_river_generated = false
 @onready var ground_layer: TileMapLayer = $GroundLayer
 @onready var decoration_layer: TileMapLayer = $DecorationLayer
 @onready var obstacle_layer: TileMapLayer = $ObstacleLayer
-@onready var rng = _get_rng()
+@onready var rng = RandomNumberGenerator
 
 
 func _ready() -> void:
@@ -60,10 +60,12 @@ func _get_rng():
 		# Fallback for editor mode since Autoloads don't run here
 		var fallback_rng = RandomNumberGenerator.new()
 		fallback_rng.randomize()
+		print("Generating Map with Seed: ", fallback_rng.seed)
 		return fallback_rng
 	return GameRNG.map_rng
 
 func generate_full_map() -> void:
+	rng = _get_rng() # Always refresh the RNG instance/seed first
 	_poi_zones.clear()
 	_clear_layers()
 	_fill_ground()
@@ -343,45 +345,51 @@ func _populate_objects_v2() -> void:
 
 func _populate_objects_v3() -> void:
 	var noise = FastNoiseLite.new()
-	noise.seed = rng.seed 
-	noise.frequency = 0.08
-	# Choose Biome for this map
+	noise.seed = rng.randi()
+	# English comment: Slightly higher frequency for smaller maps to get more "features"
+	noise.frequency = 0.07 
+	noise.noise_type = FastNoiseLite.TYPE_PERLIN
+	
 	var is_pine_map = rng.randf() < 0.5
 	var core_trees = pine_double if is_pine_map else deciduous_double
 	var edge_trees = pine_single if is_pine_map else deciduous_single
+	
 	for x in range(map_width):
 		for y in range(map_height):
 			var pos = Vector2i(x, y)
-			# Standard skip checks
 			if _is_occupied_or_path(pos): continue
-			# Get noise value (normalized to 0.0 - 1.0 for easier math)
-			var val = (noise.get_noise_2dv(Vector2(x,y)) + 1.0) / 2.0
-			# Density Gradient
-			if val > 0.65:
-				# Dense core
-				if rng.randf() < 0.8:
-					obstacle_layer.set_cell(pos, 0, _pick_seeded(core_trees))
+			
+			var val = noise.get_noise_2dv(Vector2(x,y))
+			
+			# English comment: Raised thresholds to create more open space on small maps
+			if val > 0.45: # Was 0.35 -> Fewer core trees
+				obstacle_layer.set_cell(pos, 0, _pick_seeded(core_trees))
+				
+			elif val > 0.25: # Was 0.15 -> Narrower forest edge
+				obstacle_layer.set_cell(pos, 0, _pick_seeded(edge_trees))
+			elif val > 0.05:
+				if rng.randf() < 0.3:
+					var alt = _get_random_flip(false)
+					decoration_layer.set_cell(pos, 0, _pick_seeded(tiles_shrubs), alt)
 				else:
-					obstacle_layer.set_cell(pos, 0, _pick_seeded(edge_trees))
-			elif val > 0.45:
-				# Forest Edge
-				if rng.randf() < 0.6:
-					obstacle_layer.set_cell(pos, 0, _pick_seeded(edge_trees))
+					var alt = _get_random_flip(true)
+					decoration_layer.set_cell(pos, 0, _pick_seeded(tiles_grass_patches), alt)
+			elif val < -0.4:
+				if rng.randf() < 0.9:
+					var alt = _get_random_flip(true)
+					decoration_layer.set_cell(pos, 0, _pick_seeded(tiles_grass_patches), alt)
 				else:
-					obstacle_layer.set_cell(pos, 0, _pick_seeded(tiles_shrubs))
-			elif val > 0.30:
-				# Transition to Meadow
-				if rng.randf() < 0.4:
-					obstacle_layer.set_cell(pos, 0, _pick_seeded(tiles_shrubs))
-				else:
-					obstacle_layer.set_cell(pos, 0, _pick_seeded(tiles_grass_patches))
-			elif val > 0.15:
-				# Open Meadow with bundled grass
-				if rng.randf() < 0.2:
-					obstacle_layer.set_cell(pos, 0, _pick_seeded(tiles_grass_patches))
-			# Rare Blockers (Rocks/Stumps) scattered everywhere
-			if obstacle_layer.get_cell_source_id(pos) == -1 and rng.randf() < 0.01:
-				obstacle_layer.set_cell(pos, 0, _pick_seeded(tiles_rocks))
+					if rng.randf() < 0.1:
+						var alt = _get_random_flip(false)
+						decoration_layer.set_cell(pos, 0, _pick_seeded(tiles_shrubs), alt)
+			# English comment: 3. THE REST (Open Meadow)
+			else:
+				# English comment: Only very few stray grass blades to keep it clean
+				if rng.randf() < 0.005:
+					var alt = 0
+					if rng.randi() % 2 == 0:
+						alt = TileSetAtlasSource.TRANSFORM_FLIP_H
+					obstacle_layer.set_cell(pos, 0, _pick_seeded(tiles_rocks), alt)
 
 # Helper to keep the loop clean
 func _is_occupied_or_path(pos: Vector2i) -> bool:
@@ -390,6 +398,17 @@ func _is_occupied_or_path(pos: Vector2i) -> bool:
 	for zone in _poi_zones:
 		if zone.has_point(pos): return true
 	return false
+
+# Returns a random flip/transpose combination for tiles
+func _get_random_flip(allow_vertical: bool = true) -> int:
+	var flip_h = rng.randi() % 2 == 0
+	var flip_v = (rng.randi() % 2 == 0) if allow_vertical else false
+	var transpose = (rng.randi() % 2 == 0) if allow_vertical else false
+	var alt = 0
+	if flip_h: alt |= TileSetAtlasSource.TRANSFORM_FLIP_H
+	if flip_v: alt |= TileSetAtlasSource.TRANSFORM_FLIP_V
+	if transpose: alt |= TileSetAtlasSource.TRANSFORM_TRANSPOSE
+	return alt
 
 func _place_all_unique_pois() -> void:
 	var tileset = obstacle_layer.tile_set
@@ -400,7 +419,7 @@ func _place_all_unique_pois() -> void:
 	var indices = []
 	for i in range(count):
 		indices.append(i)
-	indices.rng.shuffle()
+	indices.shuffle()
 	var to_place = clampi(poi_count, 0, count)
 	for i in range(to_place):
 		_attempt_pattern_placement(indices[i])
