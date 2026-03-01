@@ -60,7 +60,8 @@ func _get_rng():
 	if Engine.is_editor_hint():
 		# Fallback for editor mode since Autoloads don't run here
 		var fallback_rng = RandomNumberGenerator.new()
-		fallback_rng.randomize()
+		#fallback_rng.randomize()
+		fallback_rng.seed = -1273971340661010247
 		print("Generating Map with Seed: ", fallback_rng.seed)
 		return fallback_rng
 	return GameRNG.map_rng
@@ -257,8 +258,8 @@ func _place_path_or_bridge(pos: Vector2i, moving_horizontal: bool) -> void:
 func _force_bridge_connection() -> void:
 	# Find all vertical river tiles (straight) in the middle area
 	var candidates: Array[Vector2i] = []
-	for x in range(10, map_width - 10):
-		for y in range(10, map_height - 10):
+	for x in range(10, map_width - 2):
+		for y in range(10, map_height - 2):
 			var pos = Vector2i(x,y)
 			# Better to place a bridge on a straight vertical river
 			if obstacle_layer.get_cell_atlas_coords(pos) == tile_river_straight_big or obstacle_layer.get_cell_atlas_coords(pos) == tile_river_straight_small:
