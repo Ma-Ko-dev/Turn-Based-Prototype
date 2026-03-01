@@ -59,16 +59,23 @@ var _river_shore_cells: Dictionary = {}
 func _ready() -> void:
 	generate_full_map()
 
-func _get_rng():
+func _get_rng() -> RandomNumberGenerator:
 	var new_rng = RandomNumberGenerator.new()
+	# 1. Priority: Manual Editor Seed
 	if manual_seed != 0:
 		new_rng.seed = manual_seed
+		print("MapGen: Using MANUAL seed: ", manual_seed)
+	# 2. Priority: Use the seed from the global GameRNG singleton
+	elif GameRNG.get("map_rng") != null:
+		new_rng.seed = GameRNG.map_rng.seed
+		print("MapGen: Using GameRNG seed: ", new_rng.seed)
+	# 3. Fallback: Full Random (should rarely happen with the GameRoot setup)
 	else:
-		# If no manual seed, use a random one
 		new_rng.randomize()
+		print("MapGen: Using FALLBACK random seed: ", new_rng.seed)
 	current_seed = new_rng.seed
-	print("Map Generation Seed: ", current_seed)
 	return new_rng
+
 func generate_full_map() -> void:
 	rng = _get_rng() # Always refresh the RNG instance/seed first
 	_poi_zones.clear()
@@ -403,7 +410,7 @@ func _populate_objects_v3() -> void:
 				else:
 					_place_veg(decoration_layer, pos, tiles_grass_patches, true)
 			elif val < -0.4:
-				if rng.randf() < 0.9:
+				if forest_rng.randf() < 0.9:
 					_place_veg(decoration_layer, pos, tiles_grass_patches, true)
 				else:
 					if forest_rng.randf() < 0.1:
@@ -411,8 +418,8 @@ func _populate_objects_v3() -> void:
 			else: # THE REST (Open Meadow)
 				# Only very few stray grass blades to keep it clean
 				if forest_rng.randf() < 0.005:
-					var alt = TileSetAtlasSource.TRANSFORM_FLIP_H if rng.randi() % 2 == 0 else 0
-					obstacle_layer.set_cell(pos, 0, _pick_seeded(tiles_rocks), alt)
+					_place_veg(obstacle_layer, pos, tiles_rocks, false)
+					#obstacle_layer.set_cell(pos, 0, _pick_seeded(tiles_rocks), alt)
 
 # Helper to keep the loop clean
 func _is_occupied_or_path(pos: Vector2i) -> bool:
@@ -444,21 +451,34 @@ func _place_all_unique_pois() -> void:
 	var count = tileset.get_patterns_count()
 	if count == 0:
 		push_warning("MapGenerator: No patterns found in TileSet!")
+		return
+	# Create a dedicated RNG for POI shuffling and placement
+	# This prevents POI logic from "stealing" numbers from the global RNG
+	var poi_rng = RandomNumberGenerator.new()
+	poi_rng.seed = rng.seed + 500 # seperate offset
 	# Create and shuffle indices to ensure each POI is unique
 	var indices = []
 	for i in range(count):
 		indices.append(i)
-	indices.shuffle()
+	#indices.shuffle()
+	_shuffle_array_seeded(indices, poi_rng)
 	var to_place = clampi(poi_count, 0, count)
 	for i in range(to_place):
-		_attempt_pattern_placement(indices[i])
-	
-func _attempt_pattern_placement(pattern_idx: int) -> void:
+		_attempt_pattern_placement(indices[i], poi_rng)
+
+func _shuffle_array_seeded(arr: Array, custom_rng: RandomNumberGenerator) -> void:
+	for i in range(arr.size() -1, 0, -1):
+		var j = custom_rng.randi() % (i + 1)
+		var temp = arr[i]
+		arr[i] = arr[j]
+		arr[j] = temp
+
+func _attempt_pattern_placement(pattern_idx: int, poi_rng: RandomNumberGenerator) -> void:
 	var pattern = obstacle_layer.tile_set.get_pattern(pattern_idx)
 	var p_size = pattern.get_size()
 	for attempt in range(100):
-		var x = rng.randi_range(poi_padding + 1, map_width - p_size.x - poi_padding - 1)
-		var y = rng.randi_range(poi_padding + 1, map_height - p_size.y - poi_padding - 1)
+		var x = poi_rng.randi_range(poi_padding + 1, map_width - p_size.x - poi_padding - 1)
+		var y = poi_rng.randi_range(poi_padding + 1, map_height - p_size.y - poi_padding - 1)
 		var pos = Vector2i(x, y)
 		if _is_area_clear_for_poi(pos, p_size, poi_padding):
 			_clear_area_for_poi(pos, p_size)
