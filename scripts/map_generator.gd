@@ -31,6 +31,7 @@ var _poi_zones: Array[Rect2i] = []
 @export_group("Tile Settings")
 @export var tile_ground: Vector2i = Vector2i(0,0)
 @export var tiles_path: Array[Vector2i] = [Vector2i(1,0), Vector2i(2,0), Vector2i(3,0), Vector2i(4,0)]
+@export var tiles_path_placeholder: Array[Vector2i] = [Vector2i(23,2)]
 
 @export_group("River Settings")
 @export var tile_river_straight_big: Vector2i = Vector2i(8,4)
@@ -201,6 +202,8 @@ func _generate_organic_paths() -> void:
 			var v_start = Vector2i(rng.randi_range(5, map_width - 5), 0)
 			var v_end = Vector2i(rng.randi_range(5, map_width - 5), map_height - 1)
 			_create_path_connection(v_start, v_end)
+	# After placing all placeholders, transform them into smart tiles (curves, junctions)
+	_refine_all_paths()
 
 func _create_path_connection(start: Vector2i, end: Vector2i) -> void:
 	if tiles_path.is_empty():
@@ -215,6 +218,7 @@ func _create_path_connection(start: Vector2i, end: Vector2i) -> void:
 		steps += 1
 		var is_horizontal = last_was_horizontal
 		var next_step = curr
+		# Determine next movement direction
 		if rng.randf() < 0.5 and curr.x != end.x:
 			next_step.x += (1 if end.x > curr.x else -1)
 			is_horizontal = true
@@ -224,6 +228,7 @@ func _create_path_connection(start: Vector2i, end: Vector2i) -> void:
 		else:
 			next_step.x += (1 if end.x > curr.x else -1)
 			is_horizontal = true
+		# River crossing logic: Jump over the river to avoid "walking on water"
 		if _is_river_at(next_step):
 			_place_path_or_bridge(next_step, is_horizontal)
 			if is_horizontal: next_step.x += (1 if end.x > next_step.x else -1)
@@ -236,9 +241,8 @@ func _create_path_connection(start: Vector2i, end: Vector2i) -> void:
 		last_was_horizontal = is_horizontal
 
 func _place_path_or_bridge(pos: Vector2i, moving_horizontal: bool) -> void:
-	# Check if the ground layer has any river tile at this pos
-	# Check the source_id to see if it's part of the tileset (assuming ID 0)
 	if _is_river_at(pos):
+		# Select bridge orientation based on movement direction
 		var bridge = tile_bridge_h
 		var alternative = 0
 		if not moving_horizontal:
@@ -246,7 +250,8 @@ func _place_path_or_bridge(pos: Vector2i, moving_horizontal: bool) -> void:
 			alternative = TileSetAtlasSource.TRANSFORM_TRANSPOSE | TileSetAtlasSource.TRANSFORM_FLIP_H
 		decoration_layer.set_cell(pos, 0, bridge, alternative)
 	else:
-		decoration_layer.set_cell(pos, 0, _pick_seeded(tiles_path))
+		# Place a placeholder tile that will be replaced by _refine_all_paths laterh))
+		decoration_layer.set_cell(pos, 0, Vector2i(23,2))
 
 func _force_bridge_connection() -> void:
 	# Find all vertical river tiles (straight) in the middle area
@@ -276,8 +281,73 @@ func _force_bridge_connection() -> void:
 		decoration_layer.set_cell(bridge_pos + Vector2i.LEFT, 0, _pick_seeded(tiles_path))
 		decoration_layer.set_cell(bridge_pos + Vector2i.RIGHT, 0, _pick_seeded(tiles_path))
 
+func _refine_all_paths() -> void:
+	# Record all path coordinates before changing tiles to avoid neighbor detection errors
+	var all_path_coords: Array[Vector2i] = []
+	var used_cells = decoration_layer.get_used_cells()
+	for pos in used_cells:
+		if _is_path_or_bridge(pos):
+			all_path_coords.append(pos)
+	# Transform each path tile into the correct graphical representation
+	for pos in all_path_coords:
+		# Skip bridges - they are already correctly placed by bridge logic
+		var atlas = decoration_layer.get_cell_atlas_coords(pos)
+		if atlas == tile_bridge_h or atlas == tile_bridge_v:
+			continue
+		var neighbors = _get_path_neighbors(pos, all_path_coords)
+		_place_smart_path_tile(pos, neighbors)
+
+func _place_smart_path_tile(pos: Vector2i, n: Dictionary) -> void:
+	# Use bitmasking to identify neighbor configuration (N=1, S=2, W=4, E=8)
+	var mask = 0
+	if n.up:	mask += 1
+	if n.down:	mask += 2
+	if n.left:	mask += 4
+	if n.right:	mask += 8
+	var atlas = Vector2i(8,1)
+	var alt = 0
+	# Constants for Godot Tile Transforms
+	var flip_h = TileSetAtlasSource.TRANSFORM_FLIP_H
+	var flip_v = TileSetAtlasSource.TRANSFORM_FLIP_V
+	var transpose = TileSetAtlasSource.TRANSFORM_TRANSPOSE
+	match mask:
+		# --- Straight Tiles (8,1) ---
+		1, 2, 3: atlas = Vector2i(8,1); alt = 0 # North/South
+		4, 8, 12: atlas = Vector2i(8,1); alt = transpose # West/East
+		# --- Curve Tiles (9,1) - Base is Down-Right ---
+		10: atlas = Vector2i(9,1); alt = 0 # South + East
+		6: atlas = Vector2i(9,1); alt = flip_h # South + West
+		9: atlas = Vector2i(9,1); alt = flip_v # North + East
+		5: atlas = Vector2i(9,1); alt = flip_h | flip_v # North + West
+		# --- T-Junctions (10,1) - Base is N/S + E ---
+		11: atlas = Vector2i(10,1); alt = 0 # N+S+E
+		7: atlas = Vector2i(10,1); alt = flip_h # N+S+W
+		14: atlas = Vector2i(10,1); alt = transpose # S+W+E
+		13: atlas = Vector2i(10,1); alt = transpose | flip_h # N+W+E
+		# --- X-Junction (11,1) ---
+		15: atlas = Vector2i(11,1); alt = 0
+		_: atlas = Vector2i(8,1); alt = 0 # Fallback
+	decoration_layer.set_cell(pos, 0, atlas, alt)
+
+func _get_path_neighbors(pos: Vector2i, all_paths: Array[Vector2i]) -> Dictionary:
+	# Returns presence of path/bridge in all four cardinal directions
+	return {
+		"up": all_paths.has(pos + Vector2i.UP),
+		"down": all_paths.has(pos + Vector2i.DOWN),
+		"left": all_paths.has(pos + Vector2i.LEFT),
+		"right": all_paths.has(pos + Vector2i.RIGHT)
+	}
+
+func _is_path_or_bridge(pos: Vector2i) -> bool:
+	var atlas = decoration_layer.get_cell_atlas_coords(pos)
+	# Check for placeholders, refined paths, or bridges to define "what is a road"ridge
+	var is_placeholder = tiles_path_placeholder.has(atlas)
+	var is_refined = atlas.y == 1 and (atlas.x >= 8 and atlas.x <= 11)
+	var is_bridge = (atlas == tile_bridge_h or atlas == tile_bridge_v)
+	return is_placeholder or is_refined or is_bridge
+
 func _has_bridge() -> bool:
-	# Iterate through decoration layer to find any bridge tile
+	# Utility to check if at least one bridge exists on the map
 	for x in range(map_width):
 		for y in range(map_height):
 			var coords = Vector2i(x,y)
