@@ -214,25 +214,26 @@ func _create_path_connection(start: Vector2i, end: Vector2i) -> void:
 	while curr != end and steps < max_steps:
 		steps += 1
 		var is_horizontal = last_was_horizontal
-		if _is_river_at(curr):
-			if last_was_horizontal:
-				curr.x += (1 if end.x > curr.x else -1)
-			else:
-				curr.y += (1 if end.y > curr.y else -1)
+		var next_step = curr
+		if rng.randf() < 0.5 and curr.x != end.x:
+			next_step.x += (1 if end.x > curr.x else -1)
+			is_horizontal = true
+		elif curr.y != end.y:
+			next_step.y += (1 if end.y > curr.y else -1)
+			is_horizontal = false
 		else:
-			if rng.randf() < 0.5 and curr.x != end.x:
-				var next_x = curr.x + (1 if end.x > curr.x else -1)
-				curr.x = next_x
-				is_horizontal = true
-			elif curr.y != end.y:
-				var next_y = curr.y + (1 if end.y > curr.y else -1)
-				curr.y = next_y
-				is_horizontal = false
-			else:
-				curr.x += (1 if end.x > curr.x else -1)
-				is_horizontal = true
+			next_step.x += (1 if end.x > curr.x else -1)
+			is_horizontal = true
+		if _is_river_at(next_step):
+			_place_path_or_bridge(next_step, is_horizontal)
+			if is_horizontal: next_step.x += (1 if end.x > next_step.x else -1)
+			else: next_step.y += (1 if end.y > next_step.y else -1)
+			curr = next_step
+			_place_path_or_bridge(curr, is_horizontal)
+		else:
+			curr = next_step
+			_place_path_or_bridge(curr, is_horizontal)
 		last_was_horizontal = is_horizontal
-		_place_path_or_bridge(curr, is_horizontal)
 
 func _place_path_or_bridge(pos: Vector2i, moving_horizontal: bool) -> void:
 	# Check if the ground layer has any river tile at this pos
