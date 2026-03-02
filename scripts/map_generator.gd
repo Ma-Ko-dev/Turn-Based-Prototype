@@ -31,6 +31,10 @@ var _poi_zones: Array[Rect2i] = []
 @export_group("Tile Settings")
 @export var tile_ground: Vector2i = Vector2i(0,0)
 @export var tiles_path: Array[Vector2i] = [Vector2i(1,0), Vector2i(2,0), Vector2i(3,0), Vector2i(4,0)]
+@export var tiles_road_straight: Vector2i = Vector2i(8,1)
+@export var tiles_road_curve: Vector2i = Vector2i(9,1)
+@export var tiles_road_t_junction: Vector2i = Vector2i(10,1)
+@export var tiles_road_x_junction: Vector2i = Vector2i(11,1)
 @export var tiles_path_placeholder: Array[Vector2i] = [Vector2i(23,2)]
 var _path_endpoints: Array[Vector2i] = []
 
@@ -354,7 +358,7 @@ func _place_smart_path_tile(pos: Vector2i, n: Dictionary) -> void:
 	if n.down:	mask += 2
 	if n.left:	mask += 4
 	if n.right:	mask += 8
-	var atlas = Vector2i(8,1)
+	var atlas = tiles_road_straight
 	var alt = 0
 	# Constants for Godot Tile Transforms
 	var flip_h = TileSetAtlasSource.TRANSFORM_FLIP_H
@@ -362,21 +366,21 @@ func _place_smart_path_tile(pos: Vector2i, n: Dictionary) -> void:
 	var transpose = TileSetAtlasSource.TRANSFORM_TRANSPOSE
 	match mask:
 		# --- Straight Tiles (8,1) ---
-		1, 2, 3: atlas = Vector2i(8,1); alt = 0 # North/South
-		4, 8, 12: atlas = Vector2i(8,1); alt = transpose # West/East
+		1, 2, 3: atlas = tiles_road_straight; alt = 0 # North/South
+		4, 8, 12: atlas = tiles_road_straight; alt = transpose # West/East
 		# --- Curve Tiles (9,1) ---
-		10: atlas = Vector2i(9,1); alt = 0 # South + East
-		6: atlas = Vector2i(9,1); alt = flip_h # South + West
-		9: atlas = Vector2i(9,1); alt = flip_v # North + East
-		5: atlas = Vector2i(9,1); alt = flip_h | flip_v # North + West
+		10: atlas = tiles_road_curve; alt = 0 # South + East
+		6: atlas = tiles_road_curve; alt = flip_h # South + West
+		9: atlas = tiles_road_curve; alt = flip_v # North + East
+		5: atlas = tiles_road_curve; alt = flip_h | flip_v # North + West
 		# --- T-Junctions (10,1) - Base is N+S+E (Links offen) ---
-		11: atlas = Vector2i(10,1); alt = 0 # North + South + East
-		7: atlas = Vector2i(10,1); alt = flip_h # North + South + West
-		14: atlas = Vector2i(10,1); alt = transpose # South + West + East (T von OBEN)
-		13: atlas = Vector2i(10,1); alt = transpose | flip_v # North + West + East (T von UNTEN)
+		11: atlas = tiles_road_t_junction; alt = 0 # North + South + East
+		7: atlas = tiles_road_t_junction; alt = flip_h # North + South + West
+		14: atlas = tiles_road_t_junction; alt = transpose # South + West + East (T von OBEN)
+		13: atlas = tiles_road_t_junction; alt = transpose | flip_v # North + West + East (T von UNTEN)
 		# --- X-Junction (11,1) ---
-		15: atlas = Vector2i(11,1); alt = 0
-		_: atlas = Vector2i(8,1); alt = 0
+		15: atlas = tiles_road_x_junction; alt = 0
+		_: atlas = tiles_road_straight; alt = 0
 	decoration_layer.set_cell(pos, 0, atlas, alt)
 
 func _get_path_neighbors(pos: Vector2i, all_paths: Array[Vector2i]) -> Dictionary:
@@ -585,11 +589,17 @@ func _setup_player_spawn() -> void:
 		return
 	# Find all valid path tiles (excluding bridges)
 	var path_candidates: Array[Vector2i] = []
+	var all_road_types = [
+		tiles_road_straight,
+		tiles_road_curve,
+		tiles_road_t_junction,
+		tiles_road_x_junction
+	]
 	for x in range(map_width):
 		for y in range(map_height):
 			var pos = Vector2i(x, y)
 			var atlas = decoration_layer.get_cell_atlas_coords(pos)
-			if tiles_path.has(atlas):
+			if atlas in all_road_types or _is_path_or_bridge(pos):
 				path_candidates.append(pos)
 	if path_candidates.is_empty():
 		push_error("MapGen: No paths found for player spawn!")
