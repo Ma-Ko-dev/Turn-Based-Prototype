@@ -32,6 +32,7 @@ var _poi_zones: Array[Rect2i] = []
 @export var tile_ground: Vector2i = Vector2i(0,0)
 @export var tiles_path: Array[Vector2i] = [Vector2i(1,0), Vector2i(2,0), Vector2i(3,0), Vector2i(4,0)]
 @export var tiles_path_placeholder: Array[Vector2i] = [Vector2i(23,2)]
+var _path_endpoints: Array[Vector2i] = []
 
 @export_group("River Settings")
 @export var tile_river_straight_big: Vector2i = Vector2i(8,4)
@@ -194,13 +195,18 @@ func _is_river_at(pos: Vector2i) -> bool:
 #endregion
 #region --- Path & Bridge Logic ---
 func _generate_organic_paths() -> void:
+	_path_endpoints.clear()
 	var h_start = Vector2i(0, rng.randi_range(5, map_height - 5))
 	var h_end = Vector2i(map_width - 1, rng.randi_range(5, map_height - 5))
+	_path_endpoints.append(h_start)
+	_path_endpoints.append(h_end)
 	_create_path_connection(h_start, h_end)
 	if not is_river_generated:
 		if rng.randf() < 0.5: # have a chance to generate a second road when river is not present
 			var v_start = Vector2i(rng.randi_range(5, map_width - 5), 0)
 			var v_end = Vector2i(rng.randi_range(5, map_width - 5), map_height - 1)
+			_path_endpoints.append(v_start)
+			_path_endpoints.append(v_end)
 			_create_path_connection(v_start, v_end)
 	# After placing all placeholders, transform them into smart tiles (curves, junctions)
 	_refine_all_paths()
@@ -330,12 +336,13 @@ func _place_smart_path_tile(pos: Vector2i, n: Dictionary) -> void:
 	decoration_layer.set_cell(pos, 0, atlas, alt)
 
 func _get_path_neighbors(pos: Vector2i, all_paths: Array[Vector2i]) -> Dictionary:
-	# Returns presence of path/bridge in all four cardinal directions
+	# Check neighbors, but assume a neighbor exists if we are at the map edge
+	# This ensures paths look like they continue "outside" the map.
 	return {
-		"up": all_paths.has(pos + Vector2i.UP),
-		"down": all_paths.has(pos + Vector2i.DOWN),
-		"left": all_paths.has(pos + Vector2i.LEFT),
-		"right": all_paths.has(pos + Vector2i.RIGHT)
+		"up": all_paths.has(pos + Vector2i.UP) or (pos.y == 0 and _path_endpoints.has(pos)),
+		"down": all_paths.has(pos + Vector2i.DOWN) or (pos.y == map_height - 1 and _path_endpoints.has(pos)),
+		"left": all_paths.has(pos + Vector2i.LEFT) or (pos.x == 0 and _path_endpoints.has(pos)),
+		"right": all_paths.has(pos + Vector2i.RIGHT) or (pos.x == map_width - 1 and _path_endpoints.has(pos))
 	}
 
 func _is_path_or_bridge(pos: Vector2i) -> bool:
