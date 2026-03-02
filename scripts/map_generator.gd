@@ -196,55 +196,99 @@ func _is_river_at(pos: Vector2i) -> bool:
 #region --- Path & Bridge Logic ---
 func _generate_organic_paths() -> void:
 	_path_endpoints.clear()
-	var h_start = Vector2i(0, rng.randi_range(5, map_height - 5))
-	var h_end = Vector2i(map_width - 1, rng.randi_range(5, map_height - 5))
+	# 1. Main Road (West to East)
+	var h_start = Vector2i(0, rng.randi_range(15, map_height - 15))
+	var h_end = Vector2i(map_width - 1, rng.randi_range(15, map_height - 15))
 	_path_endpoints.append(h_start)
 	_path_endpoints.append(h_end)
-	_create_path_connection(h_start, h_end)
-	if not is_river_generated:
-		if rng.randf() < 0.5: # have a chance to generate a second road when river is not present
-			var v_start = Vector2i(rng.randi_range(5, map_width - 5), 0)
-			var v_end = Vector2i(rng.randi_range(5, map_width - 5), map_height - 1)
-			_path_endpoints.append(v_start)
-			_path_endpoints.append(v_end)
-			_create_path_connection(v_start, v_end)
-	# After placing all placeholders, transform them into smart tiles (curves, junctions)
+	_create_path_connection(h_start, h_end, true)
+	# 2. Exactly one organic side road from a straight segment
+	if not is_river_generated and rng.randf() < 0.8:
+		_generate_road_from_main_to_edge()
 	_refine_all_paths()
 
-func _create_path_connection(start: Vector2i, end: Vector2i) -> void:
-	if tiles_path.is_empty():
-		push_error("MapGenerator: tiles_path is empty! Check Inspector.")
-		return
+func _create_path_connection(start: Vector2i, end: Vector2i, is_main_road: bool) -> void:
 	var curr = start
 	var steps = 0
-	var max_steps = map_width * map_height 
-	var last_was_horizontal = true
-	_place_path_or_bridge(curr, last_was_horizontal)
+	var max_steps = map_width * map_height
+	_place_path_or_bridge(curr, true)
 	while curr != end and steps < max_steps:
 		steps += 1
-		var is_horizontal = last_was_horizontal
 		var next_step = curr
-		# Determine next movement direction
-		if rng.randf() < 0.5 and curr.x != end.x:
-			next_step.x += (1 if end.x > curr.x else -1)
-			is_horizontal = true
-		elif curr.y != end.y:
+		# Check for main road nearby to start straightening up
+		var road_nearby = false
+		if not is_main_road:
+			# Look ahead in Y direction to see if the main road is close
+			var check_dir = Vector2i(0, 1 if end.y > curr.y else -1)
+			for dist in range(1, 5): # Check up to 4 tiles ahead
+				if _is_path_or_bridge(curr + (check_dir * dist)):
+					road_nearby = true
+					break
+		#  Movement logic
+		if not is_main_road and road_nearby:
+			# Force straight vertical approach when close
 			next_step.y += (1 if end.y > curr.y else -1)
-			is_horizontal = false
 		else:
-			next_step.x += (1 if end.x > curr.x else -1)
-			is_horizontal = true
-		# River crossing logic: Jump over the river to avoid "walking on water"
+			#  Increased sway for more organic look (0.4 instead of 0.2)
+			var sway = 0.5 if is_main_road else 0.4 
+			if rng.randf() < sway and curr.x != end.x:
+				next_step.x += (1 if end.x > curr.x else -1)
+			elif curr.y != end.y:
+				next_step.y += (1 if end.y > curr.y else -1)
+			else:
+				next_step.x += (1 if end.x > curr.x else -1)
+		#  Collision: Stop when hitting existing road
+		if not is_main_road and _is_path_or_bridge(next_step):
+			_place_path_or_bridge(next_step, false)
+			break 
+		#  River logic
 		if _is_river_at(next_step):
-			_place_path_or_bridge(next_step, is_horizontal)
-			if is_horizontal: next_step.x += (1 if end.x > next_step.x else -1)
-			else: next_step.y += (1 if end.y > next_step.y else -1)
-			curr = next_step
-			_place_path_or_bridge(curr, is_horizontal)
-		else:
-			curr = next_step
-			_place_path_or_bridge(curr, is_horizontal)
-		last_was_horizontal = is_horizontal
+			_place_path_or_bridge(next_step, (next_step.x != curr.x))
+			next_step += (next_step - curr)
+		if not is_main_road and _is_too_close_to_existing_path(next_step, start):
+			pass
+		curr = next_step
+		_place_path_or_bridge(curr, (curr.x != start.x))
+
+func _generate_road_from_main_to_edge() -> void:
+	var valid_starts = []
+	# Slightly tighter horizontal constraints for start search
+	for x in range(15, map_width - 15):
+		for y in range(5, map_height - 5):
+			var pos = Vector2i(x, y)
+			if _is_path_or_bridge(pos):
+				#  Must be a horizontal straight segment
+				if _is_path_or_bridge(pos + Vector2i.LEFT) and _is_path_or_bridge(pos + Vector2i.RIGHT):
+					if not _is_path_or_bridge(pos + Vector2i.UP) and not _is_path_or_bridge(pos + Vector2i.DOWN):
+						valid_starts.append(pos)
+	if valid_starts.is_empty(): return
+	var v_start = _pick_seeded(valid_starts)
+	var go_up = rng.randf() < 0.5
+	var v_end = Vector2i(rng.randi_range(5, map_width - 5), 0 if go_up else map_height - 1)
+	# Ensure it's not too vertical, keep it diagonal
+	if abs(v_end.x - v_start.x) < 10:
+		v_end.x = clamp(v_start.x + (15 if rng.randf() < 0.5 else -15), 5, map_width - 5)
+	_path_endpoints.append(v_end)
+	#  --- MANUALLY START THE ROAD STRAIGHT ---
+	var curr = v_start
+	var step_dir = Vector2i.UP if go_up else Vector2i.DOWN
+	for i in range(3): # Force 3 tiles strictly away from main road
+		curr += step_dir
+		if curr.y > 0 and curr.y < map_height - 1:
+			_place_path_or_bridge(curr, false)
+	# Now continue with the organic connection from the new position
+	_create_path_connection(curr, v_end, true)
+
+func _is_too_close_to_existing_path(pos: Vector2i, current_path_start: Vector2i) -> bool:
+	# Check neighbors to avoid parallel paths
+	# We ignore the immediate area of the starting point
+	if pos.distance_to(current_path_start) < 4: return false
+	for dx in range(-1, 2):
+		for dy in range(-1, 2):
+			var check = pos + Vector2i(dx, dy)
+			if _is_path_or_bridge(check):
+				return true
+	return false
 
 func _place_path_or_bridge(pos: Vector2i, moving_horizontal: bool) -> void:
 	if _is_river_at(pos):
@@ -320,19 +364,19 @@ func _place_smart_path_tile(pos: Vector2i, n: Dictionary) -> void:
 		# --- Straight Tiles (8,1) ---
 		1, 2, 3: atlas = Vector2i(8,1); alt = 0 # North/South
 		4, 8, 12: atlas = Vector2i(8,1); alt = transpose # West/East
-		# --- Curve Tiles (9,1) - Base is Down-Right ---
+		# --- Curve Tiles (9,1) ---
 		10: atlas = Vector2i(9,1); alt = 0 # South + East
 		6: atlas = Vector2i(9,1); alt = flip_h # South + West
 		9: atlas = Vector2i(9,1); alt = flip_v # North + East
 		5: atlas = Vector2i(9,1); alt = flip_h | flip_v # North + West
-		# --- T-Junctions (10,1) - Base is N/S + E ---
-		11: atlas = Vector2i(10,1); alt = 0 # N+S+E
-		7: atlas = Vector2i(10,1); alt = flip_h # N+S+W
-		14: atlas = Vector2i(10,1); alt = transpose # S+W+E
-		13: atlas = Vector2i(10,1); alt = transpose | flip_h # N+W+E
+		# --- T-Junctions (10,1) - Base is N+S+E (Links offen) ---
+		11: atlas = Vector2i(10,1); alt = 0 # North + South + East
+		7: atlas = Vector2i(10,1); alt = flip_h # North + South + West
+		14: atlas = Vector2i(10,1); alt = transpose # South + West + East (T von OBEN)
+		13: atlas = Vector2i(10,1); alt = transpose | flip_v # North + West + East (T von UNTEN)
 		# --- X-Junction (11,1) ---
 		15: atlas = Vector2i(11,1); alt = 0
-		_: atlas = Vector2i(8,1); alt = 0 # Fallback
+		_: atlas = Vector2i(8,1); alt = 0
 	decoration_layer.set_cell(pos, 0, atlas, alt)
 
 func _get_path_neighbors(pos: Vector2i, all_paths: Array[Vector2i]) -> Dictionary:
