@@ -304,8 +304,8 @@ func _place_path_or_bridge(pos: Vector2i, moving_horizontal: bool) -> void:
 			alternative = TileSetAtlasSource.TRANSFORM_TRANSPOSE | TileSetAtlasSource.TRANSFORM_FLIP_H
 		decoration_layer.set_cell(pos, 0, bridge, alternative)
 	else:
-		# Place a placeholder tile that will be replaced by _refine_all_paths laterh))
-		decoration_layer.set_cell(pos, 0, Vector2i(23,2))
+		# Place a placeholder tile
+		decoration_layer.set_cell(pos, 0, tiles_path_placeholder[0])
 
 func _force_bridge_connection() -> void:
 	# Find all vertical river tiles (straight) in the middle area
@@ -395,11 +395,14 @@ func _get_path_neighbors(pos: Vector2i, all_paths: Array[Vector2i]) -> Dictionar
 
 func _is_path_or_bridge(pos: Vector2i) -> bool:
 	var atlas = decoration_layer.get_cell_atlas_coords(pos)
-	# Check for placeholders, refined paths, or bridges to define "what is a road"ridge
-	var is_placeholder = tiles_path_placeholder.has(atlas)
-	var is_refined = atlas.y == 1 and (atlas.x >= 8 and atlas.x <= 11)
-	var is_bridge = (atlas == tile_bridge_h or atlas == tile_bridge_v)
-	return is_placeholder or is_refined or is_bridge
+	# Check against all defined road types, placeholders and bridges
+	return atlas == tiles_road_straight or \
+		   atlas == tiles_road_curve or \
+		   atlas == tiles_road_t_junction or \
+		   atlas == tiles_road_x_junction or \
+		   tiles_path_placeholder.has(atlas) or \
+		   atlas == tile_bridge_h or \
+		   atlas == tile_bridge_v
 
 func _has_bridge() -> bool:
 	# Utility to check if at least one bridge exists on the map
